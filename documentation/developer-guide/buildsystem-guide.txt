@@ -1,0 +1,49 @@
+= Buildmanagement =
+The buildmanagement in this project is responsible to create all artefacts of the application. The goal was to implement the following attributes:
+* automatic
+* correct (reproducable)
+* minimum effort to use
+* easy to maintain
+* variable
+* able to run without any user interaction "out-of-the-box"
+
+== Architecture ==
+The used buildsystem is a separate modularized ant project that consists of multiple build.xml files and a set of 3rd party Ant libraries. It is project independent but has some requirements regarding the structure and some naming conventions of the project.
+
+== Folderstructure ==
+The buildsystem requires a defined folder structure in order to operate. A module capsulates functionality and contains source and target. The sourc can be java code, javascript code, xml files or whatever. The location of source is by default "src/main" (the main source). The buildsystem will use the source to create the artefact form a module, e.g. a JAR file, an EAR File. The default folder of the target is "target".
+Furthermore each module its own build.xml. The build.xml uses the build.xml files from the buildsystem and overwrites targets if necessary. This keeps the build.xml file of each module clean and simple. A module may contain sub modules of the same structure. 
+
+   <module>
+           |- build-tools (the buildsystem)
+           |- build.xml (project)
+           \- etc
+                |- build.properties
+                |- custom-build.properties
+           \- <project>.<module>
+           |    |- build.xml (module)
+           |    \- etc
+           |        |- build.properties
+           |        |- custom-build.properties
+           |    \- src
+           |      \- main
+           |        |- java
+           |        |- resource
+           |      \- test
+           |        |- resources
+           |        |- java
+           |    |- target (module "temporary")
+           |- target (project "temporary")
+
+== Properties ==
+
+== Targets ==
+In each module you can always use "ant -p" to show available targets. These targets also contain a description. Nevertheless each module  has  default targets inherited from the buildsystem:
+
+* clean = Cleans the target folder of the module and its sub modules
+* build = Builds the artefact into the target folder of the modules and its sub modules
+* test = Runs all Tests of the module and its sub modules
+* dist = Creates a distribution package of the module and its sub modules
+
+
+

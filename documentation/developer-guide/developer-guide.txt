@@ -1,0 +1,142 @@
+= Echolot Developer Guide =
+   
+== Introduction ==
+This guide is intended to be read by developers working on the Echolot project. 
+The guide cover guidelines for testing, coding and organization.
+
+The primary goal of this Project is to create useful, well designed high quality 
+components to be used in the nextapp.echo framework. The components don't have to be
+entirely new. The idea is to make any available and new components available to the 
+nextapp.echo framework.  
+
+== Repository ==
+The source code for the Echolot project is maintained on github. The location is:
+<code>
+https://github.com/exxcellent/echolot/
+</code>
+
+== Permissions ==
+Its always possible to checkout the source code as read-only version. To be able to commit
+changes please contact the owners of Echolot on the homepage or at the
+Echo Developer Forum (http://echo.nextapp.com/site/forum).
+
+== License ==
+Echolot license and an overview of used software components and their licenses
+are distributed within the source code repository (documentation/license).
+
+=== Building ===
+To build the software is the process to provide a distributable testable artefact in 
+a certain version. Within this project an internal build system based on Apache Ant is 
+used to support and automate this process.
+
+There a different scopes for building, such as:
+* developer build = fast, reliable building for a developer to verify software changes,
+* test = replicable, reliable building for a tester or test automation to verify the software quality, 
+* release = replicable, reliable, complete buildng for an unknown audience. This scope contains all relevant information to use the software.
+
+== Release ==
+The release process is nearly automated because of the used build system described above.
+Nevertheless to make an release you have to follow some steps:
+1. Change the version number to the release you want to make:
+<code>
+release.version=0.1
+</code>
+2. Check in and push all changes to github.
+3. Tag your current HEAD local working copy version with the new release version:
+4. Upload the distribution package file to the download file area.
+
+=== Version Number ===
+The version number can be changed in a properties file "etc/build.properties":
+<code>
+# These settings are per module
+release.version=0.1-SNAPSHOT
+</code>
+The version may contain the suffix SNAPSHOT to relect ongoing changes (HEAD). A release
+will always have a an name without this suffix.
+
+=== Distribution ===
+Luckily a distribution contains more than just the compile source code. A distributable of this
+project is a ZIP file containing:
+<code>
+dist/
+ + dist => echolot-release-0.1-distribution.zip (all libraries and compiled project code) 
+ + lib  => all depending libaries and compiled project project code
+ + demo => contains a WAR file with the deployable Echolot demo 
+</code>  
+
+=== Developer === 
+To build the software you can run from ant the commandline to archive any goal. its also possible to
+use an IDE that triggers the same ant targets.
+
+the following table gives an overview of all targets available. you can also
+type any time the following statement to see available targets.
+<code>
+ant -p
+</code>
+
+Overview:
+* build	= compiles and builds the module and all dependent modules artifacts, e.g. a jar file.
+* clean = cleans the module and all dependent module artifacts from the temporary folders 
+* dist = creates a package containing all relevant artifacts to be delivered to any target audience
+* test = runs all tests in all modules and all dependent modules. It also creates an accumulated test report
+* run = builds the software and runs the application in an internal started server.
+
+Requirements:
+* a checked out copy of the software sources
+* Apache Ant > 1.7 installation (http://ant.apache.org/)  
+* Java Developer Kit (J2SE) 1.5
+
+So to as a developer to verify the changes made to the software simply run:
+<code>
+ant run
+</code>
+At the given address, e.g. "http://localhost:5555/echolot-demo/app" you can 
+connect to the application with your browser of choice and use the application.
+
+== Documentation ==
+Any developer implementing a feature is responsible to document:
+* the written CODE as JAVADOC that other developer understand purpose and usage of the code,
+* the DESIGN and ARCHITECTURE as WIKI or static document that other developer the design. 
+
+== Testing ==
+A test in general is the verification of the software versus a planned functionality. Within this
+project we divide tests in three kind of tests:
+* Unit tests = verifies the correctness of the inner parts of the software (feat. JUnit or TestNG)
+* Integration tests = verifies the correctness from the usage perspective, i.e. in an application (feat. Selenium)
+* Regression tests = the sum of all tests from former milestones and releases that must be able to run  
+
+== Version Control ==
+The project makes use of git as version control tool.
+
+Conventions:
+* Changes must contain a comment (reason of change) 
+* Changes must may contain an issue number
+
+== IDE ==
+We do not force anybody to use a certain IDE. But we prefer:
+* Eclipse IDE > 3.6 incl. Spket Javascript Plugin
+* IntelliJ > 8 incl. Javascript Tools (Editor, Debugger)
+
+== Coding Guidelines ==
+
+Methods:
+* TDD (Test Driven Development) = First develop a test case after start implementing the feature until the test is successful. 
+* YAGNI (You Ain't Gonna Need It) = Implement functionality if its really used. Don't make any "premature optimizing"  
+* KISS (Keep It Small and Simple) = The easier the implementation is understandable the better. 
+* Maintainable code = Any implementation has to be testable, documented and easy to understand.
+
+Exceptions:
+Any application or component can have an unknown state that needs to be handled by exceptions. In this project we define the 
+following categories:
+* Type = Description = Handling
+* predictable = a state known by design = Checked defined Exception
+* unpredictable, recoverable = an unknown state that can be recovered from = Checked defined Exception
+* unpredictable = unknown state, not recoverable = Unchecked Runtime Exceptions
+
+Exception Design:
+* Predictable Exceptions are defined per feature package
+
+== Internationalization (i18n) ==
+Any component has to be able to exchange locale specific resources at runtime by design. For example the DatePicker
+has to be able to render a french, german or english calendar. If the locale changes in the application the component
+has to render according the new locale. 

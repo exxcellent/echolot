@@ -1,0 +1,93 @@
+<!--
+  ~ This file (build-web.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<project>
+
+    <!-- fallback default value -->
+    <property name="dir.tools"  value="${basedir}/tools"/>
+    <property name="dir.build.web" value="${dir.build}/web"/>
+    <property name="dir.jetty6" value="${dir.tools}/jetty6"/>
+    <property name="jetty.version" value="6.1.16"/>
+
+    <path id="jetty.plugin.classpath">
+        <fileset dir="${dir.jetty6}">
+            <include name="jetty-ant-${jetty.version}.jar"/>
+            <include name="jetty-${jetty.version}.jar"/>
+            <include name="jetty-util-${jetty.version}.jar"/>
+            <include name="jetty-plus-${jetty.version}.jar"/>
+            <include name="jetty-naming-${jetty.version}.jar"/>
+            <include name="jetty-sslengine-${jetty.version}.jar"/>
+            <include name="servlet-api-2.5-${jetty.version}.jar"/>
+            <include name="core-3.1.1.jar"/>
+        </fileset>
+    </path>
+
+    <!-- ===============================================================================================================  -->
+
+	<target name="webapp" description="Assembles the content of the final WAR in a directory" depends="build">
+		<copy todir="${dir.build.web}">
+			<fileset dir="${dir.src.web}" includes="**/**" />
+		</copy>
+		<copy todir="${dir.build.web}/WEB-INF/classes">
+			<fileset dir="${dir.build.class}" includes="**/**" />
+			<fileset dir="${dir.build.resources}" includes="**/**" />
+		</copy>
+
+        <property name="webapp.lib.include" value="**/*.jar"/>
+        <property name="webapp.lib.exclude" value="test/**, compile/**, **/*-sources.jar, **/*-javadoc.jar"/>
+        <copy todir="${dir.build.web}/WEB-INF/lib" flatten="true">
+			<fileset includes="${webapp.lib.include}" excludes="${webapp.lib.exclude}" dir="${dir.lib}" />
+		</copy>
+	</target>
+
+	<target name="war" depends="webapp" description="Create a WAR distribution of this module">
+		<war destfile="${dir.build}/${ant.project.name}.war" webxml="${dir.src.web}/WEB-INF/web.xml">
+			<fileset dir="${dir.build.web}" excludes="**/web.xml" />
+		</war>
+	</target>
+
+    <target name="run" depends="webapp, jetty.run" description="Builds and starts the application"/>
+
+    <target name="jetty.run"  description="Start the Jetty with the webapp in the web build directory.">
+        <!-- Task wird nur hier verwendet, daher knicht via initialize Tasks -->
+        <taskdef classpathref="jetty.plugin.classpath" resource="tasks.properties" loaderref="jetty.loader"/>
+        <typedef name="selectChannelConnector" classname="org.mortbay.jetty.nio.SelectChannelConnector"
+                 classpathref="jetty.plugin.classpath" loaderref="jetty.loader"/>
+        <typedef name="sslSelectChannelConnector" classname="org.mortbay.jetty.security.SslSelectChannelConnector"
+                 classpathref="jetty.plugin.classpath" loaderref="jetty.loader"/>
+
+        <property name="jetty.context" value="${ant.project.name}"/>
+        <property name="jetty.port" value="8080"/>
+        <property name="jetty.ssl.port" value="8443"/>
+
+        <echo>Starting Application inline using Jetty</echo>
+        <echo>-----------------------------------------------------------------------------------------</echo>
+        <echo> Note:    Jetty-Server runs inline in the ant-process. </echo>
+        <echo>          Debugging, etc by setting the variable ANT_OPTS</echo>
+        <echo> Bsp:     Export ANT_OPTS='-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5005 -Decho.syncdump=true'</echo>
+        <echo> Start:   http://localhost:${jetty.port}/${jetty.context}/app </echo>
+        <echo> or:      https://localhost:${jetty.ssl.port}/${jetty.context}/app </echo>
+        <echo>-----------------------------------------------------------------------------------------</echo>
+        <echo></echo>
+        <jetty tempDirectory="${dir.build}/jetty-tmp">
+            <connectors>
+                <selectChannelConnector port="${jetty.port}"/>
+                <sslSelectChannelConnector port="${jetty.ssl.port}" keystore="${dir.jetty6}/jettyssl-keystore.jks"
+                                           password="jettyssl" keyPassword="jettyssl"
+                                           truststore="${dir.jetty6}/jettyssl-keystore.jks" trustPassword="jettyssl"/>
+            </connectors>
+
+            <webApp name="application" warfile="${dir.build.web}/" contextpath="/${jetty.context}">
+                <scanTargets dir="${dir.build.web}">
+                    <include name="**/*.xml"/>
+                </scanTargets>
+            </webApp>
+        </jetty>
+    </target>
+
+</project>
+

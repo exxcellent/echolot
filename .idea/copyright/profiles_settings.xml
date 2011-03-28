@@ -1,0 +1,16 @@
+<component name="CopyrightManager">
+  <settings default="Echolot-MPL+LGPL">
+    <module2copyright>
+      <element module="All" copyright="Echolot-MPL+LGPL" />
+    </module2copyright>
+    <LanguageOptions name="CSS" />
+    <LanguageOptions name="HTML" />
+    <LanguageOptions name="JavaScript">
+      <option name="fileTypeOverride" value="3" />
+    </LanguageOptions>
+    <LanguageOptions name="Properties">
+      <option name="fileTypeOverride" value="1" />
+    </LanguageOptions>
+    <LanguageOptions name="XML" />
+  </settings>
+</component>

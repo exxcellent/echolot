@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This file (notifier.test) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>notifier</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">notifier</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>file:///home/opehnke/Projects/o-views/echolot-xx/trunk/echolot-webcontainer/src/test/web/index.html</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>exxcellentUnitTestButtonNotifier</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>btn.err</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>An error occured!</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>ntfClose</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>btn.war</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>This is to much text</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>btn.onl</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Oliver online.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertElementPresent</td>
+	<td>//img[@alt='An icon.']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>btn.doc</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Document saved.</td>
+	<td></td>
+</tr>
+<tr>
+	<td>mouseMoveAt</td>
+	<td>btn.err</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertNotText</td>
+	<td>//div</td>
+	<td>Document saved.</td>
+</tr>
+
+</tbody></table>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file (build.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<project name="echolot" default="dist">
+
+    <property name="dir.dist" value="dist"/>
+    <property name="dir.tools" value="build-tools"/>
+    <property name="profile" value="custom"/>
+
+    <property file="etc/${profile}-build.properties"/> <!-- defaults to read a custom-build.properties -->
+    <property file="etc/build.properties"/>
+
+    <import file="build-tools/build-tools.xml"/>
+    <import file="build-tools/build-svn.xml"/>
+
+	<property name="app.path" value="echolot-app"/>
+	<property name="webcontainer.path" value="echolot-webcontainer"/>
+	<property name="demo.path" value="echolot-demo"/>
+    <property name="licensing.path" value="licensing"/>
+    <property name="documentation.path" value="documentation"/>
+	
+    <target name="clean" unless="skip.clean">
+        <delete dir="${dir.dist}"/>
+        <delete dir="target"/>
+        <ant antfile="${app.path}/build.xml" target="clean.module" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${webcontainer.path}/build.xml" target="clean.module" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${demo.path}/build.xml" target="clean.module" inheritall="false" inheritrefs="false"/>
+    </target>
+
+    <target name="generate" description="Call generation targets of all modules">
+        <ant antfile="${app.path}/build.xml" target="generate" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${webcontainer.path}/build.xml" target="generate" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${demo.path}/build.xml" target="generate" inheritall="false" inheritrefs="false"/>
+    </target>
+
+    <target name="build" description="Build echolot ">
+        <mkdir dir="dist"/>
+        <ant antfile="${app.path}/build.xml" target="build.module" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${webcontainer.path}/build.xml" target="build.module" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${demo.path}/build.xml" target="build.module" inheritall="false" inheritrefs="false"/>
+    </target>
+
+    <target name="test" description="Run all tests available for echolot">
+        <ant antfile="${app.path}/build.xml" target="test" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${webcontainer.path}/build.xml" target="test" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${demo.path}/build.xml" target="test" inheritall="false" inheritrefs="false"/>
+    </target>
+
+    <target name="deploy" description="Deploys the demo instance of this application">
+        <ant antfile="echolot-demo/build.xml" target="war" inheritall="false" inheritrefs="false"/>
+        <ant antfile="echolot-demo/build.xml" target="remote.deploy" inheritall="false" inheritrefs="false"/>
+    </target>
+
+    <target name="dist" depends="clean, svn.check" description="Generates a complete echolot distribution">
+
+        <echo>=== Building distributions of modules</echo>
+        <ant antfile="${app.path}/build.xml" target="dist" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${webcontainer.path}/build.xml" target="dist" inheritall="false" inheritrefs="false"/>
+        <ant antfile="${demo.path}/build.xml" target="dist" inheritall="false" inheritrefs="false"/>
+    	<!--
+        <antcall target="releasenotes"/>
+		-->
+        <property name="dir.build.dist" value="${dir.build}/dist"/>
+
+        <echo>=== Assembling now overall echolot distribution</echo>
+    	<mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.build.dist}"/>
+        <mkdir dir="${dir.build.dist}/bin"/>
+        <mkdir dir="${dir.build.dist}/demo"/>
+        <mkdir dir="${dir.build.dist}/documentation"/>
+        <mkdir dir="${dir.build.dist}/licensing"/>
+
+        <copy todir="${dir.build.dist}/bin">
+            <fileset dir="${app.path}/dist" includes="*.*"/>
+            <fileset dir="${webcontainer.path}/dist" includes="*.*"/>
+        </copy>
+
+        <copy todir="${dir.build.dist}/bin/lib">
+            <fileset dir="${app.path}/dist/lib" includes="*.*"/>
+            <fileset dir="${webcontainer.path}/dist/lib" includes="*.*"/>
+        </copy>
+
+        <copy todir="${dir.build.dist}">
+            <fileset dir="${basedir}" includes="readme*.txt"/>
+            <fileset dir="${basedir}" includes="release*.txt"/>
+        </copy>
+
+        <copy todir="${dir.build.dist}/documentation">
+            <fileset dir="${documentation.path}" includes="developer-guide/*.*"/>
+        </copy>
+
+        <copy todir="${dir.build.dist}/demo">
+            <fileset dir="${demo.path}/dist" includes="*.*"/>
+        </copy>
+
+        <copy todir="${dir.build.dist}/licensing">
+            <fileset dir="${licensing.path}" includes="*.*"/>
+        </copy>
+
+        <!-- zip it all together -->
+        <zip destfile="${dir.dist}/${ant.project.name}-${release.version}-distribution.zip">
+            <fileset dir="${dir.build.dist}"/>
+        </zip>
+    </target>
+
+    <!--
+          ===  SITE RELATED TARGETS ========================================================================================
+    -->
+
+    <target name="site" depends="dist, site.javadoc"
+            description="Generates a web site of echolot with download, test-results, etc.">
+
+        <mkdir dir="${dir.site}"/>
+        
+        <concat destfile="${dir.site}/test/TEST-RESULTS.txt" append="true">
+            <fileset dir="${app.path}/target/test-reports/" includes="*.txt"/>
+            <fileset dir="${webcontainer.path}/target/test-reports/" includes="*.txt"/>
+        </concat>
+
+        <copy todir="${dir.site}">
+            <fileset dir="documentation/project-site"/>
+            <filterset refid="site.filters"/>
+        </copy>
+    </target>
+
+    <target name="site.javadoc" description="Creates a joined javadoc for all modules">
+        <mkdir dir="${dir.site}/apidoc"/>
+        <echo message="Creating joined JavaDoc for echolot"/>
+        <javadoc author="false"
+                 version="true"
+                 use="true"
+                 windowtitle="echolot API"
+                 destdir="${dir.site}/apidoc"
+                 useexternalfile="yes"
+                 encoding="utf-8">
+            <doctitle><![CDATA[<h1>echolot API</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright applies due to LICENCE. All Rights Reserved.</i>]]></bottom>
+            <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="${dir.sun.javadoc}"/>
+            <classpath>
+                <fileset dir="." includes="**/main/lib/**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar"/>
+            </classpath>
+            <packageset dir="${app.path}/src/main/java" defaultexcludes="yes">
+                <include name="*/**"/>
+            </packageset>
+        </javadoc>
+    </target>
+</project>

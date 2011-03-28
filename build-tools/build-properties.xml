@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file (build-properties.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!--
+        Pseudo-buildfile
+        Rules for property fallbacks 
+
+        Expected Structure:
+
+         <root>
+           |- etc
+           |   |- build.properties
+           |   \- custom-build.properties
+           |- modul1
+           |    |- build.xml (via build-master.xml)
+           |    \- etc
+           |        |- build.properties
+           |        \- custom-build.properties
+           | ...
+           \- build.xml (globales)
+-->
+
+<project>
+
+    <property name="profile" value="custom"/>
+    <property file="etc/${profile}-build.properties"/>     <!-- defaults to read a module custom-build.properties -->
+    <property file="../etc/${profile}-build.properties"/>  <!-- defaults to read a global custom-build.properties -->
+    <property file="etc/build.properties"/>
+    <property file="../etc/build.properties"/>
+
+    <!-- Fallback default values -->
+    <property name="dir.build" value="target"/>
+
+	<property name="dir.build.class" value="${dir.build}/classes"/>
+    <property name="dir.build.javadoc" value="${dir.build}/apidoc"/>
+    <property name="dir.build.resources" value="${dir.build}/resources"/>
+	
+    <property name="dir.src.java" value="src/main/java"/>
+    <property name="dir.src.res" value="src/main/resources"/>
+    <property name="dir.src.web" value="src/main/webapp"/>
+    
+	<property name="dir.dist" value="dist"/>
+    <property name="dir.lib" value="lib"/>
+    <property name="dir.tools" value="tools"/>
+    <property name="dir.test.src" value="src/test/java"/>
+    <property name="dir.test.res" value="src/test/resources"/>
+    <property name="dir.test.build" value="${dir.build}/test-classes"/>
+    <property name="dir.test.build.res" value="${dir.build}/test-resources"/>
+    <property name="dir.test.reports" value="${dir.build}/test-reports"/>
+	<property name="dir.coverage.reports" value="${dir.build}/coverage-reports" />
+	<property name="dir.coverage.data" value="${dir.build}/coverage-data" />
+
+    <property name="build.srcdir" value="${dir.src.java}"/>
+    <property name="build.jdk" value="1.5"/>
+    <property name="build.debug" value="true"/>
+    <property name="build.deprecation" value="true"/>
+
+
+    <!--
+
+        Declaration of the classpaths and their contents.
+
+        Please be aware: if you have modules you are depending on, you MUST copy and extend those
+        default declarations to include the according resources of your depending modules, too!
+
+    -->
+        
+    <!-- Declares the classpath during COMPILE time -->
+    <path id="build.classpath">
+        <fileset dir="${dir.lib}" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar, runtime/**, test/**"/>
+        <!-- Include depending modules lib/*.jar and compile/*.jar as well as their classes -->
+        <!-- Example for a module dependency:
+        <fileset dir="../module1/${dir.lib}" includes="**/*.jar" excludes="*-sources.*,*-javadoc.*,runtime/**,test/**"/>
+        <pathelement path="../module1/${dir.build.class}"/>
+        -->
+    </path>
+
+    <!-- Declares the classpath during RUNTIME (production & test) -->
+    <path id="runtime.classpath">
+        <fileset dir="${dir.lib}" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar, compile/**, test/**"/>
+        <pathelement location="${dir.build.class}"/>
+        <pathelement location="${dir.build.resources}"/>
+        <!-- Include depending modules lib/*.jar and runtinme/*.jar as well as their classes & resources -->
+        <!-- Example for a module dependency:
+        <fileset dir="../module1/${dir.lib}" includes="**/*.jar" excludes="*-sources.*,*-javadoc.*,compile/**,test/**"/>
+        <pathelement path="../module1/${dir.build.class}"/>
+        <pathelement path="../module1/${dir.build.resources}"/>
+        -->
+    </path>
+
+    <!-- Declares additional classpath on top of runtime required during test -->
+    <path id="test.classpath">
+        <fileset dir="${dir.lib}/test" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar"/>
+
+<!--
+        <pathelement path="${dir.tools}/ant-exxcellent/ant-clover/lib/clover.jar"/>
+        <fileset dir="${dir.tools}/ant-exxcellent/cobertura" includes="cobertura.jar, lib/**/*.jar"  />
+-->
+        <!-- Module dependency: typically you do NOT depend on TEST CODE and/or TEST LIBS of other modules. Copy them! -->
+    </path>
+
+    <!-- Declare a resource filtering tokens. Attention: Template declares maven style; so replacements are for "${token}" ! --> 
+    <filterset id="build.filters" begintoken="$${" endtoken="}">
+        <!-- by default empty. Override locally -->
+    </filterset>    
+    
+</project>

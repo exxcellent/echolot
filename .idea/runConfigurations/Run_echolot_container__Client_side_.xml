@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run echolot-container (Client-side)" type="JavascriptDebugSession" factoryName="Local">
+    <JSDebuggerConfigurationSettings>
+      <option name="engineId" value="firefox" />
+      <option name="fileUrl" value="file://$PROJECT_DIR$/echolot-webcontainer/src/test/web/index.html" />
+    </JSDebuggerConfigurationSettings>
+    <RunnerSettings RunnerId="JavascriptDebugRunner" />
+    <ConfigurationWrapper RunnerId="JavascriptDebugRunner" />
+    <method />
+  </configuration>
+</component>

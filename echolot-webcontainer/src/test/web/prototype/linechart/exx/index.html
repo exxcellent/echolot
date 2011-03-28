@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>g·Raphaël Dynamic Pie Chart</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="author" content="Dmitry Baranovskiy">
+        <meta name="description" content="Charting JavaScript Library">
+        <script src="../../../../../main/resources/js/raphael/raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../../../../main/resources/js/raphael/exx.raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../../../../main/resources/js/raphael/exx.linechart.js" type="text/javascript" charset="utf-8"></script>
+        <script src="../../../../../main/resources/js/raphael/popup.raphael.js" type="text/javascript" charset="utf-8"></script>
+
+        <script type="text/javascript" charset="utf-8">
+            window.onload = function () {
+                // i create a new div
+                var _div = document.createElement("div");
+                document.getElementById('holder').insertBefore(_div, document.getElementById('holder').childNodes[0]);
+                // assign this div to raphael
+                var r = Raphael(_div, 800, 600);
+                // and create a pie on it
+                var line = r.exx.linechart(600, 400);
+                //var pie = r.g.piechart(320, 240, 100, [55, 20, 13, 32, 5, 1, 2, 10], {legend: ["%%.%% – Enterprise Users", "IE Users"], legendpos: "north", href: ["http://raphaeljs.com", "http://g.raphaeljs.com"]});
+            };
+        </script>
+    </head>
+    <body class="raphael" id="g.raphael.dmitry.baranovskiy.com">
+        <div id="holder"></div>
+        <p>
+            eXXcellent line-chart demo.
+        </p>
+        <p>
+            Demo of Raphaël JavaScript library.
+        </p>
+    </body>
+</html>

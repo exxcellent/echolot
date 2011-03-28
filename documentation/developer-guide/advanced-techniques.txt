@@ -1,0 +1,77 @@
+= Advanced techniques =
+The previous part covered the basics how to write a simple component and provide a test screen for testing. This part will guide you through some advanced techniques like CSS handling, focus management and event handling.
+We will not use the CrayonBox as example here but reflect some available components that are bundled in Echolot.
+
+== Partial component update ==
+Almost any component has to update as soon as its state changes. We define two kinds of changes. Firstly incoming changes from any user interaction and secondly incoming changes from the server.
+The first kind of changes is originated from the user. Mostly the user will interact with the component using event listeners. The component has to handle those events by itself.
+The second kind of change is triggered by updating properties originated from the server (due to user interaction).
+
+The most error-free and easy way is to destroy the component and create it again if something like the display values or the styling or whatever changes. But this approach consumes cpu power and needs time. Therefore "nextapp.Echo" allows detecting what exactly changed in order to rebuild only the necessary part of the component.
+
+=== Flexigrid partial update ===
+As example we can have a look at the flexigrid component. Its a component that has three models.
+* a column model describing the structure of the displayed table(columns),
+* a table model describing the data (rows),
+* a sorting model describing the sort direction of the columns (may be changed by the
+user at runtime).
+If the column model changes its better to destroy the component and redraw everything because the structure itself changed (to much). But if we change the table model or sorting model we just need to exchange a small piece within the component (re-render the cells in the table).
+
+The callback for incoming server side changes is always the method "renderUpdate(update)" or in the Flexigrid example: "Sync.Flexigrid#renderUpdate(update)"
+<code>
+    renderUpdate: function(update) {
+    	var partitialUpdate = true;
+    	var updatedProperties = update.getUpdatedPropertyNames();
+    	if(Core.Arrays.indexOf(
+    		updatedProperties, exxcellent.FlexiGrid.COLUMNMODEL) >= 0) {
+             partitialUpdate = false;
+    	}
+
+    	if (!partitialUpdate) {
+		// destroy the container and add it again
+		var element = this._div;
+	        var containerElement = element.parentNode;
+	    	Echo.Render.renderComponentDispose(update, update.parent);
+			containerElement.removeChild(element);
+	    	this.renderAdd(update, containerElement);
+	} else {
+		// only reload the data rows
+		var options = this._renderUpdateOptions();
+		this._flexigrid.flexOptions(options);
+		flexigridBusy = this._flexigrid.flexReload();
+
+	}
+        return true;
+    },
+</code>
+In the code you can see that the update parameter contains the information what properties have to be updated. We use this information to trigger:
+1. _renderUpdateOptions() method to read all properties again from the FlexiGrid component (Application.Flexigrid.js).
+2. flexOptions(options) method to put the changed properties in our flexigrid.js
+3. flexReload() method (flexigrid.js) to render the changed properties.
+
+== Focus ==
+tbd
+
+== Event Propagation ==
+If a user clicks a button, the button has to decide what to do with this event. Any interactive component that catches events is responsible to handle each of them by itself. This works for a "native" nextapp.Echo component. But to enable a 3rd party component to handle events we need to register those events firstly at the nextapp.Echo framework and secondly delegate them to the component itself. Its all about bubbling and capturing (see http://www.quirksmode.org/js/events_order.html).
+
+To understand the weird event concept we will have a look at the FlexiGrid component once again.
+The Flexigrid is enriched by a lot of user interaction possibilities. It includes keyboard events to navigate through the result. It features mouse based events such as buttonclicks and some fine drag and drop gestures.
+
+The mouse based events are catched by the FlexiGrid itself in the flexigrid.js. If the Sync.Flexigrid.js (Echo part) is interested in the events it has to register for some callbacks.
+??? NEVER STOP propagating ????
+
+tbd
+
+
+=== Flexigrid Keyboard navigation ===
+tbd
+
+=== Flexigrid Mouse events ===
+
+== CSS Styling ==
+The component till now looks pretty ugly and Echo doesn't support any CSS
+natively.
+
+== Transient Types ==
+tb

@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title>Minimal Flexigrid</title>
+	<link rel="stylesheet" type="text/css" href="../../../../main/resources/js/flexigrid/css/flexigrid/flexigrid.css">
+	<script type="text/javascript" src="../../../../main/resources/js/jquery/jquery-1.3.2.js"></script>
+	<script type="text/javascript" src="../../../../main/resources/js/flexigrid/flexigrid.js"></script>	
+</head>
+
+<body>
+	<table id="flex1"></table>
+
+<script type="text/javascript">
+	 jQuery(document).ready(function(){
+	 	$("#flex1").flexigrid({
+	 		colModel: [{
+	 			display: 'ISO',
+	 			name: 'iso',
+	 			width: 40,
+	 			sortable: true,
+	 			align: 'center'
+	 		}, {
+	 			display: 'Name',
+	 			name: 'name',
+	 			width: 180,
+	 			sortable: true,
+	 			align: 'left'
+	 		}, {
+	 			display: 'Printable Name',
+	 			name: 'printable_name',
+	 			width: 120,
+	 			sortable: true,
+	 			align: 'left'
+	 		}, {
+	 			display: 'ISO3',
+	 			name: 'iso3',
+	 			width: 130,
+	 			sortable: true,
+	 			align: 'left',
+	 			hide: true
+	 		}, {
+	 			display: 'Number Code',
+	 			name: 'numcode',
+	 			width: 80,
+	 			sortable: true,
+	 			align: 'right'
+	 		}],
+	 		searchitems: [{
+	 			display: 'ISO',
+	 			name: 'iso'
+	 		}, {
+	 			display: 'Name',
+	 			name: 'name',
+	 			isdefault: true
+	 		}],
+	 		sortname: "iso",
+	 		sortorder: "asc",
+	 		usepager: true,
+	 		title: 'Countries',
+	 		useRp: true,
+	 		rp: 15,
+	 		showTableToggleBtn: true,
+	 		width: 700,
+	 		height: 200
+	 	})
+	 });
+</script>
+
+</body>
+</html>

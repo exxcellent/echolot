@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file (build-tools.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!--
+        Pseudo-ant Project which declares internal helper tasks for include/define
+        commont ant tasks (like antcontrib, ...) 
+-->
+<project>
+
+    <!-- Declare antcontrib task but only once to avoid redeclaration warnings -->
+    <target name="-init.antcontrib" unless="antcontrib.initalized">
+        <fail unless="dir.tools" message="Missing 'dir.tools' property! "/>
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+            <classpath>
+                <fileset dir="${dir.tools}/ant-optional" includes="*.jar"/>
+            </classpath>
+        </taskdef>
+        <property name="antcontrib.initalized" value="true"/>
+    </target>
+
+                <!-- Declare FTP task -->
+    <target name="-init.extendclasspath" unless="extendclasspath.initialized">
+        <fail unless="dir.tools" message="Missing 'dir.tools' property! "/>
+        <taskdef resource="com/cenqua/ant/antlib.xml" classpath="${dir.tools}/ant-classpath/cenquatasks.jar"/>
+        <property name="extendclasspath.initialized" value="yes"/>
+    </target>
+
+</project>
+
+

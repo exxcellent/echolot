@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ss>
+ <s n="TestPane" t="nextapp.echo.app.SplitPane">
+  <p n="separatorHeight" t="Extent">1px</p>
+  <p n="separatorColor">#1d1d1d</p>
+ </s>
+ <s n="Default" t="nextapp.echo.app.Table">
+  <p n="insets" t="Insets">2px 5px</p>
+  <p n="border" t="Border">2px groove #afffaf</p>
+  <p n="width" t="Extent">100%</p>
+ </s>
+ <s n="EvenCellLabel" t="nextapp.echo.app.Label">
+  <p n="layoutData" t="nextapp.echo.app.layout.TableLayoutData">
+   <p n="background" t="Color">#afffaf</p>
+  </p>
+ </s>
+ <s n="OddCellLabel" t="nextapp.echo.app.Label">
+  <p n="layoutData" t="nextapp.echo.app.layout.TableLayoutData">
+   <p n="background" t="Color">#ffffaf</p>
+  </p>
+ </s>
+ <s n="Default" t="nextapp.echo.testapp.interactive.testscreen.StyleSheetTest$SpecialButton">
+  <p n="background" t="Color">#ff7f00</p>
+  <p n="border" t="Border">10px double #6fff8f</p>
+  <p n="insets" t="Insets">3px 20px</p>
+ </s>
+ <s n="Default" t="nextapp.echo.app.button.AbstractButton">
+  <p n="background" t="Color">#4f4f5f</p>
+  <p n="foreground" t="Color">#efefff</p>
+  <p n="border" t="Border">1px outset #6f6f8f</p>
+  <p n="rolloverEnabled" t="b">true</p>
+  <p n="rolloverBackground" t="Color">#6f6f87</p>
+  <p n="rolloverForeground" t="Color">#ffffaf</p>
+  <p n="rolloverBorder" t="Border">1px outset #8f8faf</p>
+  <p n="pressedEnabled" t="b">true</p>
+  <p n="pressedBackground" t="Color">#2f2f3f</p>
+  <p n="pressedForeground" t="Color">#ffafaf</p>
+  <p n="pressedBorder" t="Border">1px inset #4f4f6f</p>
+  <p n="insets" t="Insets">3px 20px</p>
+ </s>
+ <s b="Default" n="Selected" t="nextapp.echo.app.Button">
+  <p n="background" t="Color">#3f3f4f</p>
+  <p n="foreground" t="Color">#ffcfcf</p>
+ </s>
+ <s n="Default" t="nextapp.echo.app.text.TextComponent">
+  <p n="background" t="Color">#ffffdf</p>
+  <p n="foreground" t="Color">#000000</p>
+  <p n="border" t="Border">1px inset #ffffaf</p>
+ </s>
+ <s n="Default" t="nextapp.echo.app.list.AbstractListComponent">
+  <p n="background" t="Color">#ffffdf</p>
+  <p n="foreground" t="Color">#000000</p>
+  <p n="border" t="Border">1px inset #ffffaf</p>
+ </s>
+ <s n="Default" t="nextapp.echo.app.PasswordField">
+  <p n="background" t="Color">#ffdfdf</p>
+  <p n="foreground" t="Color">#000000</p>
+  <p n="border" t="Border">1px inset #ffffaf</p>
+ </s>
+ <s n="DefaultResizable" t="nextapp.echo.app.SplitPane">
+  <p n="resizable" t="b">true</p>
+ </s>
+ <s b="DefaultResizable" n="TestControls" t="nextapp.echo.app.SplitPane">
+  <p n="separatorPosition">20.5em</p>
+  <p n="orientation">ORIENTATION_HORIZONTAL</p> 
+ </s> 
+ <s n="TitleLabel" t="nextapp.echo.app.Label">
+  <p n="font" t="Font">
+   <f sz="14pt">
+    <tf>Verdana</tf>
+   </f>
+  </p>
+  <p n="foreground" t="Color">#ffffff</p>
+  <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+   <p n="alignment" t="Alignment">
+    <a h="center"/>
+   </p>
+   <p n="background" t="Color">#1b1b21</p>
+   <p n="insets" t="Insets">8px</p>
+   <p n="overflow" t="i">OVERFLOW_HIDDEN</p>
+  </p>
+ </s>
+ <s n="Default" t="nextapp.echo.app.WindowPane">
+  <p n="ieAlphaRenderBorder" t="b">true</p>
+  <p n="titleInsets" t="Insets">5px 10px</p>
+  <p n="titleBackground" t="Color">#2f2f4f</p>
+  <p n="titleForeground" t="Color">#ffffff</p>
+  <p n="controlsInsets" t="Insets">-1px 5px</p>
+ </s>
+ <s n="GlassBlue" t="nextapp.echo.app.WindowPane">
+  <p n="ieAlphaRenderBorder" t="b">true</p>
+  <p n="titleInsets" t="Insets">5px 10px</p>
+  <p n="titleForeground" t="Color">#ffffff</p>
+ </s>
+ <s n="TransGreen" t="nextapp.echo.app.WindowPane">
+  <p n="ieAlphaRenderBorder" t="b">true</p>
+  <p n="titleInsets" t="Insets">5px 10px</p>
+  <p n="titleForeground" t="Color">#ffffff</p>
+ </s>
+ <s n="Borderless" t="nextapp.echo.app.WindowPane">
+  <p n="border">
+   <fib bi="0px" c="#ffffff" ci="0px">
+    <null-fi/>
+    <null-fi/>
+    <null-fi/>
+    <null-fi/>
+    <null-fi/>
+    <null-fi/>
+    <null-fi/>
+    <null-fi/>
+   </fib> 
+  </p>
+ </s>
+ <s n="ControlPane.Button" t="nextapp.echo.app.button.AbstractButton">
+  <p n="lineWrap" t="b">false</p>
+  <p n="insets" t="Insets">3px 15px</p>
+  <p n="foreground" t="Color">#000000</p>
+  <p n="rolloverEnabled" t="b">true</p>
+  <p n="rolloverForeground" t="Color">#ffffff</p>
+  <p n="rolloverBackground" t="Color">#3939d6</p>
+  <p n="pressedEnabled" t="b">true</p>
+  <p n="pressedForeground" t="Color">#dfffff</p>
+  <p n="pressedBackground" t="Color">#3939d6</p>
+ </s>
+ <s n="ControlPane" t="nextapp.echo.app.Row">
+  <p n="insets" t="Insets">0px 9px</p>
+  <p n="cellSpacing" t="Extent">3px</p>
+  <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+   <p n="overflow" t="i">OVERFLOW_HIDDEN</p>
+   <p n="background" t="Color">#cfcfdf</p>
+  </p>
+ </s>
+ <s n="ApplicationControlsColumn" t="nextapp.echo.app.Column">
+  <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+   <p n="background" t="Color">#4f4f6f</p>
+   <p n="insets" t="Insets">7px 10px</p>
+   <p n="minimumSize" t="Extent">12.5em</p>
+   <p n="maximumSize" t="Extent">33.3%</p>
+  </p>
+ </s>
+ <s n="TestControlsColumn" t="nextapp.echo.app.Column">
+  <p n="layoutData" t="nextapp.echo.app.layout.SplitPaneLayoutData">
+   <p n="background" t="Color">#afafef</p>
+   <p n="insets" t="Insets">7px 10px</p>
+   <p n="minimumSize" t="Extent">12.5em</p>
+   <p n="maximumSize" t="Extent">33.3%</p>
+  </p>
+ </s>
+ <s n="WelcomePane" t="nextapp.echo.app.ContentPane">
+ </s>
+ <s n="WelcomePane.Column" t="nextapp.echo.app.Column">
+  <p n="insets" t="Insets">0px 0px 0px 245px</p>
+  <p n="cellSpacing" t="Extent">40px</p>
+ </s>
+ <s b="Default" n="WelcomePane" t="nextapp.echo.app.WindowPane">
+  <p n="width" t="Extent">40em</p>
+  <p n="resizable" t="b">true</p>
+  <p n="positionX" t="Extent">160px</p>
+  <p n="positionY" t="Extent">-50px</p>
+ </s>
+ <s n="Grid.StyleTest" t="nextapp.echo.app.Grid">
+  <p n="columnWidth" t="Extent" x="0">100px</p>
+  <p n="columnWidth" t="Extent" x="1">120px</p>
+  <p n="columnWidth" t="Extent" x="2">140px</p>
+  <p n="columnWidth" t="Extent" x="3">160px</p>
+ </s>
+ <s n="Test.GenericStyle" t="nextapp.echo.app.Component">
+  <p n="background" t="Color">#ff0000</p>
+  <p n="foreground" t="Color">#ffffff</p>
+ </s>
+</ss>

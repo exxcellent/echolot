@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+    <head>
+        <title>g·Raphaël Dynamic Pie Chart</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="author" content="Dmitry Baranovskiy">
+        <meta name="description" content="Charting JavaScript Library">
+        <script src="js/raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/g.raphael.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/g.pie.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript" charset="utf-8">
+            window.onload = function () {
+                // i create a new div
+                var _div = document.createElement("div");
+                document.getElementById('holder').insertBefore(_div, document.getElementById('holder').childNodes[0]);
+                //_div.style.position = absolute;
+                //_div.style.visibility = hidden;
+                //_div.setAttribute('position', 'absolute');
+                //_div.setAttribute('visibility', 'hidden');
+                // assign this div to raphael
+                var r = Raphael(_div);
+                r.g.txtattr.font = "12px 'Fontin Sans', Fontin-Sans, sans-serif";
+                r.g.text(320, 100, "Interactive Pie Chart").attr({"font-size": 20});
+                // and create a pie on it
+                var pie = r.g.piechart(320, 240, 100, [55, 20, 13, 32, 5, 1, 2, 10], {legend: ["%%.%% – Enterprise Users", "IE Users"], legendpos: "north", href: ["http://raphaeljs.com", "http://g.raphaeljs.com"]});
+                // after all - lets put the div to the holder. This is just to make this example running.
+                // Normally this will be done by the sorounding framework
+
+            };
+        </script>
+    </head>
+    <body class="raphael" id="g.raphael.dmitry.baranovskiy.com">
+        <div id="holder"></div>
+        <p>
+            Pie chart with legend, hyperlinks on two first sectors and hover effect.
+        </p>
+        <p>
+            Demo of <a href="http://g.raphaeljs.com/">g·Raphaël</a> JavaScript library.
+        </p>
+    </body>
+</html>

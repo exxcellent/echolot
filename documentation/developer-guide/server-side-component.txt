@@ -1,0 +1,21 @@
+= Server-Side JavaScript Components =
+The Echo Web Application Framework allows creating web applications that are
+programmed with Java use the Client-Side components and run in a 
+Java servlet container environment. 
+
+This guide will help you to create the java component to use a client-side
+JavaScript component. 
+ 
+== Prerequisites ==
+* Java language understanding
+* The fundamentals are described in the nextapp.echo documentation at 
+"http://echo.nextapp.com/site/echo3/doc/devguide/serverapps"
+
+== Introduction ==
+Developing a heterogenic plattform consisting of JavaScript and Java makes sense. 
+The Java code will not be exposed to the client and can be trusted and the rendering 
+happens right in the browser reducing the network traffic to a minimum.  
+
+To use a client-side component in java you need to develop a minimal Peer for
+exchanging sychronization messages between server component and client component.
+

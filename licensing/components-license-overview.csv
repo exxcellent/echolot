@@ -1,0 +1,14 @@
+"Name of Project ",Name of OSS,Version of OSS,What are the reasons for using this OSS,Source from which OSS will be obtained,"Do we have evidence that this is a reliable source? ",Which OSS licence will be applicable?,Licence information,Distribution
+Echolot,Echo,Echo 3,"Scalable, well-proven UI AJAX Framework Technology. Best fitting the applications requirement. Next official release expected coming soon.",http://echo.nextapp.com/site,"Yes, established since 2002",MPL or GPL or LGPL,http://echo.nextapp.com/site/echo3/doc/faq,"yes, client UI is exposed to user"
+Echolot,FlexiGrid,n/a,Fits best as table representation component starting point,http://www.flexigrid.info,Small code snippet,MIT,http://www.opensource.org/licenses/mit-license.php,"yes, client UI is exposed to user"
+Echolot,jQuery,0002-03-01,AJAX framework,http://jquery.com/,Commonly used,MIT or GPL,http://dev.jquery.com/browser/trunk/jquery/MIT-LICENSE.txt,"yes, client UI is exposed to user"
+Echolot,Jettison,2011-01-01,JSON StAX Implementation,http://jettison.codehaus.org/,Commonly used,APL2.0,http://jettison.codehaus.org/License,no
+Echolot,log4J,2.0,Standard Framework for Logging,http://logging.apache.org,"Yes, popular and broadly used",APL2.0,http://logging.apache.org/license.html,no
+Echolot,Mozilla Rhino,1.6R7,"Internal Dependency of YUI Compressor ",http://www.mozilla.org/rhino,Mozilla  provided source,MPL,http://www.mozilla.org/MPL,no
+Echolot,X-Stream,0001-04-01,XStream,http://xstream.codehaus.org/,Commonly used,BSD,http://xstream.codehaus.org/license.html,no
+Echolot,Yahoo UI Compressor,0002-04-02,Compresses the data delivered to client for enhanced user expiereince,http://developer.yahoo.com/yui/compressor,Yahoo as world-wide supplier,BSD,http://developer.yahoo.com/yui/license.html,no
+Echolot,Ant,0001-07-01,Standard Framework,http://ant.apache.org,"Yes, popular and broadly used",APL2.0,http://ant.apache.org/LICENSE,no
+Echolot,ANTLR,2,Included by others,http://www.antlr2.org,"Yes, popular and broadly used",BSD,http://www.antlr2.org/license.html,no
+Echolot,Selenium,1.0 b2,Free QA solution,http://seleniumhq.org,"Yes, popular and broadly used",APL2.0,http://seleniumhq.org/about/license.html,no
+Echolot,Date Picker,22/05/2009,Fits best as date picker component starting point,http://www.eyecon.ro/datepicker/,"No, own peer review",MIT or GPL,http://www.eyecon.ro/datepicker/datepicker.zip (See contained Datepicker.js),"yes, client UI is exposed to user"
+Echolot,JSON,n/a,Serializing of objects,http://www.json.org/,"Yes, popular and broadly used",JSON,http://www.crockford.com/JSON/license.html,no

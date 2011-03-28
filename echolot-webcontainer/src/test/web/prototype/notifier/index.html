@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en-US" xml:lang="en-US" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Notifier Plugin</title>
+		<script type="text/javascript" src="js/jquery-1.3.2.js"></script>
+		<script type="text/javascript" src="../../../../main/resources/js/notifier/notifier.js"></script>
+		<style type="text/css">
+			html, body {
+				height: 100%;
+			}
+			#container {
+				float: right;
+				width: 50%;
+				height: 250px;
+				border: 1px solid #aaaaaa;
+				background: #eeeeee;
+				position: relative;
+			}
+		</style>
+		<script type="text/javascript">
+			
+			function normalMsg() {
+				$('body').notifier(
+                    {title: 'Normal Notification', text: 'We just want to inform you.' });
+			}
+
+            function warning() {
+				$('body').notifier(
+                    {title: 'Warning', text: 'Just a warning', icon: 'alert.png',
+                        background: '#ffe385', pFont: {color: '#665727'},
+                        hFont: {color: '#665727'}, border: '#e6c867 solid 2px'}
+                );
+			}
+
+            function stickyError() {
+				$('body').notifier(
+                    {title: 'Sticky Error',text: 'This error will not fade away',
+                    sticky: true,
+                    background: '#990000', border: '#c60808 solid 2px'}
+                 );
+			}
+			
+			function insideMsg() {
+				$('#container').notifier(
+                    {title: 'Inside Notification', text: 'We just want to inform you inside a notification.',
+                    width: '150px', height: '100px'});
+			}
+
+            function titleMsg() {
+				$('body').notifier(
+                    {title: 'Only Title Notification'});
+			}
+
+            function topRightWarning() {
+				$('body').notifier(
+                    {title: 'Warning', text: 'Just a warning', icon: 'alert.png',
+                    width: 200, position: 'topright',
+                    background: '#ffe385', pFont: {color: '#665727'}, hFont: {color: '#665727'}, border: '#e6c867 solid 2px'}
+                );
+			}
+
+            function bottomRightWarning() {
+				$('body').notifier(
+                    {title: 'Message', text: 'A message arrived!',
+                    position: 'bottomright', msgClass: 'warning'}
+                );
+			}
+
+		</script>
+    </head>
+    <body>
+        <h1>Notifier Message Plugin</h1>
+        <p>A jQuery Plugin inspired by:</p>
+        <ul>
+            <li>Notice Message Plugin by http://hiromitz.jimdo.com/.</li>
+            <li>jGrowl by http://www.stanlemon.net/projects/jgrowl.html.</li>
+        </ul>
+		<div id="container">
+			Container
+		</div>
+		<ul>
+			<li><a href="javascript:normalMsg();">normal message</a></li>
+            <li><a href="javascript:warning();">warning</a></li>
+            <li><a href="javascript:stickyError();">sticky error</a></li>
+            <li><a href="javascript:insideMsg();">message inside of a container</a></li>
+            <li><a href="javascript:titleMsg();">title message without text</a></li>
+            <li><a href="javascript:topRightWarning();">top right warning</a></li>
+            <li><a href="javascript:bottomRightWarning();">bottom right message</a></li>
+		</ul>
+    </body>
+</html>

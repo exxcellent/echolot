@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/echolot.iml" filepath="$PROJECT_DIR$/echolot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/echolot-app/echolot-app.iml" filepath="$PROJECT_DIR$/echolot-app/echolot-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/echolot-demo/echolot-demo.iml" filepath="$PROJECT_DIR$/echolot-demo/echolot-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/echolot-webcontainer/echolot-webcontainer.iml" filepath="$PROJECT_DIR$/echolot-webcontainer/echolot-webcontainer.iml" />
+    </modules>
+  </component>
+</project>
+

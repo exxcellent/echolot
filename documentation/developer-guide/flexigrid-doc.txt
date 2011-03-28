@@ -1,0 +1,51 @@
+= Flexigrid =
+The flexigrid component is an interactive table component. It has features known from rich client platforms. It was created by Paolo P. Marinas in 2008 and first released in the codeigniter forum (http://codeigniter.com/forums/viewthread/75326). Although it is still beta and wasn't developed further it is still a brilliant state-of-the-art component.
+
+[flexigrid-countries.png]
+
+== Architecture ==
+The flexigrid component consists of a javascript and a java part. The javascript part is a jquery plugin that is wrapped with an nextapp.Echo component. It takes all the user input and contains the actual code to render the component. The java part is an Echo component serving as Java API without any render implementation or event handling.
+
+[pic goes here - architecture (wrapping)]
+
+Looking at the code the flexigrid implementation (flexigrid.js) consists of three main parts. 
+* p = is the option object defining all customizable properties, it is predefined to reduce the needed parameter but can be overloaded by the input parameter "p",
+* t = the actual table the flexigrid component wraps,
+* g = the actual flexigrid object (function class) defining all methods the flexigrid offers.
+
+In the file "Sync.Flexigrid.js" you can see how the 't' (this._table) and 'p' (options) parameter are used to construct the flexigrid component via jquery. $(this._table) "selects" the table element stored in the variable '_table' of our Sync.Flexigrid component. The 'options' object is used as parameter.
+<code>
+renderDisplay: function() {	
+	...
+	$(this._table).flexigrid(options);
+	...
+}
+</code>
+The call of the method "flexigrid" (seen above) calls the "addFlex" method (the "each" construct is jquery magic) in the flexigrid.js. The internal $.addFlex (at the top of flexigrid.js) is our actual flexigrid. It wraps everything except the defined accessor such as flexigrid or flexReload. This encapsulation not only hides the internal implementation but also is neccesary to control the functional scope in javascript (e.g. closures).  
+<code>
+$.addFlex = function(t,p) {
+	...
+}
+
+$.fn.flexigrid = function(p) {
+		return this.each( function() {
+			$.addFlex(this,p);
+		});
+};
+</code>
+
+== Design ==
+The internal design of the flexigrid looks like this:
+[pic goes here - flexigrid vs. models and event handlers etc]
+
+=== Models ===
+* ColumnModel
+* SortingModel
+* TableModel
+
+
+== UI Design ==
+The html design of the flexigrid is straight forward. 
+
+[TODO the flexigrid divs, table etc.]
+

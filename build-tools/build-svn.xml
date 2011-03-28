@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file (build-svn.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!--
+        SVN and Versionmanagement tasks and services.
+-->
+
+<project>
+
+    <!-- Check release.version property and states: FAILED or WARNING depending if unversioned files exist, etc. -->
+    <!-- description="Checks for a fully versioned source and fails in case of release versions" -->
+    <target name="svn.check" depends="-svn-version, -svnversion, -init.antcontrib" unless="svncheck.disable">
+        <!-- flag is set if this is a Snapshot-Version -->
+        <condition property="snapshot.version">
+            <contains string="${release.version}" substring="-SNAPSHOT"/>
+        </condition>
+
+        <if>
+            <isset property="svn.modified"/>
+            <then>
+                <if>
+                    <isset property="snapshot.version"/>
+                    <then>
+                        <echo level="warning" message="----------------------------------------------------------------------- "/>
+                        <echo level="warning" message="=== WARNING: Build contains snapshot-version '${release.version}'"/>
+                        <echo level="warning" message="===          contains not versioned changes!"/>
+                        <echo level="warning" message="----------------------------------------------------------------------- "/>
+                    </then>
+                    <else>
+                        <echo level="warning"
+                              message="=== ATTENTION! ==================================================================="/>
+                        <echo level="warning"
+                              message="You try to build version '${release.version}', that it is NO SNAPSHOT-Version, "/>
+                        <echo level="warning"
+                              message="but still contains unversioned changes! (Check with 'svn status').  "/>
+                        <echo level="warning" message=" "/>
+                        <echo level="warning" message="Please change the release.version to XX.XX-SNAPSHOT or even better:  "/>
+                        <echo level="warning" message="Version all changes for a distribution! "/>
+                        <echo level="warning"
+                              message="================================================================================="/>
+                        <fail message="Trying to build a non-SNAPSHOT version with unversioned contents. Try to commit and update your changes!"/>
+                        <!--   If you still want manually let it fail
+                        <input message="Build (y/n)?" validargs="y,n" addproperty="do.dist" defaultvalue="Y"/>
+                        <condition property="do.abort"><equals arg1="n" arg2="${do.dist}"/></condition>
+                        <fail if="do.abort">Build aborted by user.</fail>-->
+                    </else>
+                </if>
+            </then>
+            <else>
+                <if>
+                    <isset property="svn.mixed"/>
+                    <then>
+                        <if>
+                            <isset property="snapshot.version"/>
+                            <then>
+                                <echo level="warning"
+                                      message="----------------------------------------------------------------------- "/>
+                                <echo level="warning"
+                                      message="=== WARNUNG: The build of this Snapshot-Version '${release.version}'"/>
+                                <echo level="warning"
+                                      message="===          contains different SVN Versions! ('svn update')"/>
+                                <echo level="warning"
+                                      message="----------------------------------------------------------------------- "/>
+                            </then>
+                            <else>
+                                <echo level="warning"
+                                      message="=== ATTENTION! =============================================================="/>
+                                <echo level="warning"
+                                      message="You are trying to build an unversioned Version that "/>
+                                <echo level="warning" message="has differen SVN Versionssnumbers. "/>
+                                <echo level="warning" message=""/>
+                                <echo level="warning"
+                                      message="Please make a global svn update! ('svn update' im Root)"/>
+                                <echo level="warning"
+                                      message="============================================================================"/>
+                                <fail message="Trying to build a non-SNAPSHOT version with mixed, versioned contents! (Do a global 'svn update')"/>
+                            </else>
+                        </if>
+                    </then>
+                </if>
+            </else>
+        </if>
+    </target>
+
+
+    <target name="-svn-version" depends="-init.antcontrib" unless="svncheck.disable">
+        <!-- read the current svn version of the working copy and sets a attribute. See build-tools/svnant -->
+        <taskdef name="svn" classname="org.tigris.subversion.svnant.SvnTask">
+            <classpath>
+                <fileset dir="${dir.tools}/ant-svn/lib" includes="svn*.jar"/>
+                <fileset dir="${dir.tools}/ant-svn/lib" includes="javasvn.jar"/>
+            </classpath>
+        </taskdef>
+        <property name="dir.svn.check" value="${basedir}"/>
+        <svn>
+            <wcVersion path="${dir.svn.check}" prefix="svn." processUnversioned="false"/>
+        </svn>
+        <echo message="SVN Repository URL: ${svn.repository.url}. Local Path: ${dir.svn.check}"/>
+        <echo message="Unversioned changes: ${svn.modified}. Local Version: ${svn.revision.max}. Mixed Changes: ${svn.mixed}. "/>
+    </target>
+
+
+    <target name="-svnversion" unless="svncheck.disable">
+        <!-- Read the Version of the command 'svnversion' and checks if a 'P' exists.-->
+        <exec executable="svnversion" spawn="false" dir="${basedir}" outputproperty="svnversion.output"
+              failifexecutionfails="false">
+            <arg line="."/>
+        </exec>
+
+        <!-- only execute, if exec didn't fail -->
+        <if>
+            <isset property="svnversion.output"/>
+            <then>
+                <condition property="svnversion.output.contains.p" value="true">
+                    <contains string="${svnversion.output}" substring="P" casesensitive="true"/>
+                </condition>
+
+                <if>
+                    <isset property="svnversion.output.contains.p"/>
+                    <then>
+                        <echo message="Output of svnversion contains a 'P': ${svnversion.output}"/>
+                        <echo level="warning"
+                              message="----------------------------------------------------------------------- "/>
+                        <echo level="warning"
+                              message="=== WARNING: The build of this version is based on not completely "/>
+                        <echo level="warning"
+                              message="===          checked out working copy (sparse checkout). Check out again"/>
+                        <echo level="warning"
+                              message="===          and make sure, that the output of 'svnversion' contains no"/>
+                        <echo level="warning"
+                              message="===          'P'!"/>
+                        <echo level="warning"
+                              message="----------------------------------------------------------------------- "/>
+                        <fail message="Trying to build a version with a sparse checked out working copy!"/>
+                    </then>
+                    <else>
+                        <echo message="Output of svnversion: ${svnversion.output}"/>
+                    </else>
+                </if>
+            </then>
+        </if>
+    </target>
+
+</project>

@@ -1,0 +1,246 @@
+= Client-Side JavaScript Components =
+The Client-Side development of applications using the Echolot and Echo is 
+entirely based on JavaScript. Thus you should have an understanding of the
+language itself and the Echo architecture.
+ 
+This guide will help a developer to integrate 3rd party JS components  
+as new Echo components into this library. After reading you will have an understanding 
+of the internals of Echo and can easily continue writing the Java part.
+
+== Prerequisites ==
+* Know the project structure (Where do i find JavaScript code)
+* JavaScript language understanding
+* Echo fundamentals are described in the nextapp.echo documentation at 
+"http://echo.nextapp.com/site/echo3/doc/devguide/clientapps"
+
+== Introduction ==
+Writing a client-side component using Echo based JavaScript feels firstly 
+strange for a Java developer but secondly makes perfectly sense because it provides 
+major benefits:
+
+* immediate hassle free developer round-trip (no compiling, no waiting)
+* object-oriented programming model through Core.js Framework
+* easy programming model with lifecycle support Core.js Framework
+* independent development of any java server code
+ 
+Nevertheless the code is exposed to the client and should be seen as not trustable. 
+
+== Starting the IDE ==
+Start your favorite IDE (we suggest IntelliJ) and you can browse through the project
+as described under (structure). A strong IDE should have the following features to 
+develop JavaScript code:
+   
+* Syntax highlighting (including occurrence marking)
+* Code Intentions (see http://www.jetbrains.com/idea/documentation/intentions.jsp) or alternative JsLint.com
+* Debugging facilities (local and remote) 
+* An outline of the JavaScript code structure (JavaScript can be a mess)
+* Auto-suggest - can be nice but don't rely on it 
+  
+== CrayonBox Example ==
+As an example for a 3rd party component we will use the CrayonBox (http://www.gelform.com/blog/crayonbox-jquery-plugin/) 
+to create the CrayonBox Echo component. Ready? Go!   
+
+=== Prototyping ===
+# Read how to use the "crayon box" in html. The documentation states, that you can apply the code to a HTML "input" field. So
+our goal is first to create a new component that only consists of an input field and has one property called text.  
+
+# Download the crayonbox script and put it as prototype in the echolot-webcontainer module 
+<code>
+echolot-webcontainer/src/test/web/prototype
+echolot-webcontainer/src/test/web/prototype/crayonbox/jquery.crayonbox.js
+echolot-webcontainer/src/test/web/prototype/crayonbox/jquery.crayonbox.css
+echolot-webcontainer/src/test/web/prototype/crayonbox/index.html
+</code>
+
+# Now follow the example on the crayonbox documentation and use the distributed files to create
+a plain prototype in the index.html file. You should be able to play with the component and
+get an understanding, that you are actually wrapping an inputfield.     
+
+=== Component founding ===
+A component in Echo consists mainly of two parts. The component named "Application.<ComponentName>" and
+the component rendering peer named "Sync.<ComponentName>". 
+
+1. The component forms the API of the component. Its a class that defines properties, event methods and 
+used types, such as a "table model". Because of the expressiveness of the language its a neat class.  
+2. The component rendering peer is the heart of the component and is responsible to render the component
+(create the html) to handle the focus and the actual user input.  
+
+The Echo framework takes care of the rendering lifecycle and delegates calls between peer and component.
+
+[picture: User -> Peer (Sync.<Component>) -> Component (Application.<Component>) -> Application Instance]
+[ - user inteaction delegation -> this way ->]
+[ - creation of component <- this way <- ]
+
+A good example how to write an entirely new component is covered by the SpinButton Tutorial (http://echo.nextapp.com/site/node/65).
+But if you want to create a new component by integrating an existing JavaScript component you found on the web you have to read
+further.
+
+# Create the following files in the module echolot-webcontainer: 
+<code>
+echolot-webcontainer/src/main/resource/js
+echolot-webcontainer/src/main/resource/js/Application.CrayonBox.js 
+echolot-webcontainer/src/main/resource/js/Sync.CrayonBox.js 
+</code>
+
+=== Application.CrayonBox.js ===
+The JavaScript component API is easy to write. We just need to define the text from the input field
+as property. Actually we define only the name of the property to use it later in peer via this static
+variable. Its easier to maintain and convenience , but we don't need to do it at all.
+<code>
+/** Component implementation for a Crayon Box field. */
+exxcellent.CrayonBox = Core.extend(Echo.Component, {
+
+    $load: function() {
+        Echo.ComponentFactory.registerType("exxcellent.CrayonBox", this);
+    },
+
+	/** Properties defined for this component. */
+	$static : {
+		TEXT : "text",
+	}
+
+    componentType: "exxcellent.CrayonBox",
+});
+</code>   
+
+=== Sync.CrayonBox.js ===
+The tricky and challenging part is always the peer of the component. The peer will create the component
+as html element and participate at the Echo lifecycle to create, update, delete and focus the component.    
+
+Our goal therefore is to:
+1. Construct an html input field (to wrap the whole CrayonBox its better inside a div element)
+2. Combine the CrayonBox JavaScript code with our component  
+3. Define more vital properties
+
+The following snippet shows the skeleton of our component peer. Again - its just an input field.  
+<code>
+/** Component rendering peer: CrayonBox. */
+exxcellent.CrayonBox.Sync = Core.extend(Echo.Render.ComponentSync, { 
+
+    $load: function() {
+        Echo.Render.registerPeer("exxcellent.CrayonBox", this);
+    },
+
+	/* private variables and methods start with an underscore '_'. */
+    _div: null,
+    _input: null,
+    _value: null,
+
+	/** Initial rendering of the CrayonBox. */
+    renderAdd: function(update, parentElement) {
+        this._div = document.createElement("div");
+        this._div.id = this.component.renderId;
+
+        this._value = this.component.render(exxcellent.CrayonBox.TEXT);
+        this._input = document.createElement("input");
+        this._input.type = "text";
+        this._input.value = value == null ? "0" : parseInt(value);
+        this._div.appendChild(this._input);
+
+        // Register the events for _process methods
+        Core.Web.Event.add(this._input, "change",
+                Core.method(this, this._processTextChange), false);
+
+        parentElement.appendChild(this._div);
+    },
+
+	/** Remove the CrayonBox from DOM and component tree. */
+    renderDispose: function(update) {
+    	// Unregister the events
+        Core.Web.Event.removeAll(this._input);
+        
+        this._input = null;
+        this._div = null;
+    },
+
+	/** Renders an update if e.g. the style changes at runtime.*/
+    renderUpdate: function(update) {
+    	/* the easiest update is to remove and add it again. */
+        var element = this._div;
+        var containerElement = element.parentNode;
+        Echo.Render.renderComponentDispose(update, update.parent);
+        containerElement.removeChild(element);
+        this.renderAdd(update, containerElement);
+        return true;
+    }
+});
+</code>
+To explain the code in a nutshell:
+* the private variables and methods are signed with an underscore
+* No variable and no method will be accessable by the Application.<component> part
+* the render<phase> methods are callbacks triggered by the Echo framework (see http://echo.nextapp.com/site/echo3/doc)
+* creation of native HTML elements is done using the DOM API (see http://www.w3.org/DOM/)
+* registering events (change event) is done through the Echo framework (see http://echo.nextapp.com/site/echo3/doc)
+* a component is appended and removed from a parent component (component tree)
+
+=== Integrating ===
+We know that our CrayonBox jQuery component takes the input field as argument. To apply this we will modify
+the lifecycle callback method called "renderDisplay()". This method describes how the component renders itself.
+It is also triggered if the renderUpdate decided to partially render the component.
+<code>  
+    /** Describes how the component renders itself. */
+    renderDisplay: function() {
+    	if (!this._crayonBox) {
+			this._crayonBox = $(this._input).crayonBox;		      
+    	}
+    },
+</code>   
+To explain the modified code in a nutshell:
+* The dollar sign is a variable representing the jQuery framework instance (see http://docs.jquery.com/Main_Page). 
+* We will use the same form of calling the jQuery CrayonBox script like in the prototype.
+* We have to make sure the component is only created once
+
+Okay that it. 
+We just created out first component.
+
+== Testing ==
+Its time to test the new component. An integration test has never been so easy and fun. All we need is 
+use the create a component testscreen and add this to the Echolot component list. Furthermore we need to
+add our JavaScript files to the index.html containing the tests. These kind of test is actually client side
+programming entirely in JavaScript.
+
+=== index.html ===
+The index.html is used as starting point for our test application. The file contains all scripts including the application script itself and all required libraries. We will add all we need like in the prototype.
+
+Locate the file "echolot-webcontainer/src/test/web/index.html" and add the new component files and the lines from the prototype. You do not need to add jquery, since it already exists.
+<code>
+  <script type='text/javascript' src='../../main/resources/js/Application.CrayonBox.js'></script>
+  <script type='text/javascript' src='../../main/resources/js/Sync.CrayonBox.js'></script>
+  <script type='text/javascript' src='../../main/resources/js/crayonbox/jquery.crayonbox.js'></script>
+</code>
+
+=== CrayonBoxTest.js ===
+The code to write a Test varies on your needs. For a simple smoke test we will create the component and add it to the test area. A good testscreen will feature a lot of variants of the component, like multiple instances, different styling or buttons changing dynamically the component itself.
+
+<code>
+exxcellent.test.CrayonBoxTest = Core.extend(
+{
+  $construct: function( testArea )
+  {
+    var box = new exxcellent.CrayonBox({
+      	renderId: "exxcellentUnitTestCrayonBox",
+      	styleName: "Default"	  
+    });
+    testArea.add( box );
+  }
+});
+</code>
+
+=== ComponentsList.js ===
+Our test is not accessable right now. The ComponentListColumn.js file makes our test screen available to the test application. Its a component used to display a list of control components used to display the echolot component being tested.  We add out component to be tested having an associated "exxcellent.test.CrayonBoxTest" class to the COMPONENTS array.
+<code>
+	COMPONENTS: new Array(
+		...		
+		"CrayonBox",
+</code>
+
+=== Testing ===
+To finally test the application you can open any browser you like and point it to the local index.html file. You should see the test screen and be able to use your component.
+If you use a browser that comes with a debugger you can now open the debug view and put a breakpoint anywhere you want.
+
+Prefered browsers:
+* Firefox, Gecko-Engine
+* Chromium, V8-Engine
+* Safari, Webkit-Engine
+
+That's all folks!

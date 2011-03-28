@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- includes -->
+<project name="echolot-app" basedir="." default="build">
+	<property name="dir.tools" value="../build-tools"/>
+	<property name="build.debug" value="true"/>
+	
+    <import file="../build-tools/build-master.xml"/>
+
+    <path id="build.classpath">
+        <fileset dir="lib" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar, test/**"/>
+    </path>
+
+    <path id="runtime.classpath"> <!-- req'd for running the tests -->
+        <fileset dir="lib" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar,test/**,compile/**, test/**"/>
+    </path>
+
+    <target name="clean.dependencies" unless="skip.dependencies">
+    </target>
+
+    <target name="build.dependencies" unless="skip.dependencies">
+    </target>
+</project>

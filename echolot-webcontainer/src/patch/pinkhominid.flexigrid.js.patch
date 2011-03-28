@@ -1,0 +1,42 @@
+// pinkhominid (2008.09.20): ie leak fix start
+        //add document events
+        $(document)
+        .mousemove(mousemove)
+        .mouseup(mouseup)
+        .hover(hoverover, hoverout);
+        
+        function mousemove(e) {
+            g.dragMove(e);
+        }
+        function mouseup() {
+            g.dragEnd();
+        }
+        function hoverover(){}
+        function hoverout() {
+            g.dragEnd();
+        }
+        g.cleanup = function () {
+            $(document)
+                .unbind('mousemove', mousemove)
+                .unbind('mouseup', mouseup)
+                .unbind('mouseenter mouseleave', hoverout)
+                .unbind('mouseenter mouseleave', hoverover);
+            p = null;
+            g = null;
+            t.p = null;
+            t.grid = null;
+            t = null;
+        };
+// pinkhominid (2008.09.20): ie leak fix end 
+
+
+// pinkhominid (2008.09.20): ie leak fix start
+    $.fn.flexDestroy = function() {
+        return this.each( function() {
+                if (this.grid) {
+                    $(this.grid.gDiv).remove();
+                    this.grid.cleanup();
+                }
+            });        
+    };
+// pinkhominid (2008.09.20): ie leak fix end 

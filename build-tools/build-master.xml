@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file (build-master.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!--
+        This project can be imported in each module via import to save redundant 
+        implementation of equal tasks.
+-->
+
+<project name="default">
+
+    <import file="build-properties.xml"/>
+
+    <import file="build-tools.xml"/>
+
+
+    <target name="clean.dependencies">
+        <fail message="Override the target clean.dependencies in your module according to your needs!"/>
+    </target>
+
+    <target name="clean.module" description="Clean ONLY all output of this module">
+        <echo>=== Cleaning module: ${ant.project.name}</echo>
+        <fail unless="dir.build" message="dir.build property undeclared"/>
+        <delete includeEmptyDirs="true" failonerror="false" dir="${dir.build}"/>
+        <delete includeEmptyDirs="true" failonerror="false" dir="${dir.dist}"/>
+    </target>
+
+    <target name="clean.classes"> <!-- service task mainly to force a recompile -->
+        <echo>Deleting all files under ${dir.build.class} and ${dir.test.build}</echo>
+        <delete dir="${dir.build.class}" includes="**/**" includeemptydirs="true"/>
+        <delete dir="${dir.test.build}" includes="**/**" includeemptydirs="true"/>
+    </target>
+
+    <target name="clean" depends="clean.dependencies, clean.module" unless="skip.clean"
+            description="Deletes all module artefacts (compiled classes, generated artefacts, dist archives, etc.)">
+    </target>
+
+    <target name="build.dependencies">
+        <fail message="override the target build.dependencies in your module according to your needs!"/>
+    </target>
+
+    <target name="compile" description="Compiles the module" depends="generate.sources">
+        <echo>=== Compiling module: ${ant.project.name}</echo>
+        <mkdir dir="${dir.build.class}"/>
+        <javac debug="${build.debug}" deprecation="${build.deprecation}" fork="true"
+               destdir="${dir.build.class}" srcdir="${build.srcdir}" source="${build.jdk}" target="${build.jdk}"
+               encoding="UTF-8" includeAntRuntime="false">
+            <!--<compilerarg value="-Xlint:unchecked"/>-->
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="generate" depends="generate.resources, generate.sources"  description="Generates all intermediate artefacts"/>
+
+    <target name="generate.sources" description="(Optionally) generates some java sources i.e. via source generators">
+    </target>
+
+    <target name="generate.resources" description="Generates classpath resources primarily via filtering copy">
+        <mkdir dir="${dir.build.resources}"/>
+        <!-- Ausgewählte Dateien als UTF-8 durchsuchen und Platzhalter ersetzen -->
+        <copy todir="${dir.build.resources}" failonerror="false" encoding="utf-8">
+            <filterset refid="build.filters"/>
+            <fileset dir="${dir.src.res}" includes="**/*.xml, **/*.js"/>
+        </copy>
+        <!-- ...  als ISO-88591 ...  -->
+        <copy todir="${dir.build.resources}" failonerror="false" encoding="iso-8859-1">
+            <filterset refid="build.filters"/>
+            <fileset dir="${dir.src.res}" includes="**/*.properties, **/*.ini"/>
+        </copy>
+        <!-- Alles andere ungefiltert kopieren -->
+        <copy todir="${dir.build.resources}" failonerror="false">
+            <fileset dir="${dir.src.res}" excludes="**/*.xml, **/*.js, **/*.properties, **/*.ini/"/>
+        </copy>
+    </target>
+
+    <target name="build" depends="build.dependencies, build.module" description="Builds all artefacts of this module"/>
+
+    <target name="build.module" depends="compile, generate.resources" description="Builds ONLY this module"/>
+
+    <target name="build.test" depends="-init.antcontrib, build.module" description="Compile and build tests" unless="skip.tests">
+        <property name="dir.test.src" value="src/test/java"/>
+        <available file="${dir.test.src}" property="tests.available"/>
+
+        <if>
+            <isset property="tests.available"/>
+            <then>
+                <mkdir dir="${dir.test.build}"/>
+                <javac destdir="${dir.test.build}" srcdir="${dir.test.src}" source="${build.jdk}" target="${build.jdk}"
+                       debug="true" deprecation="false" encoding="UTF-8" fork="true" includeAntRuntime="false">
+                    <classpath refid="test.classpath"/>
+                    <classpath refid="runtime.classpath"/>
+                    <classpath refid="build.classpath"/>
+                    <classpath location="${dir.build.class}"/>
+                </javac>
+
+                <!-- build resources -->
+                <copy todir="${dir.test.build.res}">
+                    <filterset refid="build.filters"/>
+                    <fileset dir="${dir.test.res}" includes="**/*.properties, **/*.xml, **/*.ini"/>
+                </copy>
+                <copy todir="${dir.test.build.res}">
+                    <fileset dir="${dir.test.res}" includes="**/**" excludes="**/*.properties, **/*.xml, **/*.ini"/>
+                </copy>
+
+                <!-- building joined classpath directory -->
+                <copy todir="${dir.test.build}">
+                    <fileset dir="${dir.test.build.res}" includes="**/**"/>
+                </copy>
+            </then>
+            <else>
+                <echo level="warning" message="${ant.project.name} currently does not implement ANY tests. Skipping. "/>
+            </else>
+        </if>
+    </target>
+
+    <target name="test" depends="-init.antcontrib, build, build.test" description="Build and Run all tests" if="tests.available" unless="skip.tests">
+        <delete dir="${dir.test.reports}" failonerror="false"/>
+        <mkdir dir="${dir.test.reports}"/>
+
+        <!-- Fallback values -->
+        <property name="test.excludedgroups" value=""/>
+        <property name="test.groups" value=""/>
+        <property name="test.jvmarg" value="-Dfoo=bar"/> <!-- ATTENTION! URGENTLY NEEDED FOR LINUX! see below-->
+        <property name="test.jvmea" value="true"/>
+        <property name="test.reporter" value=""/>
+        <property name="test.workdir" value="${basedir}"/>
+        <!-- Note: ant fails with VERY CRYPTIC errors to fork JVMs under Linux if it receives an
+             empty <jvmarg> value! -->
+
+        <if>
+            <equals arg1="${test.runner}" arg2="testng"/>
+            <then>
+                <echo>=== Starting TestNG Runner for **/*Test.class, groups: '${test.groups}', excluded groups: '${test.excludedgroups}', excluded classes: 'Abstract*.class'</echo>
+                <taskdef resource="testngtasks" classpathref="test.classpath"/>
+                <testng classpathref="test.classpath"
+                        outputDir="${dir.test.reports}"
+                        groups="${test.groups}" excludedgroups="${test.excludedgroups}"
+                        failureproperty="failedtests" verbose="0" dumpCommand="false"
+                        testname="TEST-${ant.project.name}" suitename="${ant.project.name}"
+                        reporter="${test.reporter}" timeout="600000" enableAssert="${test.jvmea}"
+                        workingDir="${test.workdir}">	
+		    <sysproperty key="net.sourceforge.cobertura.datafile" file="${dir.coverage.data}/cobertura.ser" />
+                    <classpath location="${dir.test.build}"/>
+                    <classpath location="${dir.build.class}"/>
+                    <classpath refid="test.classpath"/>
+                    <classpath refid="runtime.classpath"/>
+                    <jvmarg line="${test.jvmarg}"/> 
+			
+			
+                    <classfileset dir="${dir.test.build}" includes="**/*Test.class" excludes="**/Abstract*.*"/>
+                </testng>
+            </then>
+            <else>
+                <echo>=== Starting JUnit Runner for all '**/*Test.class' exclusive 'Abstract*.class'</echo>
+                <!-- Standard JUnit Tests -->
+                <junit fork="true" forkmode="once" showoutput="true" printsummary="withOutAndErr"
+                       failureproperty="failedtests">
+                    <classpath location="${dir.test.build}"/>
+                    <classpath location="${dir.build.class}"/>
+                    <classpath refid="test.classpath"/>
+                    <classpath refid="runtime.classpath"/>
+		    <sysproperty key="net.sourceforge.cobertura.datafile" file="${dir.coverage.data}/cobertura.ser" />
+                    <jvmarg line="${test.jvmarg}"/>
+
+                    <formatter type="plain"/>
+                    <batchtest todir="${dir.test.reports}">
+                        <fileset dir="${dir.test.src}" includes="**/*Test.java" excludes="**/Abstract*"/>
+                    </batchtest>
+                    <formatter type="xml"/>
+                </junit>
+            </else>
+        </if>
+
+        <fail if="failedtests">One ore more tests of this modules FAILED. Check ${dir.test.reports} for details.</fail>
+    </target>
+
+    <target name="test.failed" depends="-init.antcontrib, build, build.test"
+            description="Re-Executes the tests that failed during the last run (TestNG only)"
+            if="tests.available" unless="skip.tests">
+
+
+        <if>
+            <not>
+                <available file="${dir.test.reports}/testng-failed.xml" property="testng.know-failed-tests"/>
+            </not>
+            <then>
+                <fail>${dir.test.reports}/testng-failed.xml missing: Either there were no failed tests or 'test' needs to be run first.</fail>
+            </then>
+        </if>
+
+        <delete dir="${dir.test.reports}" failonerror="false" excludes="testng-failed.xml" includeemptydirs="true" />
+
+        <!-- Fallback values -->
+        <property name="test.jvmarg" value="-Dfoo=bar"/> <!-- ATTENTION! URGENTLY NEEDED FOR LINUX! see below-->
+        <property name="test.jvmea" value="true"/>
+        <property name="test.reporter" value=""/>
+        <property name="test.workdir" value="${basedir}"/>
+        <!-- Note: ant fails with VERY CRYPTIC errors to fork JVMs under Linux if it receives an
+             empty <jvmarg> value! -->
+
+        <if>
+            <equals arg1="${test.runner}" arg2="testng"/>
+            <then>
+                <echo>=== Starting TestNG Runner with failed tests noted in '${test.workdir}/testng-failed.xml'</echo>
+                <taskdef resource="testngtasks" classpathref="test.classpath"/>
+
+                <testng classpathref="test.classpath"
+                        outputDir="${dir.test.reports}"
+                        failureproperty="failedtests" verbose="0" dumpCommand="false"
+                        testname="TEST-${ant.project.name}" suitename="${ant.project.name}"
+                        reporter="${test.reporter}" timeout="600000" enableAssert="${test.jvmea}"
+                        workingDir="${test.workdir}">
+                    <classpath location="${dir.test.build}"/>
+                    <classpath location="${dir.build.class}"/>
+                    <classpath refid="test.classpath"/>
+                    <classpath refid="runtime.classpath"/>
+                    <jvmarg line="${test.jvmarg}"/>
+
+                    <xmlfileset dir="${dir.test.reports}" includes="testng-failed.xml"/>
+                </testng>
+            </then>
+            <else>
+                <fail>Task only supported for TestNG</fail>
+            </else>
+        </if>
+
+        <fail if="failedtests">One ore more tests of this modules FAILED. Check ${dir.test.reports} for details.</fail>
+    </target>
+
+    <target name="dist" depends="build.dependencies, dist.module"
+            description="Builds a full distribution of this and all parent modules"/>
+
+    <target name="dist.module" depends="build.module, test, -javadoc.packed"
+            description="Create a distribution of this module only">
+        <echo>=== Distributing module: ${ant.project.name}</echo>
+        <fail unless="dir.dist" message="dir.dist property undeclared"/>
+        <mkdir dir="${dir.dist}"/>
+        <jar destfile="${dir.dist}/${ant.project.name}-${release.version}.jar">
+            <fileset dir="${dir.build.class}"/>
+            <fileset dir="${dir.build.resources}"/>
+            <manifest>
+                <attribute name="Version" value="${release.version}"/>
+                <attribute name="SVN-Revision" value="${svn.revision.max}"/>
+                <attribute name="SVN-URL" value="${svn.repository.url}"/>
+                <attribute name="SVN-locally-modified" value="${svn.modified}"/>
+                <attribute name="SVN-mixed-revisions" value="${svn.mixed}"/>
+            </manifest>
+        </jar>
+        <jar destfile="${dir.dist}/${ant.project.name}-${release.version}-sources.jar">
+            <fileset dir="${dir.src.java}"/>
+            <manifest>
+                <attribute name="Version" value="${release.version}"/>
+                <attribute name="SVN-Revision" value="${svn.revision.max}"/>
+                <attribute name="SVN-URL" value="${svn.repository.url}"/>
+                <attribute name="SVN-locally-modified" value="${svn.modified}"/>
+                <attribute name="SVN-mixed-revisions" value="${svn.mixed}"/>
+            </manifest>
+        </jar>
+        <copy file="${dir.build}/${ant.project.name}-${release.version}-javadoc.jar"
+              tofile="${dir.dist}/${ant.project.name}-${release.version}-javadoc.jar"
+              failonerror="false"/>
+
+        <copy todir="${dir.dist}/lib">
+            <fileset dir="${dir.lib}">
+                <include name="**/*.jar"/>
+                <include name="**/*.zip"/>
+                <exclude name="compile/**"/>
+                <exclude name="test/**"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clover.activate">
+        <fail message="Override the clover.activate target in your module according to your needs (i.e. skip)!"/>
+    </target>
+
+    <target name="compile.with.clover" depends="clover.activate, compile"/>
+
+    <target name="-javadoc.zip-update-check" unless="skip.javadoc">
+        <dependset>
+            <srcfileset dir="${dir.src.java}" includes="**/*.java"/>
+            <targetfilelist dir="${dir.build}" files="${ant.project.name}-${release.version}-javadoc.jar"/>
+        </dependset>
+        <available file="${dir.build}/${ant.project.name}-${release.version}-javadoc.jar" property="skip.javadoc"/>
+    </target>
+
+    <target name="javadoc" description="Generate the JavaDoc API documentation for this module"
+            unless="skip.javadoc">
+        <mkdir dir="${dir.build.javadoc}"/>
+        <echo message="Constructing JavaDoc for ${dir.src.java}"/>
+
+        <property name="javadoc.included" value="*/**"/>
+        <property name="javadoc.excluded" value="*/**/generated/**"/>
+        <javadoc author="false" version="true" use="true"
+                 windowtitle="${ant.project.name} API"
+                 classpathref="build.classpath"
+                 destdir="${dir.build.javadoc}"
+                 useexternalfile="yes"
+                 encoding="utf-8">
+            <doctitle><![CDATA[<h1>${ant.project.name} API</h1>]]></doctitle>
+            <bottom><![CDATA[<i>Copyright notice.</i>]]></bottom>
+            <link offline="true" href="http://java.sun.com/j2se/1.5.0/docs/api/" packagelistLoc="${dir.sun.javadoc}"/>
+            <packageset dir="${dir.src.java}" defaultexcludes="yes">
+                <include name="${javadoc.included}"/>
+                <exclude name="${javadoc.excluded}"/>
+            </packageset>
+        </javadoc>
+    </target>
+
+    <target name="-javadoc.packed" unless="skip.javadoc"
+            depends="-javadoc.zip-update-check, javadoc">
+        <jar file="${dir.build}/${ant.project.name}-${release.version}-javadoc.jar">
+            <zipfileset dir="${dir.build.javadoc}">
+                <include name="**/**"/>
+            </zipfileset>
+            <manifest>
+                <attribute name="Version" value="${release.version}"/>
+                <attribute name="SVN-Revision" value="${svn.revision.max}"/>
+                <attribute name="SVN-URL" value="${svn.repository.url}"/>
+                <attribute name="SVN-locally-modified" value="${svn.modified}"/>
+                <attribute name="SVN-mixed-revisions" value="${svn.mixed}"/>
+            </manifest>
+        </jar>
+    </target>
+
+</project>

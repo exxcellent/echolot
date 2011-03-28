@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ~ This file (build-ssh-deploy.xml) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!--
+        DEPLOY AND START PROJECT VIA SSH
+
+        Pseudo-buildfile containing tasks and properties to remote-deploy a (web) application
+        on a target server via ssh.
+
+        To use this tasks, do the following:
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        1. Define the properties deploy.ssh.host, deploy.ssh.username,
+           deploy.ssh.password and optionally deploy.ssh.startdir in
+           your build.properties :
+
+            deploy.ssh.host=server
+            deploy.ssh.username=username
+            deploy.ssh.password=password
+            #deploy.ssh.startdir=~/jetty
+
+        2. Copy and prepare a Jetty instance to the target server.
+
+        3. Configure the Jetty ports, so that they don't conflict with other services on host!
+
+        4. Ensure installation by running ${deploy.ssh.startdir}/bin/jetty.sh start and stop
+
+        5. Adjust and point the ssh-startdir to the new jetty instance (default: ~/jetty).
+-->
+
+<project>
+
+    <import file="build-tools.xml"/>
+
+    <target name="remote.stop" depends="-init.ssh" description="Stops the Jetty servlet container on the deployment server via SSH">
+        <echo>Stopping application at server ${deploy.ssh.username}@${deploy.ssh.host}.</echo>
+        <ssh.execute command="${deploy.ssh.startdir}/bin/jetty.sh stop"/>
+    </target>
+
+    <target name="remote.start" depends="-init.ssh" description="Starts the Jetty servlet container on the deployment server via SSH">
+        <echo>Starting application at server ${deploy.ssh.username}@${deploy.ssh.host}.</echo>
+        <ssh.execute command="nohup ${deploy.ssh.startdir}/bin/jetty.sh start &amp;>/dev/null &amp;"/>
+    </target>
+
+    <target name="remote.undeploy" depends="-init.ssh" description="Deletes the application WAR file on deployment server via SSH">
+        <ssh.execute command="rm -fr ${deploy.ssh.startdir}/webapps/${deploy.webapp.name} ; rm -f ${deploy.ssh.startdir}/webapps/${deploy.webapp.name}.war"/>
+    </target>
+
+    <target name="remote.deploy.war" depends="-init.ssh" description="Transfers the WAR file to the deployment server via SCP">
+        <available file="${deploy.war.dir}/${deploy.webapp.name}.war" property="war.present"/>
+        <fail unless="war.present">Unable to find WAR file: '${deploy.war.dir}/${deploy.webapp.name}.war'
+Use build properties 'deploy.war.dir' (Default: target)  and 'deploy.webapp.name' to point to the right WAR file."</fail>
+
+        <echo>Remote-deploying application with configuration '${profile}' to server '${deploy.ssh.host}'. (Use -Dprofile=xxx)</echo>
+        <ssh.copy sourcefile="${deploy.war.dir}/${deploy.webapp.name}.war" targetdir="webapps"/>
+    </target>
+
+    <target name="remote.deploy" depends="remote.stop, remote.undeploy, remote.deploy.war, remote.start"
+            description="Stops, redeploys and starts the application on the deployment server via SSH and SCP.">
+    </target>
+
+    <!-- 
+            Internal Tasks & Macros
+    -->
+
+    <target name="-init.ssh" depends="-init.extendclasspath" unless="deploy.ssh.initalized">
+        <fail unless="deploy.ssh.host"     message="Missing property 'deploy.ssh.host'. Still in setup or didn't you choose the right build profile? (-Dprofile=xxx)"/>
+        <fail unless="deploy.ssh.username" message="Missing property 'deploy.ssh.username'. Still in setup or didn't you choose the right build profile? (-Dprofile=xxx)"/>
+        <fail unless="deploy.ssh.password" message="Missing property 'deploy.ssh.password'. Still in setup or didn't you choose the right build profile? (-Dprofile=xxx)"/>
+
+        <!-- Default / fallback values -->
+        <property name="deploy.war.dir" value="target"/>
+        <property name="deploy.webapp.name" value="${ant.project.name}"/>
+        <property name="deploy.ssh.startdir" value="~/jetty"/>
+
+        <!-- extend ant classpath for SCP/SSH task -->
+        <extendclasspath path="${dir.tools}/ant-optional/jsch-0.1.41.jar"/>
+        <property name="deploy.ssh.initalized" value="yes"/>
+    </target>
+
+    <macrodef name="ssh.copy">
+        <attribute name="sourcefile"/>
+        <attribute name="targetdir"/>
+        <sequential>
+            <echo>Copying @{sourcefile} to ${deploy.ssh.startdir}/@{targetdir} on ${deploy.ssh.username}@${deploy.ssh.host}</echo>
+            <scp localFile="@{sourcefile}" todir="${deploy.ssh.username}@${deploy.ssh.host}:${deploy.ssh.startdir}/@{targetdir}"
+                 host="${deploy.ssh.host}" username="${deploy.ssh.username}" password="${deploy.ssh.password}"
+                 trust="true" verbose="true"/>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="ssh.execute">
+        <attribute name="command"/>
+        <attribute name="timeout" default="60000"/>
+        <sequential>
+            <echo>Executing '@{command}' on '${deploy.ssh.username}'@'${deploy.ssh.host}'</echo>
+            <sshexec host="${deploy.ssh.host}" username="${deploy.ssh.username}" password="${deploy.ssh.password}"
+                     command="@{command}" trust="true" timeout="@{timeout}"/>
+
+        </sequential>
+    </macrodef>
+
+
+</project>

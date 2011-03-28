@@ -1,0 +1,811 @@
+Index: flexigrid.js
+===================================================================
+--- flexigrid.js	(original copy)
++++ flexigrid.js	(working copy)
+@@ -49,8 +49,9 @@
+ 			 onToggleCol: false,
+ 			 onChangeSort: false,
+ 			 onSuccess: false,
+-			 onSubmit: false // using a custom populate function
+-		  }, p);
++			 onSubmit: false, // using a custom populate function
++             prepareRequest: false // Could be used do modify the request data send to target with ajax method.
++          }, p);
+ 
+ 
+ 		$(t)
+@@ -63,34 +64,32 @@
+ 		var g = {
+ 			hset : {},
+ 			rePosDrag: function () {
++                var cdleft = 0 - this.hDiv.scrollLeft;
++                if (this.hDiv.scrollLeft > 0) {
++                    cdleft -= Math.floor(p.cgwidth / 2);
++                }
++                $(g.cDrag).css({top:g.hDiv.offsetTop + 1});
++                var cdpad = this.cdpad;
+ 
+-			var cdleft = 0 - this.hDiv.scrollLeft;
+-			if (this.hDiv.scrollLeft>0) cdleft -= Math.floor(p.cgwidth/2);
+-			$(g.cDrag).css({top:g.hDiv.offsetTop+1});
+-			var cdpad = this.cdpad;
++                // Select all possible drags and hide it. The selection is stored to a variable because
++                // we will reuse it later while iterate through the header cells.
++                var qdrags = $('div', g.cDrag);
++                qdrags.hide();
+ 
+-			$('div',g.cDrag).hide();
+-
+-			$('thead tr:first th:visible',this.hDiv).each
+-				(
+-			 	function ()
+-					{
+-					var n = $('thead tr:first th:visible',g.hDiv).index(this);
+-
+-					var cdpos = parseInt($('div',this).width());
+-					var ppos = cdpos;
+-					if (cdleft==0)
+-							cdleft -= Math.floor(p.cgwidth/2);
+-
+-					cdpos = cdpos + cdleft + cdpad;
+-
+-					$('div:eq('+n+')',g.cDrag).css({'left':cdpos+'px'}).show();
+-
+-					cdleft = cdpos;
+-					}
+-				);
+-
+-			},
++                // We do not use the regular each method of jQuery because we do need the index of the
++                // header cell for other operation with the drags.
++                var qheaders = $('thead tr:first th:visible', this.hDiv);
++                for (var n = 0; n < qheaders.length; n++) {
++                    var cdpos = parseInt($('div', qheaders[n]).width());
++                    if (cdleft == 0) {
++                        cdleft -= Math.floor(p.cgwidth / 2);
++                    }
++                    cdpos = cdpos + cdleft + cdpad;
++                    // Select the drag which is equals to the index of the current header cell.
++                    $(qdrags[n]).css('left', cdpos + 'px').show();
++                    cdleft = cdpos;
++                }
++            },
+ 			fixHeight: function (newH) {
+ 					newH = false;
+ 					if (!newH) newH = $(g.bDiv).height();
+@@ -362,23 +361,24 @@
+ 			},
+ 			addData: function (data) { //parse data
+ 
+-				if (p.preProcess)
+-					data = p.preProcess(data);
++                if (p.preProcess) {
++                    data = p.preProcess(data);
++                }
+ 
+-				$('.pReload',this.pDiv).removeClass('loading');
+-				this.loading = false;
++                if (!data) {
++                    // There is no data after loading. Interrupt the loading here,
++                    // set busy to to false and display an error message.
++                    g.setBusy(false);
++                    $('.pPageStat',this.pDiv).html(p.errormsg);
++                    return false;
++                }
+ 
+-				if (!data)
+-					{
+-					$('.pPageStat',this.pDiv).html(p.errormsg);
+-					return false;
+-					}
++                if (p.dataType=='xml') {
++                    p.total = +$('rows total',data).text();
++                } else {
++                    p.total = data.total;
++                }
+ 
+-				if (p.dataType=='xml')
+-					p.total = +$('rows total',data).text();
+-				else
+-					p.total = data.total;
+-
+ 				if (p.total==0)
+ 					{
+ 					$('tr, a, td, div',t).unbind();
+@@ -399,134 +399,156 @@
+ 
+ 				this.buildpager();
+ 
+-				//build new body
++				// Build new body...
+ 				var tbody = document.createElement('tbody');
++                // Select the body before. This is better because this selected jQuery object could be used more then one times in the next steps.
++                var qtbody = $(tbody);
+ 
+-				if (p.dataType=='json')
+-				{
+-					$.each
+-					(
+-					 data.rows,
+-					 function(i,row)
+-					 	{
+-							var tr = document.createElement('tr');
+-							if (i % 2 && p.striped) tr.className = 'erow';
++                // If Debugging is enabled record the start time of the rendering process.
++                if (p.debug) {
++                    var startTime = new Date();
++                }
+ 
+-							if (row.id) tr.id = 'row' + row.id;
++                /**
++                 * This method is used to finalize the rendering of the data to the body if the grid list.
++                 * @return (void)
++                 */
++                function finalizeRendering() {
++                    var qt = $(t);
++                    // Clean the current body compleate and add the new generated body.
++                    $('tr', qt).unbind();
++                    qt.empty();
++                    qt.append(qtbody);
+ 
+-							//add cell
+-							$('thead tr:first th',g.hDiv).each
+-							(
+-							 	function ()
+-									{
++                    g.rePosDrag();
+ 
+-										var td = document.createElement('td');
+-										var idx = $(this).attr('axis').substr(3);
+-										td.align = this.align;
+-										td.innerHTML = row.cell[idx];
+-										$(tr).append(td);
+-										td = null;
+-									}
+-							);
++                    // This is paranoid but set the variables back to null. It is better for debugging.
++                    tbody = null;
++                    data = null;
+ 
++                    // Call the onSuccess hook (if present).
++                    if (p.onSuccess) {
++                        p.onSuccess();
++                    }
+ 
+-							if ($('thead',this.gDiv).length<1) //handle if grid has no headers
+-							{
++                    // Deactivate the busy mode.
++                    g.setBusy(false);
+ 
+-									for (idx=0;idx<cell.length;idx++)
+-										{
+-										var td = document.createElement('td');
+-										td.innerHTML = row.cell[idx];
+-										$(tr).append(td);
+-										td = null;
+-										}
+-							}
++                    if (p.debug && window.console && window.console.log) {
++                        // If debugging is enabled log the duration of this operation.
++                        var nowTime = new Date();
++                        console.log('Duration of rendering data of type "' + p.dataType + '": ' + (nowTime - startTime) + 'ms');
++                    }
++                }
+ 
+-							$(tbody).append(tr);
+-							tr = null;
+-						}
+-					);
++                // We will need the header cell at this point more times.
++                // So we do better to store it not for further usages.
++                var headers = $('thead tr:first th',g.hDiv);
+ 
+-				} else if (p.dataType=='xml') {
++                // What is going on here? Because of many rows we have to render, we do not
++                // iterate with a regular foreach method. We make a pseudo asynchron process with
++                // the setTimeout method. We do better to do this because in other way we will
++                // force a lagging of the whole browser. In the worst case the user will get a
++                // dialog box of an "endless looping javaScript".
++                if (p.dataType=='json') {
++                    // Prepare the looping parameters.
++                    var ji = 0;
++                    var row = null;
+ 
+-				i = 1;
++                    function doJsonRow() {
++                        // Only if there are more rows we will render a next row.
++                        if (data.rows.length > ji) {
++                            row = data.rows[ji];
++                            // Paranoid I know but it possible that there is an array selected with
++                            // null entries.
++                            if (row) {
++                                var tr = document.createElement('tr');
++                                var qtr = $(tr);
++                                if (ji % 2 && p.striped) {
++                                    tr.className = 'erow';
++                                }
++                                if (row.id) {
++                                    tr.id = 'row' + row.id;
++                                }
++                                // Add each cell
++                                for (idx = 0; idx < row.cell.length; idx++) {
++                                    var td = document.createElement('td');
++                                    var th = idx < headers.length ? headers[idx] : null;
++                                    if (th) {
++                                        td.align = th.align;
++                                    }
++                                    qtr.append(td);
++                                    g.addCellProp(td, qtr, row.cell[idx], th);
++                                }
++                                qtbody.append(tr);
++                                g.addRowProp(qtr);
++                                // Prepare the next step.
++                                tr = null;
++                                ji++;
++                                setTimeout(doJsonRow, 1);
++                            } else {
++                                finalizeRendering();
++                            }
++                        } else {
++                            finalizeRendering();
++                        }
++                    }
++                    // Start the pseudo asynchron iteration.
++                    setTimeout(doJsonRow, 1);
++                } else if (p.dataType=='xml') {
++                    // Prepare the looping parameters.
++                    var index = 1;
++                    var xi = 0;
++                    var rows = $("rows row", data);
+ 
+-				$("rows row",data).each
+-				(
++                    function doXmlRow() {
++                        // Only if there are more rows we will render a next row.
++                        if (xi < rows.length) {
++                            var row = rows[xi];
++                            // Paranoid I know but it possible that there is an array selected with
++                            // null entries.
++                            if (row) {
++                                var qrow = $(row);
++                                index++;
+ 
+-				 	function ()
+-						{
+-
+-							i++;
+-
+-							var tr = document.createElement('tr');
+-							if (i % 2 && p.striped) tr.className = 'erow';
+-
+-							var nid =$(this).attr('id');
+-							if (nid) tr.id = 'row' + nid;
+-
+-							nid = null;
+-
+-							var robj = this;
+-
+-
+-
+-							$('thead tr:first th',g.hDiv).each
+-							(
+-							 	function ()
+-									{
+-
+-										var td = document.createElement('td');
+-										var idx = $(this).attr('axis').substr(3);
+-										td.align = this.align;
+-										td.innerHTML = $("cell:eq("+ idx +")",robj).text();
+-										$(tr).append(td);
+-										td = null;
+-									}
+-							);
+-
+-
+-							if ($('thead',this.gDiv).length<1) //handle if grid has no headers
+-							{
+-								$('cell',this).each
+-								(
+-								 	function ()
+-										{
+-										var td = document.createElement('td');
+-										td.innerHTML = $(this).text();
+-										$(tr).append(td);
+-										td = null;
+-										}
+-								);
+-							}
+-
+-							$(tbody).append(tr);
+-							tr = null;
+-							robj = null;
+-						}
+-				);
+-
+-				}
+-
+-				$('tr',t).unbind();
+-				$(t).empty();
+-
+-				$(t).append(tbody);
+-				this.addCellProp();
+-				this.addRowProp();
+-
+-				//this.fixHeight($(this.bDiv).height());
+-
+-				this.rePosDrag();
+-
+-				tbody = null; data = null; i = null;
+-
+-				if (p.onSuccess) p.onSuccess();
+-				if (p.hideOnSubmit) $(g.block).remove();//$(t).show();
+-
+-				this.hDiv.scrollLeft = this.bDiv.scrollLeft;
+-				if ($.browser.opera) $(t).css('visibility','visible');
+-
++                                var tr = document.createElement('tr');
++                                var qtr = $(tr);
++                                if (index % 2 && p.striped) {
++                                    tr.className = 'erow';
++                                }
++                                var nid = qrow.attr('id');
++                                if (nid) {
++                                    tr.id = 'row' + nid;
++                                }
++                                nid = null;
++                                var cells = $('cell', row);
++                                // Add each cell
++                                for (idx = 0; idx < cells.length; idx++) {
++                                    var td = document.createElement('td');
++                                    var th = idx < headers.length ? headers[idx] : null;
++                                    if (th) {
++                                        td.align = th.align;
++                                    }
++                                    qtr.append(td);
++                                    g.addCellProp(td, qtr, $(cells[idx]).text(), th);
++                                }
++                                qtbody.append(tr);
++                                // Prepare the next step.
++                                tr = null;
++                                xi++;
++                                setTimeout(doXmlRow, 1);
++                            } else {
++                                finalizeRendering();
++                            }
++                        } else {
++                            finalizeRendering();
++                        }
++                    }
++                    // Start the pseudo asynchron iteration.
++                    setTimeout(doXmlRow, 1);
++                } else {
++                    throw new Error('DataType "' + p.dataType + '" could not be handled.');
++                }
+ 			},
+ 			changeSort: function(th) { //change sortorder
+ 
+@@ -571,8 +593,52 @@
+ 			$('.pPageStat',this.pDiv).html(stat);
+ 
+ 			},
+-			populate: function () { //get latest data
++            /**
++             * This method is used to control the grid busy state.
++             *
++             * @param busy if set to true the grid list will get a semi transparent layer, a loading message will be displayed and a spinner.
++             * If set to false this layer, spinner and message will be removed.
++             * @return (boolean) true if the state is changed.
++             */
++            setBusy: function (busy) {
++                var result = false;
++                if (busy) {
++                    if (!this.loading) {
++                        this.loading = true;
++                        $('.pPageStat',this.pDiv).html(p.procmsg);
++                        $('.pReload',this.pDiv).addClass('loading');
++                        $(g.block).css({top:g.bDiv.offsetTop});
++                        if (p.hideOnSubmit) {
++                            $(this.gDiv).prepend(g.block); //$(t).hide();
++                        }
++                        if ($.browser.opera) {
++                            $(t).css('visibility','hidden');
++                        }
++                        result = true;
++                    }
++                } else {
++                    if (this.loading) {
++                        var qstatus = $('.pPageStat',this.pDiv);
++                        if (qstatus.html() == p.procmsg) {
++                            $('.pPageStat',this.pDiv).text('');
++                        }
++                        $('.pReload',this.pDiv).removeClass('loading');
++                        if (p.hideOnSubmit) {
++                            $(g.block).remove(); //$(t).show();
++                        }
++                        g.hDiv.scrollLeft = g.bDiv.scrollLeft;
++                        if ($.browser.opera) {
++                            $(t).css('visibility','visible');
++                        }
+ 
++                        this.loading = false;
++                        result = true;
++                    }
++                }
++                return result;
++            },
++            populate: function () { //get latest data
++
+ 				if (this.loading) return true;
+ 
+ 				if (p.onSubmit)
+@@ -581,24 +647,17 @@
+ 						if (!gh) return false;
+ 					}
+ 
+-				this.loading = true;
+ 				if (!p.url) return false;
+ 
+-				$('.pPageStat',this.pDiv).html(p.procmsg);
++                // Make this grid list busy for the user.
++                this.setBusy(true);
+ 
+-				$('.pReload',this.pDiv).addClass('loading');
+-
+-				$(g.block).css({top:g.bDiv.offsetTop});
+-
+-				if (p.hideOnSubmit) $(this.gDiv).prepend(g.block); //$(t).hide();
+-
+-				if ($.browser.opera) $(t).css('visibility','hidden');
+-
+ 				if (!p.newp) p.newp = 1;
+ 
+ 				if (p.page>p.pages) p.page = p.pages;
+ 				//var param = {page:p.newp, rp: p.rp, sortname: p.sortname, sortorder: p.sortorder, query: p.query, qtype: p.qtype};
+-				var param = [
++				var data = [];
++                var params = [
+ 					 { name : 'page', value : p.newp }
+ 					,{ name : 'rp', value : p.rp }
+ 					,{ name : 'sortname', value : p.sortname}
+@@ -607,19 +666,35 @@
+ 					,{ name : 'qtype', value : p.qtype}
+ 				];
+ 
+-				if (p.params)
+-					{
+-						for (var pi = 0; pi < p.params.length; pi++) param[param.length] = p.params[pi];
+-					}
++                // Only add parameters to request data which are not null.
++                for (i in params) {
++                    var param = params[i];
++                    if (param && param.name && param.value) {
++                        data.push(param);
++                    }
++                }
++                // If there are some additional parameters and each are not null add it to the request data.
++                if (p.params) {
++				    for (pi in p.params) {
++                        var current = p.params[pi];
++                        if (current && current.name && current.value) {
++                            data.push(current);
++                        }
++                    }
++                }
++                // Call prepareRequest hook.
++                if (p.prepareRequest) {
++                    p.prepareRequest(data);
++                }
+ 
+-					$.ajax({
+-					   type: p.method,
+-					   url: p.url,
+-					   data: param,
+-					   dataType: p.dataType,
+-					   success: function(data){g.addData(data);},
+-					   error: function(data) { try { if (p.onError) p.onError(data); } catch (e) {} }
+-					 });
++                $.ajax({
++                   type: p.method,
++                   url: p.url,
++                   data: data,
++                   dataType: p.dataType,
++                   success: function(data){g.addData(data);},
++                   error: function(data) { try { if (p.onError) p.onError(data); } catch (e) {} }
++                 });
+ 			},
+ 			doSearch: function () {
+ 				p.query = $('input[name=q]',g.sDiv).val();
+@@ -656,53 +731,42 @@
+ 					this.populate();
+ 
+ 			},
+-			addCellProp: function ()
+-			{
++			addCellProp: function (cell, prnt, innerHtml, pth) {
++                var tdDiv = document.createElement('div');
++                var qtdDiv = $(tdDiv);
++                var qcell = $(cell);
++                if (pth != null) {
++                    if (p.sortname == $(pth).attr('abbr') && p.sortname) {
++                        cell.className = 'sorted';
++                    }
++                    qtdDiv.css({textAlign:pth.align,width: $('div:first', pth)[0].style.width});
+ 
+-					$('tbody tr td',g.bDiv).each
+-					(
+-						function ()
+-							{
+-									var tdDiv = document.createElement('div');
+-									var n = $('td',$(this).parent()).index(this);
+-									var pth = $('th:eq('+n+')',g.hDiv).get(0);
++                    if (pth.hide) {
++                        qcell.css('display', 'none');
++                    }
++                }
+ 
+-									if (pth!=null)
+-									{
+-									if (p.sortname==$(pth).attr('abbr')&&p.sortname)
+-										{
+-										this.className = 'sorted';
+-										}
+-									 $(tdDiv).css({textAlign:pth.align,width: $('div:first',pth)[0].style.width});
++                if (p.nowrap == false) {
++                    qtdDiv.css('white-space', 'normal');
++                }
+ 
+-									 if (pth.hide) $(this).css('display','none');
++                if (!innerHtml || innerHtml == '') {
++                    innerHtml = '&nbsp;';
++                }
+ 
+-									 }
++                tdDiv.innerHTML = innerHtml;
+ 
+-									 if (p.nowrap==false) $(tdDiv).css('white-space','normal');
++                var pid = false;
++                if (prnt.id) {
++                    pid = prnt.id.substr(3);
++                }
+ 
+-									 if (this.innerHTML=='') this.innerHTML = '&nbsp;';
++                if (pth != null && pth.process) {
++                    pth.process(tdDiv, pid);
++                }
+ 
+-									 //tdDiv.value = this.innerHTML; //store preprocess value
+-									 tdDiv.innerHTML = this.innerHTML;
+-
+-									 var prnt = $(this).parent()[0];
+-									 var pid = false;
+-									 if (prnt.id) pid = prnt.id.substr(3);
+-
+-									 if (pth!=null)
+-									 {
+-									 if (pth.process) pth.process(tdDiv,pid);
+-									 }
+-
+-									$(this).empty().append(tdDiv).removeAttr('width'); //wrap content
+-
+-									//add editable event here 'dblclick'
+-
+-							}
+-					);
+-
+-			},
++                qcell.empty().append(tdDiv).removeAttr('width');
++            },
+ 			getCellDim: function (obj) // get cell prop for editable event
+ 			{
+ 				var ht = parseInt($(obj).height());
+@@ -715,69 +779,45 @@
+ 				var pdt = parseInt($(obj).css('paddingTop'));
+ 				return {ht:ht,wt:wt,top:top,left:left,pdl:pdl, pdt:pdt, pht:pht, pwt: pwt};
+ 			},
+-			addRowProp: function()
+-			{
+-					$('tbody tr',g.bDiv).each
+-					(
+-						function ()
+-							{
+-							$(this)
+-							.click(
+-								function (e)
+-									{
+-										var obj = (e.target || e.srcElement); if (obj.href || obj.type) return true;
+-										$(this).toggleClass('trSelected');
+-										if (p.singleSelect) $(this).siblings().removeClass('trSelected');
+-									}
+-							)
+-							.mousedown(
+-								function (e)
+-									{
+-										if (e.shiftKey)
+-										{
+-										$(this).toggleClass('trSelected');
+-										g.multisel = true;
+-										this.focus();
+-										$(g.gDiv).noSelect();
+-										}
+-									}
+-							)
+-							.mouseup(
+-								function ()
+-									{
+-										if (g.multisel)
+-										{
+-										g.multisel = false;
+-										$(g.gDiv).noSelect(false);
+-										}
+-									}
+-							)
+-							.hover(
+-								function (e)
+-									{
+-									if (g.multisel)
+-										{
+-										$(this).toggleClass('trSelected');
+-										}
+-									},
+-								function () {}
+-							)
+-							;
++			addRowProp: function(qrow) {
++                qrow.click(function (e) {
++                    var obj = (e.target || e.srcElement);
++                    if (obj.href || obj.type) {
++                        return true;
++                    }
++                    $(this).toggleClass('trSelected');
++                    if (p.singleSelect) {
++                        qrow.siblings().removeClass('trSelected');
++                    }
++                }).mousedown(function (e) {
++                    if (e.shiftKey) {
++                        $(this).toggleClass('trSelected');
++                        g.multisel = true;
++                        this.focus();
++                        $(g.gDiv).noSelect();
++                    }
++                }).mouseup(function () {
++                    if (g.multisel) {
++                        g.multisel = false;
++                        $(g.gDiv).noSelect(false);
++                    }
++                }).hover(function () {
++                    if (g.multisel) {
++                        $(this).toggleClass('trSelected');
++                    }
++                }, function () {
++                });
+ 
+-							if ($.browser.msie&&$.browser.version<7.0)
+-								{
+-									$(this)
+-									.hover(
+-										function () { $(this).addClass('trOver'); },
+-										function () { $(this).removeClass('trOver'); }
+-									)
+-									;
+-								}
+-							}
+-					);
++                if ($.browser.msie && $.browser.version < 7.0) {
++                    qrow.hover(function () {
++                        $(this).addClass('trOver');
++                    }, function () {
++                        $(this).removeClass('trOver');
++                    });
++                }
+ 
+ 
+-			},
++            },
+ 			pager: 0
+ 			};
+ 
+@@ -1056,12 +1096,8 @@
+ 			}
+ 
+ 
+-		//add td properties
+-		g.addCellProp();
++        $('tbody', g.bDiv).hide();
+ 
+-		//add row properties
+-		g.addRowProp();
+-
+ 		//set cDrag
+ 
+ 		var cdcol = $('thead tr:first th:first',g.hDiv).get(0);
+@@ -1380,14 +1416,77 @@
+ 		t.p = p;
+ 		t.grid = g;
+ 
+-		// load data
+-		if (p.url&&p.autoload)
+-			{
+-			g.populate();
+-			}
++        // Load data if possible and enabled.
++        if (p.url && p.autoload) {
++            g.populate();
++        } else {
++            // If Debugging is enabled record the start time of the rendering process.
++            if (p.debug) {
++                var startTime = new Date();
++            }
++            // Make this grid list busy for the user.
++            g.setBusy(true);
+ 
+-		return t;
++            /**
++             * This method is used to finalize the rendering of the data to the body if the grid list.
++             * @return (void)
++             */
++            function finalizeRendering() {
++                g.setBusy(false);
++                $('tbody', g.bDiv).show();
+ 
++                if (p.debug && window.console && window.console.log) {
++                    var nowTime = new Date();
++                    console.log('Duration of rendering data of type "inlineHtml": ' + (nowTime - startTime) + 'ms');
++                }
++            }
++
++            // Add tr and td properties
++
++            // What is going on here? Because of many rows we have to render, we do not
++            // iterate with a regular foreach method. We make a pseudo asynchron process with
++            // the setTimeout method. We do better to do this because in other way we will
++            // force a lagging of the whole browser. In the worst case the user will get a
++            // dialog box of an "endless looping javaScript".
++
++            // Set initial properties for rendering the data.
++            var qth = $('thead tr:first th',g.hDiv);
++            var rows = $('tbody tr', g.bDiv);
++            var rowIndex = 0;
++            function doRow() {
++                // Only if there are more rows we will render a next row.
++                if (rowIndex < rows.length) {
++                    var tr = rows[rowIndex];
++                    // Paranoid I know but it possible that there is an array selected with
++                    // null entries.
++                    if (tr) {
++                        var qtr = $(tr);
++                        var i = 0;
++                        $('td', tr).each(function() {
++                            var header = false;
++                            if (qth.length > i) {
++                                header = qth[i] || false;
++                            }
++                            g.addCellProp(this, tr, this.innerHTML, header);
++                            i++;
++                        });
++                        g.addRowProp(qtr);
++                        // Prepare the next step.
++                        rowIndex++;
++                        setTimeout(doRow, 1);
++                    } else {
++                        finalizeRendering();
++                    }
++                } else {
++                    finalizeRendering();
++                }
++            }
++            // Start the pseudo asynchron iteration.
++            setTimeout(doRow, 1);
++        }
++
++        return t;
++
+ 	};
+ 
+ 	var docloaded = false;
+@@ -1483,4 +1582,4 @@
+ 
+ 	}; //end noSelect
+ 
+-})(jQuery);
+\ No newline at end of file
++})(jQuery);

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- includes -->
+<project name="echolot-demo" basedir="." default="build">
+	<property name="dir.tools" value="../build-tools"/>
+	<property name="build.debug" value="true"/>
+
+	<property name="app.path" value="../echolot-app"/>
+    <property name="webcontainer.path" value="../echolot-webcontainer"/>
+	
+    <import file="../build-tools/build-master.xml"/>
+    <import file="../build-tools/build-web.xml" optional="false"/>
+    <import file="../build-tools/build-ssh-deploy.xml"/>
+
+    <path id="build.classpath">        
+		<fileset dir="${app.path}/lib" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar,test/**"/>
+		<fileset dir="${webcontainer.path}/lib" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar,test/**"/>
+
+    	<pathelement location="${app.path}/target/classes"/>
+    	<pathelement location="${webcontainer.path}/target/classes"/>
+    </path>
+
+    <path id="runtime.classpath"> <!-- req'd for running the tests -->
+    	<fileset dir="${app.path}/lib" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar, test/**"/>
+    	<fileset dir="${webcontainer.path}/lib" includes="**/*.jar" excludes="**/*-sources.jar,**/*-javadoc.jar, test/**"/>
+
+    	<pathelement location="${app.path}/target/classes"/>
+    	<pathelement location="${webcontainer.path}/target/classes"/>
+    </path>
+
+    <target name="clean.dependencies" unless="skip.dependencies">
+    	<ant antfile="${app.path}/build.xml" target="clean.module" inheritall="false"/>
+    	<ant antfile="${webcontainer.path}/build.xml" target="clean.module" inheritall="false"/>
+    </target>
+
+    <target name="build.dependencies" unless="skip.dependencies">
+    	<ant antfile="${app.path}/build.xml" target="build.module" inheritall="false"/>
+    	<ant antfile="${webcontainer.path}/build.xml" target="build.module" inheritall="false"/>
+    </target>
+	
+	<target name="webapp" description="Assembles the content of the final WAR in a directory" depends="build">
+        <copy todir="${dir.build.web}">
+            <fileset dir="${dir.src.web}" includes="**/**"/>
+        </copy>
+        <copy todir="${dir.build.web}/WEB-INF/classes">
+            <fileset dir="${dir.build.class}" includes="**/**"/>
+            <fileset dir="${dir.build.resources}" includes="**/**"/>
+        	
+            <fileset dir="${app.path}/target/classes"/>
+            <fileset dir="${webcontainer.path}/target/classes"/>
+            
+        	<fileset dir="${app.path}/target/resources"/>
+            <fileset dir="${webcontainer.path}/target/resources"/>
+            
+        	<fileset dir="${dir.src.java}" includes="**/*.java"/>
+        </copy>
+        <copy todir="${dir.build.web}/WEB-INF/lib" flatten="true">
+            <fileset dir="${dir.lib}" includes="**/*.jar" excludes="*-sources.*, *-javadoc.*"/>
+            <fileset dir="${app.path}/lib" includes="**/*.jar" excludes="**/*-sources.*, **/*-javadoc.*"/>
+            <fileset dir="${webcontainer.path}/lib" includes="**/*.jar" excludes="**/*-sources.*, **/*-javadoc.*"/>
+        </copy>
+    </target>
+
+    <target name="dist.module" depends="war">
+        <copy todir="${dir.dist}">
+            <fileset file="${dir.build}/${ant.project.name}.war"/>
+        </copy>
+    </target>
+	
+</project>
