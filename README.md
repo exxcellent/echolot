@@ -7,6 +7,8 @@ Echolot currently features some awesome well known components like:
  - Flexigrid (an efficient datagrid)
  - Charts (charts based on Raphael)
  - KeyStrokeListener (bind any action to key commands)
+ - Notifier
+ - Expander
  - and many more...
 
 To build:
@@ -16,6 +18,7 @@ To build:
 
 To start the java demo (uses an inline jetty):
 
+    cd echolot-demo
     ant run
 
 To start the javascript demo point your browser to:
