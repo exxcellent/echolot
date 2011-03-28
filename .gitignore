@@ -1,0 +1,10 @@
+# Temp build folders #
+######################
+target/
+dist/
+
+# OS generated files #
+######################
+.DS_Store?
+ehthumbs.db
+Thumbs.db

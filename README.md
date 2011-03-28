@@ -7,16 +7,20 @@ Echolot currently features some awesome well known components like:
  - Flexigrid (an efficient datagrid)
  - Charts (charts based on Raphael)
  - KeyStrokeListener (bind any action to key commands)
-And many more - check it out.
+ - and many more...
 
 To build:
 
     ./
     ant dist
 
-To run the tests:
+To start the java demo (uses an inline jetty):
 
-    ant test
+    ant run
+
+To start the javascript demo point your browser to:
+
+    echolot-webcontainer/src/test/web/index.html
 
 Further reading
 ---
