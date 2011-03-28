@@ -245,20 +245,12 @@
             <fileset dir="${dir.build.resources}"/>
             <manifest>
                 <attribute name="Version" value="${release.version}"/>
-                <attribute name="SVN-Revision" value="${svn.revision.max}"/>
-                <attribute name="SVN-URL" value="${svn.repository.url}"/>
-                <attribute name="SVN-locally-modified" value="${svn.modified}"/>
-                <attribute name="SVN-mixed-revisions" value="${svn.mixed}"/>
             </manifest>
         </jar>
         <jar destfile="${dir.dist}/${ant.project.name}-${release.version}-sources.jar">
             <fileset dir="${dir.src.java}"/>
             <manifest>
                 <attribute name="Version" value="${release.version}"/>
-                <attribute name="SVN-Revision" value="${svn.revision.max}"/>
-                <attribute name="SVN-URL" value="${svn.repository.url}"/>
-                <attribute name="SVN-locally-modified" value="${svn.modified}"/>
-                <attribute name="SVN-mixed-revisions" value="${svn.mixed}"/>
             </manifest>
         </jar>
         <copy file="${dir.build}/${ant.project.name}-${release.version}-javadoc.jar"
@@ -320,10 +312,6 @@
             </zipfileset>
             <manifest>
                 <attribute name="Version" value="${release.version}"/>
-                <attribute name="SVN-Revision" value="${svn.revision.max}"/>
-                <attribute name="SVN-URL" value="${svn.repository.url}"/>
-                <attribute name="SVN-locally-modified" value="${svn.modified}"/>
-                <attribute name="SVN-mixed-revisions" value="${svn.mixed}"/>
             </manifest>
         </jar>
     </target>

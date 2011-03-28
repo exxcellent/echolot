@@ -17,7 +17,6 @@
     <property file="etc/build.properties"/>
 
     <import file="build-tools/build-tools.xml"/>
-    <import file="build-tools/build-svn.xml"/>
 
 	<property name="app.path" value="echolot-app"/>
 	<property name="webcontainer.path" value="echolot-webcontainer"/>
@@ -57,7 +56,7 @@
         <ant antfile="echolot-demo/build.xml" target="remote.deploy" inheritall="false" inheritrefs="false"/>
     </target>
 
-    <target name="dist" depends="clean, svn.check" description="Generates a complete echolot distribution">
+    <target name="dist" depends="clean" description="Generates a complete echolot distribution">
 
         <echo>=== Building distributions of modules</echo>
         <ant antfile="${app.path}/build.xml" target="dist" inheritall="false" inheritrefs="false"/>
