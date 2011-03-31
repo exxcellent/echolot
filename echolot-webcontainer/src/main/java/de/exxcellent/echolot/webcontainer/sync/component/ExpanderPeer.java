@@ -45,6 +45,7 @@ import nextapp.echo.webcontainer.service.JavaScriptService;
  * the javascript based echo3 client component exxcellent.Expander.
  *
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
+ * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
 public class ExpanderPeer extends AbstractComponentSynchronizePeer {
 
@@ -53,29 +54,46 @@ public class ExpanderPeer extends AbstractComponentSynchronizePeer {
 
     static {
         EXPANDER_SYNC_SERVICE = JavaScriptService.forResource("exxcellent.Expander.Sync",
-                                                                "js/Sync.Expander.js");
+                "js/Sync.Expander.js");
 
         /* Register JavaScriptService with the global service registry.*/
         WebContainerServlet.getServiceRegistry().add(EXPANDER_SYNC_SERVICE);
     }
 
-    /** Default constructor for a {@link de.exxcellent.echolot.webcontainer.sync.component.ExpanderPeer}. Registers an event peer for client events. */
+    /**
+     * Default constructor for a {@link de.exxcellent.echolot.webcontainer.sync.component.ExpanderPeer}. Registers an event peer for client events.
+     */
     public ExpanderPeer() {
+        // add the event that listens on toggling the content
+        addEvent(new EventPeer(Expander.INPUT_CONTENT_TOGGLED, Expander.ACTION_LISTENERS_CHANGED_PROPERTY) {
+            @Override
+            public boolean hasListeners(Context context, Component c) {
+                return ((Expander) c).hasActionListeners();
+            }
+        });
+
     }
 
+    /**
+     * @inheritDoc
+     */
     public String getClientComponentType(boolean shortType) {
         // Return client-side component type name.
         return "exxcellent.Expander";
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     @Override
     public Class getComponentClass() {
         // Return server-side Java class.
         return Expander.class;
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     @Override
     public void init(Context context, Component component) {
         super.init(context, component);

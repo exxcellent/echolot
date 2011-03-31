@@ -41,6 +41,7 @@ import nextapp.echo.app.layout.CellLayoutData;
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
 public class ExpanderTest extends SplitPane {
+
     /**
      * default constructor.
      */
@@ -91,6 +92,13 @@ public class ExpanderTest extends SplitPane {
 
         exp.setContent(content);
         exp.setHiddenContent(hidden);
+
+        // just some ActionListener that's triggered, when content is toggled
+        exp.addContentToggledListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Content toggled");
+            }
+        });
 
         final Component pane = new ContentPane();
         pane.add(exp);

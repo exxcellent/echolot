@@ -36,17 +36,17 @@ import nextapp.echo.app.event.ActionListener;
 import java.util.EventListener;
 
 /**
- /**
+ * /**
  * Expander component: A container which has either one or two children. It renders a section
  * line with an optional title at the top of its content. The content can be toggled by
  * clicking the header. The first child is shown by default.
  * May contain one or two child component. Doesn't support a pane component as a child.
- * <p>
+ * <p/>
  * The initially visible child is depending on the visible_child_idx property. The first child is
  * always the one shown by default.
  * <ul>
- *  <li>If two children exists, the first child is shown by default. A click on the header will hide the first child and show the second child.</li>
- *  <li>If only one child is provided, this child will be visible by default. A click on the header will hide the child.</li>
+ * <li>If two children exists, the first child is shown by default. A click on the header will hide the first child and show the second child.</li>
+ * <li>If only one child is provided, this child will be visible by default. A click on the header will hide the child.</li>
  * </ul>
  * <p/>
  * <pre>
@@ -60,16 +60,21 @@ import java.util.EventListener;
  * The Expander is an animated and highly customizable container component, with the following
  * features:
  * <ul>
- *  <li>minimalistic stylable header</li>
- *  <li>styleable through echo stylesheet (style properties)</li>
- *  <li>some nice animation effects while toggling</li>
- *  <li>rollover effect on header</li>
- *  <li>callback after toggling with index of the visible child</li>
- *  <li>focus management and keyboard control (hide on enter or space)</li>
+ * <li>minimalistic stylable header</li>
+ * <li>styleable through echo stylesheet (style properties)</li>
+ * <li>some nice animation effects while toggling</li>
+ * <li>rollover effect on header</li>
+ * <li>callback after toggling with index of the visible child</li>
+ * <li>focus management and keyboard control (hide on enter or space)</li>
  * </ul>
+ *
+ * @author Oliver Pehnke <o.pehnke@exxcellent.de>
+ * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
 public class Expander extends Component {
-    /** Serial Version UID.*/
+    /**
+     * Serial Version UID.
+     */
     private static final long serialVersionUID = 20101015L;
 
     /**
@@ -107,14 +112,14 @@ public class Expander extends Component {
     public static final String PROPERTY_HEADER_HEIGHT = "headerHeight";
     public static final String PROPERTY_HEADER_INSETS = "headerInsets";
 
-    public static final String PROPERTY_BORDER = "border";        
+    public static final String PROPERTY_BORDER = "border";
     public static final String PROPERTY_INSETS = "insets";
 
     public static final String PROPERTY_ICON_TEXT_FOREGROUND = "iconTextForeground";
     public static final String PROPERTY_ICON_TEXT_FONT = "iconTextFont";
     public static final String PROPERTY_ICON_TEXT_MARGIN = "iconTextMargin";
     public static final String PROPERTY_ICON_TEXT_MARGIN_TOP = "iconTextMarginTop";
-    
+
     public static final String PROPERTY_FOCUSED_BACKGROUND = "focusedBackground";
     public static final String PROPERTY_FOCUSED_BACKGROUND_IMAGE = "focusedBackgroundImage";
     public static final String PROPERTY_FOCUSED_BORDER = "focusedBorder";
@@ -147,6 +152,30 @@ public class Expander extends Component {
     }
 
     /**
+     * Removes an <code>ActionListener</code> from the <code>TextField</code>.
+     *
+     * @param l the <code>ActionListener</code> to remove
+     */
+    public void removeActionListener(ActionListener l) {
+        if (!hasEventListenerList()) {
+            return;
+        }
+        getEventListenerList().removeListener(ActionListener.class, l);
+        // Notification of action listener changes is provided due to
+        // existence of hasActionListeners() method.
+        firePropertyChange(ACTION_LISTENERS_CHANGED_PROPERTY, l, null);
+    }
+
+    /**
+     * Determines if any <code>ActionListener</code>s are registered.
+     *
+     * @return true if any action listeners are registered
+     */
+    public boolean hasActionListeners() {
+        return hasEventListenerList() && getEventListenerList().getListenerCount(ActionListener.class) != 0;
+    }
+
+    /**
      * Fires an action event to all listeners.
      */
     private void fireActionEvent() {
@@ -163,6 +192,7 @@ public class Expander extends Component {
         }
     }
 
+
     /**
      * @see nextapp.echo.app.Component#processInput(java.lang.String, java.lang.Object)
      */
@@ -172,21 +202,6 @@ public class Expander extends Component {
         if (INPUT_CONTENT_TOGGLED.equals(inputName)) {
             fireActionEvent();
         }
-    }
-
-    /**
-     * Removes an <code>ActionListener</code> from the <code>TextField</code>.
-     *
-     * @param l the <code>ActionListener</code> to remove
-     */
-    public void removeActionListener(ActionListener l) {
-        if (!hasEventListenerList()) {
-            return;
-        }
-        getEventListenerList().removeListener(ActionListener.class, l);
-        // Notification of action listener changes is provided due to
-        // existence of hasActionListeners() method.
-        firePropertyChange(ACTION_LISTENERS_CHANGED_PROPERTY, l, null);
     }
 
     /**
@@ -495,6 +510,7 @@ public class Expander extends Component {
 
     /**
      * Sets the color of the title.
+     *
      * @param newValue the new color used for the title
      */
     public void setTitleForeground(final Color newValue) {
@@ -503,6 +519,7 @@ public class Expander extends Component {
 
     /**
      * Returns the color of the title.
+     *
      * @return the color of the title
      */
     public Color getTitleForeground() {
@@ -511,6 +528,7 @@ public class Expander extends Component {
 
     /**
      * Sets the color of the "hide and show" text.
+     *
      * @param newValue the new color used for the "hide and show"
      */
     public void setIconTextForeground(final Color newValue) {
@@ -519,6 +537,7 @@ public class Expander extends Component {
 
     /**
      * Returns the color of the "hide and show" text.
+     *
      * @return the color of the "hide and show"
      */
     public Color getIconTextForeground() {
@@ -527,6 +546,7 @@ public class Expander extends Component {
 
     /**
      * Returns the overall header height.
+     *
      * @return the header height
      */
     public Extent getHeaderHeight() {
@@ -535,6 +555,7 @@ public class Expander extends Component {
 
     /**
      * Returns the background color of the header used in the <code>Expander</code>.
+     *
      * @return the header background color
      */
     public Color getHeaderBackground() {
@@ -543,6 +564,7 @@ public class Expander extends Component {
 
     /**
      * Sets the header background color of the <code>Expander</code>.
+     *
      * @param newValue the new rollover background <code>Color</code>
      */
     public void setHeaderBackground(Color newValue) {
@@ -551,6 +573,7 @@ public class Expander extends Component {
 
     /**
      * Returns the background color of the header used during the rollover effect in the <code>Expander</code>.
+     *
      * @return the header rollover background color
      */
     public Color getRolloverBackground() {
@@ -559,6 +582,7 @@ public class Expander extends Component {
 
     /**
      * Sets the rollover background color of the header in the <code>Expander</code>.
+     *
      * @param newValue the new rollover background <code>Color</code>
      */
     public void setRolloverBackground(Color newValue) {
@@ -567,6 +591,7 @@ public class Expander extends Component {
 
     /**
      * Returns the rollover title foreground color of the header in the <code>Expander</code>.
+     *
      * @return the rollover foreground color
      */
     public Color getRolloverForeground() {
@@ -575,6 +600,7 @@ public class Expander extends Component {
 
     /**
      * Sets the rollover title foreground color of the header in the <code>Expander</code>.
+     *
      * @param newValue the new rollover foreground <code>Color</code>
      */
     public void setRolloverForeground(Color newValue) {
@@ -620,6 +646,7 @@ public class Expander extends Component {
     /**
      * Sets the spacing between the icon and the text in the header (show and hide
      * image and text).
+     *
      * @param newValue the spacing between icon and text
      */
     public void setIconTextMargin(Extent newValue) {
@@ -629,6 +656,7 @@ public class Expander extends Component {
     /**
      * Returns the spacing between the icon and the text in the header (show and hide
      * image and text).
+     *
      * @return the spacing between the icon and the text
      */
     public Extent getIconTextMargin() {
@@ -638,6 +666,7 @@ public class Expander extends Component {
     /**
      * Sets the spacing from the top of the header for the icon and the text (show and hide
      * image and text).
+     *
      * @param newValue the top spacing of icon and text
      */
     public void setIconTextMarginTop(Extent newValue) {
@@ -647,6 +676,7 @@ public class Expander extends Component {
     /**
      * Returns the spacing from the top of the header for the icon and the text (show and hide
      * image and text).
+     *
      * @return the top spacing for the icon and the text.
      */
     public Extent getIconTextMarginTop() {
@@ -656,6 +686,7 @@ public class Expander extends Component {
     /**
      * Returns the state of the first child. If true the first child
      * is visible otherwise its hidden (false). Hidden means no (or the second child) is visible.
+     *
      * @return true if the first child is visible.
      */
     public boolean isShow() {
@@ -666,6 +697,7 @@ public class Expander extends Component {
     /**
      * Sets the state of the first child. True the first child is visible and false for
      * its hidden and the second or no child is visible.
+     *
      * @param newValue true will show the first child in the expander
      */
     public void setShow(final boolean newValue) {
@@ -674,6 +706,7 @@ public class Expander extends Component {
 
     /**
      * Returns the position of the title text. Valid values are "left" or "right".
+     *
      * @return the position of the title text
      */
     public String getTitlePosition() {
@@ -683,14 +716,16 @@ public class Expander extends Component {
     /**
      * Sets the title position to either left or right handed. Valid values are
      * "left" or "right".
+     *
      * @param newValue the position of the title text
      */
-    public void setTitlePosition(String newValue){
+    public void setTitlePosition(String newValue) {
         set(PROPERTY_TITLE_POSITION, newValue);
     }
 
     /**
      * Sets the main content shown in the expander.
+     *
      * @param contentComponent the content of the expander
      */
     public void setContent(Component contentComponent) {
@@ -700,6 +735,7 @@ public class Expander extends Component {
     /**
      * Sets the optional hidden content that is shown if the main
      * content is hidden.
+     *
      * @param hiddenComponent the optional hidden content.
      */
     public void setHiddenContent(Component hiddenComponent) {
