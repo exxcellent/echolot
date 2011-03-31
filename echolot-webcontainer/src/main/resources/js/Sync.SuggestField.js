@@ -1,7 +1,8 @@
 /**
  * SuggestField
  * Component to show a suggestField with the possibility of a serverFilter
- * @author Ralf Enderle
+ * Makes use of an extended jQuerUI autocomplete PlugIn jQuery.ui.autocomplete
+ * @author Ralf Enderle <r.enderle@exxcellent.de>
  * @version 1.0
  */
 exxcellent.SuggestField = Core.extend(Echo.TextComponent, {
@@ -126,7 +127,7 @@ exxcellent.model.SuggestItem = Core.extend({
  * Synchronisation component for Sync.SuggestField.js
  *
  * Makes use of an extended jQuerUI autocomplete PlugIn jQuery.ui.autocomplete
- * @author Ralf Enderle
+ * @author Ralf Enderle <r.enderle@exxcellent.de>
  * @version 1.0
  */
 exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
@@ -226,15 +227,6 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
         this.renderAddToParent(parentElement);
         Core.Web.Event.add(this.input, "keydown",
                 Core.method(this, this._processKeyDownInternal), false);
-    },
-
-    /**
-     * called when the component is set do display
-     * @param inUpdate
-     */
-    renderDisplay: function(inUpdate) {
-        // nothing to do yet...
-        // whole magic is in renderAdd
     },
 
     /**

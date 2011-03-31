@@ -108,7 +108,7 @@ public class SuggestFieldTest extends SplitPane {
             }
         });
 
-                controlsColumn.addButton("Toggle: Grow left", new ActionListener() {
+        controlsColumn.addButton("Toggle: Grow left", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toggleGrowLeft();
             }
@@ -116,6 +116,18 @@ public class SuggestFieldTest extends SplitPane {
 
         // -- Styling ---
         controlsColumn.add(new Label("Styling"));
+        controlsColumn.addButton("Width: 100%", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setWidth(new Extent(100, Extent.PERCENT));
+            }
+        });
+
+        controlsColumn.addButton("Width: 180px", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                setWidth(new Extent(180));
+            }
+        });
+
         controlsColumn.addButton("Toggle Magnifier", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 toggleMagnifier();
@@ -155,30 +167,30 @@ public class SuggestFieldTest extends SplitPane {
             }
         });
 
-        r.add(suggestField);
-        r.add(new CheckBox("blub"));
-        Button b = new Button("Click me...");
-        b.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Hey, you clicked the button...!");
-                System.out.println(getTextFieldContent());
-            }
-        });
-        r.add(b);
+//        r.add(suggestField);
+//        r.add(new CheckBox("blub"));
+//        Button b = new Button("Click me...");
+//        b.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("Hey, you clicked the button...!");
+//                System.out.println(getTextFieldContent());
+//            }
+//        });
+//        r.add(b);
+//
+//        final TextField tf = new TextField();
+//        r.add(tf);
+//
+//        Button b2 = new Button("Click me...");
+//        b2.addActionListener(new ActionListener() {
+//            public void actionPerformed(ActionEvent e) {
+//                System.out.println("Hey, you clicked the button2...!");
+//                System.out.println(tf.getText());
+//            }
+//        });
+//        r.add(b2);
 
-        final TextField tf = new TextField();
-        r.add(tf);
-
-        Button b2 = new Button("Click me...");
-        b2.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                System.out.println("Hey, you clicked the button2...!");
-                System.out.println(tf.getText());
-            }
-        });
-        r.add(b2);
-
-        add(r);
+        add(suggestField);
     }
 
     private String getTextFieldContent() {
@@ -210,11 +222,15 @@ public class SuggestFieldTest extends SplitPane {
         });
     }
 
+    private void setWidth(final Extent width) {
+        suggestField.setWidth(width);
+    }
+
     private void toggleShowDescription() {
         suggestField.setShowDescription(!suggestField.isShowDescription().booleanValue());
     }
 
-        private void toggleGrowLeft() {
+    private void toggleGrowLeft() {
         suggestField.setGrowLeft(!suggestField.isGrowLeft());
     }
 

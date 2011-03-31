@@ -7,6 +7,8 @@
 
 /**
  * A test to verify the suggestField.
+ *
+ * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
 exxcellent.test.SuggestFieldTest = Core.extend({
     _mainContent:null,
@@ -103,6 +105,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
 
         this.suggestModel = this._getSuggestModel_1();
         this._suggestField = new exxcellent.SuggestField({
+            width:'100%',
             minLength:1,
             delay:200,
             suggestModel: this.suggestModel,
