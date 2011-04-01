@@ -26,5 +26,5 @@ decision by deleting the provisions above and replace them with the notice
 and other provisions required by the GPL or the LGPL. If you do not delete
 the provisions above, a recipient may use your version of this software under
 the terms of any one of the MPL, the GPL or the LGPL.  Copies of the GPL and
-LGPL are provided in the files "GNUGeneralPublicLicense.txt" and
-"GNULesserGeneralPublicLicense.txt" files respectively.
+LGPL are provided in the files "LICENSE-GPL-2.txt" and
+"LICENSE-LGPL-2_1.txt" files respectively.
