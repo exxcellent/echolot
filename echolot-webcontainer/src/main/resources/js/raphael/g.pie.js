@@ -54,6 +54,13 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
         series[0].middle = {x: cx, y: cy};
         series[0].mangle = 180;
         series[0].value = values[0];
+
+        if (style.sectorAbbrevShow) {
+            // let's print it in the middle of the actual path we defined
+            var abbrevTextFill = {fill: values[0].abbreviationForeground || style.sectorAbbrevForeground};
+            var abbrevFont = style.sectorAbbrevFont;
+            paper.text(cx, cy, values[0].abbreviation).attr(abbrevFont).attr(abbrevTextFill);
+        }
     }
     else {
         function sector(cx, cy, r, startAngle, endAngle, fill) {
