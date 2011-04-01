@@ -39,17 +39,23 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
             cut = 24, // maximum of segments
             defcut = true;
     chart.covers = covers;
+
     var fallbackColorFactory = style.nextFallbackColor();
+
     if (len == 1) {
-        series.push(this.circle(cx, cy, r).attr({fill: this.g.colors[0], stroke: opts.stroke || "#fff", "stroke-width": opts.strokewidth == null ? 1 : opts.strokewidth}));
-        covers.push(this.circle(cx, cy, r).attr(this.g.shim));
-        total = values[0];
-        values[0] = {value: values[0], order: 0, valueOf: function () {
+        values[0] = {value: values[0].value,  order: 0, name: values[0].name, abbreviation: values[0].abbreviation, abbreviationForeground: values[0].abbreviationForeground, popUpLabel: values[0].popUpLabel, color: values[0].color, identifier: values[0].identifier, valueOf: function () {
             return this.value;
         }};
+
+        series.push(this.circle(cx, cy, r).attr({fill: values[0].color || fallbackColorFactory(), stroke: opts.stroke || "#fff", "stroke-width": opts.strokewidth == null ? 1 : opts.strokewidth}));
+        covers.push(this.circle(cx, cy, r).attr(this.g.shim));
+
+        total = values[0].value;
         series[0].middle = {x: cx, y: cy};
         series[0].mangle = 180;
-    } else {
+        series[0].value = values[0];
+    }
+    else {
         function sector(cx, cy, r, startAngle, endAngle, fill) {
             var rad = Math.PI / 180,
                     x1 = cx + r * Math.cos(-startAngle * rad),
@@ -74,7 +80,7 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
             return b.value - a.value;
         });
         for (i = 0; i < len; i++) {
-            if (defcut && values[i] * 360 / total <= 1.5) {
+            if (defcut && values[i].value != 0 && values[i].value * 360 / total <= 1.5) {
                 cut = i;
                 defcut = false;
             }
@@ -88,15 +94,16 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
         len = Math.min(cut + 1, values.length);
         others && values.splice(len) && (values[cut].others = true);
         for (i = 0; i < len; i++) {
-            var mangle = angle - 360 * values[i] / total / 2;
+
+            var mangle = angle - 360 * values[i].value / total / 2;
             if (!i) {
                 angle = 90 - mangle;
-                mangle = angle - 360 * values[i] / total / 2;
+                mangle = angle - 360 * values[i].value / total / 2;
             }
             if (opts.init) {
-                var ipath = sector(cx, cy, 1, angle, angle - 360 * values[i] / total).join(",");
+                var ipath = sector(cx, cy, 1, angle, angle - 360 * values[i].value / total).join(",");
             }
-            var path = sector(cx, cy, r, angle, angle -= 360 * values[i] / total);
+            var path = sector(cx, cy, r, angle, angle -= 360 * values[i].value / total);
             var p = this.path(opts.init ? ipath : path).attr({fill: values[i].color || fallbackColorFactory(), stroke: opts.stroke || "#fff", "stroke-width": (opts.strokewidth == null ? 1 : opts.strokewidth), "stroke-linejoin": "round"});
             p.value = values[i];
             p.middle = path.middle;
@@ -104,6 +111,8 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
             sectors.push(p);
             series.push(p);
             opts.init && p.animate({path: path.join(",")}, (+opts.init - 1) || 1000, ">");
+
+
             // maybe we wanna have some text in the sectors
             if (style.sectorAbbrevShow) {
                 // let's print it in the middle of the actual path we defined
@@ -141,9 +150,10 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
                     total: total,
                     label: that.labels && that.labels[j]
                 };
-                cover.mouseover(function () {
-                    fin.call(o);
-                }).mouseout(function () {
+                cover.mouseover(
+                        function () {
+                            fin.call(o);
+                        }).mouseout(function () {
                     fout.call(o);
                 });
             })(series[i], covers[i], i);

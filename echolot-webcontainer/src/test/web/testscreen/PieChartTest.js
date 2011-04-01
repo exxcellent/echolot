@@ -21,66 +21,66 @@ exxcellent.test.PieChartTest = Core.extend({
         var controlColumn = new Echo.Column({
             styleName: "TestControl",
             children: [
-                    new Echo.Label({
-                        text: "PieChart", styleName: "Title"
-                    }),
-                    new Echo.Label({
-                        text: "Models", styleName: "Default"
-                    }),
-                    this._createButton("Model 1 - 3 sectors",
+                new Echo.Label({
+                    text: "PieChart", styleName: "Title"
+                }),
+                new Echo.Label({
+                    text: "Models", styleName: "Default"
+                }),
+                this._createButton("Model 1 - 3 sectors",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.PIE_MODEL, this._createPieModel_1().pieModel);
                         }
-                    ),
-                    this._createButton("Model 2 - 3 sectors",
+                        ),
+                this._createButton("Model 2 - 3 sectors",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.PIE_MODEL, this._createPieModel_2().pieModel);
                         }
-                    ),
-                    this._createButton("Model 3 - More Sectors",
+                        ),
+                this._createButton("Model 3 - More Sectors",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.PIE_MODEL, this._createPieModel_3().pieModel);
                         }
-                    ),
-                    this._createButton("Model 4 - 3 Sectors",
+                        ),
+                this._createButton("Model 4 - 3 Sectors",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.PIE_MODEL, this._createPieModel_4().pieModel);
                         }
-                    ),
-                    new Echo.Label({
-                        text: "Size", styleName: "Default"
-                    }),
-                    this._createButton("Height +10",
+                        ),
+                new Echo.Label({
+                    text: "Size", styleName: "Default"
+                }),
+                this._createButton("Height +10",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.HEIGHT, this._pieChart.get(exxcellent.PieChart.HEIGHT) + 10);
                         }
-                    ),
-                    this._createButton("Height -10",
+                        ),
+                this._createButton("Height -10",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.HEIGHT, this._pieChart.get(exxcellent.PieChart.HEIGHT) - 10);
                         }
-                    ),
-                    new Echo.Label({
-                        text: "Animation", styleName: "Default"
-                    }),
-                    this._createButton("Toggle Animation",
+                        ),
+                new Echo.Label({
+                    text: "Animation", styleName: "Default"
+                }),
+                this._createButton("Toggle Animation",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.DO_ANIMATION, !this._pieChart.get(exxcellent.PieChart.DO_ANIMATION));
                         }
-                    ),
-                    this._createButton("Bounce",
+                        ),
+                this._createButton("Bounce",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.ANIMATION_TYPE, "bounce");
                         }
-                    ),
-                    new Echo.Label({
-                        text: "Styling", styleName: "Default"
-                    }),
-                    this._createButton("toggle sectorAbbrev ON/OFF ",
+                        ),
+                new Echo.Label({
+                    text: "Styling", styleName: "Default"
+                }),
+                this._createButton("toggle sectorAbbrev ON/OFF ",
                         function() {
                             this._pieChart.set(exxcellent.PieChart.SECTOR_ABBREV_SHOW, !this._pieChart.get(exxcellent.PieChart.SECTOR_ABBREV_SHOW));
                         }
-                    )
+                        )
             ]
         });
 
@@ -102,25 +102,25 @@ exxcellent.test.PieChartTest = Core.extend({
 
     _createPieChart: function() {
         return new exxcellent.PieChart({
-                        font : {
-                            size: "18",
-                            typeface: ["Courier New", "Courier", "Monospace"],
-                            italic: true
-                        },
-                        fallbackSectorColor_0 : 'red',
-                        fallbackSectorColor_1 : 'green',
-                        fallbackSectorColor_2 : 'blue',
-                        fallbackSectorColor_3 : 'maroon',
-                        foreground : '#aaffaa',
-                        legendPosition : 'east',
-                        showLegend : true,
-                        showPopUp : true,
-                        doAnimation : true,
-                        width : 300,
-                        height : 200,
-                        events: {
-                            pieSectorSelect: Core.method(this, this._dummyAction) }
-                    });
+            font : {
+                size: "18",
+                typeface: ["Courier New", "Courier", "Monospace"],
+                italic: true
+            },
+            fallbackSectorColor_0 : 'red',
+            fallbackSectorColor_1 : 'green',
+            fallbackSectorColor_2 : 'blue',
+            fallbackSectorColor_3 : 'maroon',
+            foreground : '#aaffaa',
+            legendPosition : 'east',
+            showLegend : true,
+            showPopUp : true,
+            doAnimation : true,
+            width : 300,
+            height : 200,
+            events: {
+                pieSectorSelect: Core.method(this, this._dummyAction) }
+        });
     },
 
     /**
@@ -129,9 +129,11 @@ exxcellent.test.PieChartTest = Core.extend({
     _createPieModel_1: function() {
         // the sectors
         var sectors = new Array(
-                new exxcellent.model.PieSector("Blubber", 80, "Blubber PopUp", true, '#33FF99', 'Abbrev 1', 10),
-                new exxcellent.model.PieSector("Foo", 100, "Foo PopUp", true, '#663399', 'Abbrev 2', '#fff', 11),
-                new exxcellent.model.PieSector("Bar", 300, "Bar PopUp", true, '#666633', 'Abbrev 3', null, 12)
+                new exxcellent.model.PieSector("Blubber", 90, "Blubber PopUp", true, '#33FF99', 'Abbrev 1', 10)
+                ,
+                new exxcellent.model.PieSector("Foo", 40, "Foo PopUp", true, '#663399', 'Abbrev 2', '#fff', 11)
+                ,
+                new exxcellent.model.PieSector("Bar", 20, "Bar PopUp", true, '#666633', 'Abbrev 3', null, 12)
                 );
 
         // return the whole thing

@@ -198,7 +198,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
                 while (fallbackColorArrayInner[currentCount % 10] == null) {
                     currentCount++;
                     // we stop at 0 - makes no sensee to search any more
-                    if(currentCount % 10 == 0 ) {
+                    if (currentCount % 10 == 0) {
                         // if we are at position 0 and have no color, then return some kind of black
                         return fallbackColorArrayInner[currentCount % 10] || '#000';
                     }
@@ -214,22 +214,6 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
         var radius = this._calculatePieRadius(width, height, style.showLegend, style.legendPosition, pieModel.sectors.length);
 
         var sectors = pieModel.sectors;             // the various sectors of the pie
-        // No we step through all sectors to collect the different pie- and legend-Values
-
-        var legendValues = [];
-        if (style.showLegend) {
-            for (var i = 0; i < sectors.length; i++) {
-                if (sectors[i].showPercentage) {
-                    // if we should show percentage
-                    legendValues[i] = '%%.%%' + exxcellent.PieChartSync._percentageDelimiter + sectors[i].name;
-                } else {
-                    legendValues[i] = sectors[i].name;
-                }
-            }
-        } else {
-            // if we don't want to have a legend we just pass 'null' to raphael -it will handle this for us
-            legendValues = null;
-        }
 
         // calculate layout-data
         var x_offset = radius + (exxcellent.PieChartSync._offsetValue * exxcellent.PieChartSync._scaleFactor);
@@ -238,7 +222,32 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
         this._raphael = Raphael(this._div, width, height);
         var raphael_self = this._raphael;
 
-        var pie = this._raphael.g.piechart(x_offset, y_offset, radius, sectors, {legend: legendValues, legendpos: style.legendPosition, legendcolor: style.legendForeground}, style);
+        // we step through all sectors and throw away those with ZERO
+        var sectorsToPaint = [];
+        var count;
+        for (count in sectors) {
+            if (sectors[count].value != 0) {
+                sectorsToPaint.push(sectors[count])
+            }
+        }
+
+        // collect the legend values
+        var legendValues = [];
+        if (style.showLegend) {
+            for (var i = 0; i < sectorsToPaint.length; i++) {
+                if (sectorsToPaint[i].showPercentage) {
+                    // if we should show percentage
+                    legendValues[i] = '%%.%%' + exxcellent.PieChartSync._percentageDelimiter + sectorsToPaint[i].name;
+                } else {
+                    legendValues[i] = sectorsToPaint[i].name;
+                }
+            }
+        } else {
+            // if we don't want to have a legend we just pass 'null' to raphael -it will handle this for us
+            legendValues = null;
+        }
+
+        var pie = this._raphael.g.piechart(x_offset, y_offset, radius, sectorsToPaint, {legend: legendValues, legendpos: style.legendPosition, legendcolor: style.legendForeground}, style);
 
         if (style.doAnimation) {
             // Let's do some animation
@@ -367,7 +376,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
                     this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_6) || null,
                     this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_7) || null,
                     this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_8) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_9) || null 
+                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_9) || null
                     )
         }
         return style;
