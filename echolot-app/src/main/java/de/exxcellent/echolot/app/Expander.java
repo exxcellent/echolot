@@ -760,4 +760,14 @@ public class Expander extends Component {
     public Insets getHeaderInsets() {
         return (Insets) get(PROPERTY_HEADER_INSETS);
     }
+
+    /**
+     * Sets the optional title content that is shown instead of the title text.
+     * The title is always visible and supports any Component.
+     *
+     * @param hiddenComponent the optional hidden content.
+     */
+    public void setTitle(Component titleComponent) {
+        add(titleComponent, 2);
+    }
 }

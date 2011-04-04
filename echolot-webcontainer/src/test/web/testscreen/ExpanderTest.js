@@ -128,6 +128,41 @@ exxcellent.test.ExpanderTest = Core.extend({
 
             ]
         }));
+        // defining a title component
+        testColumn.add(new exxcellent.Expander({
+            styleName: "ExpanderTest",
+            // the content
+            children: [new Echo.Grid({
+                styleName: "Default",
+                size: 2,
+                children: [
+                    new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
+                    new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default",text: "Oliver"}),
+                    new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default",text: "Germany"}),
+                    new Echo.Label({text: "Status"}), new Echo.CheckBox({selected: true})
+                ]}),
+                // optional hide content
+                new Echo.Grid({
+                    styleName: "Default",
+                    size: 2,
+                    children: [
+                        new Echo.Label({icon: "image/oliver.jpg"}),
+                        new Echo.Label({text: "Name: Oliver, Country: Germany, State: online"})
+                    ]
+                }),
+                // optional title content
+                new Echo.Grid({
+                    styleName: "Default",
+                    size: 2,
+                    children: [
+                        new Echo.Label({text: "Name: Oliver, ..."}),
+                        new Echo.Label({icon: "image/magnifier.png"})
+                    ]
+                })
+            ]
+
+        }));
+
 
         var contentPane = new Echo.ContentPane({
             styleName: "TestArea",

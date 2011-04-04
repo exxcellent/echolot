@@ -136,11 +136,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
                 exxcellent.ExpanderSync.DEFAULTS.headerInsets), this._mDiv, "padding");
 
         this._titleDiv = document.createElement("div");
-        this._titleDiv.appendChild(document.createTextNode(this.component.render(exxcellent.Expander.TITLE)));
-        Echo.Sync.Insets.render(this.component.render(exxcellent.Expander.TITLE_INSETS,
-                exxcellent.ExpanderSync.DEFAULTS.titleInsets), this._titleDiv, "padding");
-        Echo.Sync.Font.render(this.component.render(exxcellent.Expander.TITLE_FONT), this._titleDiv);
-        Echo.Sync.Color.render(this.component.render(exxcellent.Expander.TITLE_FOREGROUND), this._titleDiv, "color");
+        this._renderTitle(update);
 
         var titlePos = this.component.render(exxcellent.Expander.TITLE_POSITION);
         this._titleDiv.style.cssFloat = titlePos === "left" ? "left" : "right";
@@ -197,6 +193,30 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
 
         // initially the 'action' hint text is hidden
         $(this._txtDiv).hide();
+    },
+
+    /**
+     * Renders the title from the 3rd component in the components array.
+     * @param update
+     */
+    _renderTitle: function(update) {
+        var titleChild = this.component.getComponent(2);
+
+        // Either render a simple text node including font and color style
+        if (!titleChild){
+            var titleTxt = this.component.render(exxcellent.Expander.TITLE);
+            this._titleDiv.appendChild(document.createTextNode(titleTxt));
+            Echo.Sync.Insets.render(this.component.render(exxcellent.Expander.TITLE_INSETS,
+                exxcellent.ExpanderSync.DEFAULTS.titleInsets), this._titleDiv, "padding");
+            Echo.Sync.Font.render(this.component.render(exxcellent.Expander.TITLE_FONT), this._titleDiv);
+            Echo.Sync.Color.render(this.component.render(exxcellent.Expander.TITLE_FOREGROUND), this._titleDiv, "color");
+        } else {
+            // Render the 3rd child component as title
+
+            this._renderContent(titleChild, this._titleDiv, update, this._div);
+        }
+
+
     },
 
     /**
@@ -311,10 +331,10 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Renders a content (child) of the Expander.
      *
-     * @param {Element} the child element that shall be rendered
-     * @param {Element} DOM DIV element used to render the content inside
-     * @param {Echo.Update.ComponentUpdate} the update
-     * @param {Element} the element to which the content should be appended
+     * @param {Element} child the child element that shall be rendered
+     * @param {Element} div DOM DIV element used to render the content inside
+     * @param {Echo.Update.ComponentUpdate} update the update
+     * @param {Element} parentElement the element to which the content should be appended
      */
     _renderContent: function(child, div, update, parentElement) {
 

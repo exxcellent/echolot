@@ -32,6 +32,7 @@ package de.exxcellent.echolot.testapp.testscreen;
 import de.exxcellent.echolot.app.Expander;
 import de.exxcellent.echolot.testapp.ButtonColumn;
 import de.exxcellent.echolot.testapp.StyleUtil;
+import de.exxcellent.echolot.testapp.Styles;
 import nextapp.echo.app.*;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
@@ -66,6 +67,13 @@ public class ExpanderTest extends SplitPane {
         
         final Component hidden = new Label("Hidden Content");
 
+        final Component title = new Row();
+        title.add(new Label(Styles.ICON_24_MAGNIFIER));
+        title.add(new Label("This is a custom title..."));
+        final CellLayoutData tld = new CellLayoutData(){};
+        tld.setInsets(new Insets(20,10,0,0));
+        title.setLayoutData(tld);
+
         final CellLayoutData fld = new CellLayoutData(){};
         fld.setInsets(new Insets(5,20,5,5));
         hidden.setLayoutData(fld);
@@ -73,7 +81,7 @@ public class ExpanderTest extends SplitPane {
 
         // the notifier instance
         final Expander exp = new Expander();
-        exp.setTitle("This is the title");
+
         exp.setTitlePosition("left");
         exp.setHeaderHeight(new Extent(32));
         exp.setHeaderInsets(new Insets(10, 10));
@@ -92,6 +100,8 @@ public class ExpanderTest extends SplitPane {
 
         exp.setContent(content);
         exp.setHiddenContent(hidden);
+        // set a Label as title content
+        exp.setTitle(title);
 
         // just some ActionListener that's triggered, when content is toggled
         exp.addContentToggledListener(new ActionListener() {
