@@ -148,6 +148,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
     _number : 1,
     _lastInput: null,
     _obsoleteInput: null,
+    _isValidSuggestUpdate: null, // marker, if we have a valid update - if false, updateEvents will not be processed
 
     /** @see Echo.Render.ComponentSync#getFocusFlags */
     getFocusFlags: function() {
@@ -236,18 +237,22 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
     renderUpdate : function(update) {
         var id = this.input;
         if (update.getUpdatedProperty(exxcellent.SuggestField.SUGGEST_MODEL)) {
-            $(id).autocomplete('search', id.value);
-            $(id).autocomplete('setLoadingAnimation', false);
-            var length = 0;
-            if (this._obsoleteInput && id.value) {
-                length = id.value.length - this._obsoleteInput.length;
+            if (this._isValidSuggestUpdate) {
+                $(id).autocomplete('search', id.value);
+                $(id).autocomplete('setLoadingAnimation', false);
+                var length = 0;
+                if (this._obsoleteInput && id.value) {
+                    length = id.value.length - this._obsoleteInput.length;
+                }
+                var i = 0;
+                for (i = 0; i <= length + 1; i++) {
+                    // we repos the suggestBox n-times. jQuery is not a friend if asynchronous Echo calls like we do here
+                    $(id).autocomplete('repos');
+                }
+                this._obsoleteInput = id.value;
+                this._isValidSuggestUpdate = false;
+
             }
-            var i = 0;
-            for (i = 0; i <= length + 1; i++) {
-                // we repos the suggestBox n-times. jQuery is not a friend if asynchronous Echo calls like we do here
-                $(id).autocomplete('repos');
-            }
-            this._obsoleteInput = id.value;
             return;
         } else {
             // if any other property changed, we call super.renderUpdate
@@ -415,12 +420,18 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
         // if we have a server filter have some own implemetation on keyEvents because of the asynchronous behaviour
         var keyCode = $.ui.keyCode;
         switch (e.keyCode) {
+            case keyCode.ENTER:
+            case keyCode.NUMPAD_ENTER: {
+                clearTimeout(inField.searching);
+                this._isValidSuggestUpdate = false;
+                $(inField).autocomplete('setLoadingAnimation', false);
+                $(inField).autocomplete('close');
+                return true;
+            }
             case keyCode.PAGE_UP:
             case keyCode.PAGE_DOWN:
             case keyCode.UP:
             case keyCode.DOWN:
-            case keyCode.ENTER:
-            case keyCode.NUMPAD_ENTER:
             case keyCode.TAB:
                 // do nothing here - navigation is handled by jQuery
                 break;
@@ -435,6 +446,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
                 var currentLength = this.input.value.length;
                 if (currentLength >= defMinLength) {
                     clearTimeout(self.searching);
+                    this._isValidSuggestUpdate = true;
                     self.searching = setTimeout(function() {
                         self._triggerServerFilter()
                     }, 500);
@@ -468,6 +480,10 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
             case keyCode.ENTER:
             case keyCode.NUMPAD_ENTER:
             {
+                clearTimeout(inField.searching);
+                this._isValidSuggestUpdate = false;
+                $(inField).autocomplete('setLoadingAnimation', false);
+                $(inField).autocomplete('close');
                 // so we throw it back with true -> echo will look for other listeners for us
                 return true;
             }
@@ -480,9 +496,11 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * will be triggered after a certain of time
      */
     _triggerServerFilter : function() {
-        var inField = this.input;
-        $(inField).autocomplete('setLoadingAnimation', true);
-        this.component.doTriggerServerFilter(inField.value);
+        if (this._isValidSuggestUpdate) {
+            var inField = this.input;
+            $(inField).autocomplete('setLoadingAnimation', true);
+            this.component.doTriggerServerFilter(inField.value);
+        }
     },
 
     /**

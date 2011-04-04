@@ -69,7 +69,7 @@
 
             // if there is a bg-color defined by echo we have to set this to the style of the bg-image
             var echoDefinedBGColor = this.element.css('backgroundColor');
-            if(!echoDefinedBGColor) {
+            if (!echoDefinedBGColor) {
                 echoDefinedBGColor = 'transparent';
             }
             var style__icon = {
@@ -87,10 +87,10 @@
                     .attr("autocomplete", "off")
                 // TODO verify these actually work as intended
                     .attr({
-                role: "textbox",
-                "aria-autocomplete": "list",
-                "aria-haspopup": "true"
-            })
+                              role: "textbox",
+                              "aria-autocomplete": "list",
+                              "aria-haspopup": "true"
+                          })
                     .bind("keydown.autocomplete", function(event) {
                 if (self.options.disabled) {
                     return;
@@ -128,7 +128,10 @@
                         self.menu.select(event);
                         break;
                     case keyCode.ESCAPE:
-                        self.element.val(self.term);
+                        if (self.isSuggestBoxVisible) {
+                            // if suggestBox is visible, we reSet the value in the inputField to the 'old' one
+                            self.element.val(self.term);
+                        }
                         // In case of using in Echo we have to trigger the close manually from echo because
                         // there are different strategies in event-handling in Gecko-Engines (like Firefox) and the Internet Explorer
                         // We want to have different ESCAPE-functionality in inside-Echo whether suggestBox is open or not...
@@ -204,42 +207,42 @@
                 }, 13);
             })
                     .menu({
-                focus: function(event, ui) {
-                    var item = ui.item.data("item.autocomplete");
-                    if (false !== self._trigger("focus", null, { item: item })) {
-                        // use value to match what will end up in the input, if it was a key event
-                        if (/^key/.test(event.originalEvent.type)) {
-                            self.element.val(item.value);
-                        }
-                    }
-                },
-                selected: function(event, ui) {
-                    var item = ui.item.data("item.autocomplete"),
-                            previous = self.previous;
+                              focus: function(event, ui) {
+                                  var item = ui.item.data("item.autocomplete");
+                                  if (false !== self._trigger("focus", null, { item: item })) {
+                                      // use value to match what will end up in the input, if it was a key event
+                                      if (/^key/.test(event.originalEvent.type)) {
+                                          self.element.val(item.value);
+                                      }
+                                  }
+                              },
+                              selected: function(event, ui) {
+                                  var item = ui.item.data("item.autocomplete"),
+                                          previous = self.previous;
 
-                    // only trigger when focus was lost (click on menu)
-                    if (self.element[0] !== doc.activeElement) {
-                        self.element.focus();
-                        self.previous = previous;
-                    }
+                                  // only trigger when focus was lost (click on menu)
+                                  if (self.element[0] !== doc.activeElement) {
+                                      self.element.focus();
+                                      self.previous = previous;
+                                  }
 
-                    if (false !== self._trigger("select", event, { item: item })) {
-                        self.term = item.value;
-                        self.element.val(item.value);
-                    }
+                                  if (false !== self._trigger("select", event, { item: item })) {
+                                      self.term = item.value;
+                                      self.element.val(item.value);
+                                  }
 
-                    self.close(event);
-                    self.selectedItem = item;
-                },
-                blur: function(event, ui) {
-                    // don't set the value of the text field if it's already correct
-                    // this prevents moving the cursor unnecessarily
-                    if (self.menu.element.is(":visible") &&
-                            ( self.element.val() !== self.term )) {
-                        self.element.val(self.term);
-                    }
-                }
-            })
+                                  self.close(event);
+                                  self.selectedItem = item;
+                              },
+                              blur: function(event, ui) {
+                                  // don't set the value of the text field if it's already correct
+                                  // this prevents moving the cursor unnecessarily
+                                  if (self.menu.element.is(":visible") &&
+                                          ( self.element.val() !== self.term )) {
+                                      self.element.val(self.term);
+                                  }
+                              }
+                          })
                     .zIndex(this.element.zIndex() + 1)
                 // workaround for jQuery bug #5781 http://dev.jquery.com/ticket/5781
                     .css({ top: 0, left: 0 })
@@ -280,7 +283,7 @@
         setLoadingAnimation: function(doLoading) {
             // pick up tzhe actual bg-color to set it to the new styling of the img
             var actualDefinedBGColor = this.element.css('backgroundColor');
-            if(!actualDefinedBGColor) {
+            if (!actualDefinedBGColor) {
                 actualDefinedBGColor = 'transparent';
             }
             if (doLoading && this.styling.loading_img) {
@@ -545,9 +548,9 @@
                     .css(style__ui_widget_content)
                     .css(style__ui_corner_all)
                     .attr({
-                role: "listbox",
-                "aria-activedescendant": "ui-active-menuitem"
-            })
+                              role: "listbox",
+                              "aria-activedescendant": "ui-active-menuitem"
+                          })
                     .click(function(event) {
                 if (!$(event.target).closest(".ui-menu-item a").length) {
                     return;
