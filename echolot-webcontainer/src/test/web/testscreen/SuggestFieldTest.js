@@ -180,7 +180,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
         ]);
         return suggestModel;
     },
-    
+
     /**
      * Helper
      * @param text
@@ -195,7 +195,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
             }
         });
     },
-    
+
     _dummyAction: function(event) {
         var self = this;
         this._suggestModel.suggestItems = this._suggestModel.suggestItems.concat(new exxcellent.model.SuggestItem('TestLabel ' + Math.round(Math.random() * 100), '', 'Cat 1', Math.round(Math.random() * 100)));
@@ -207,7 +207,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
     },
 
     _dummyListener__SuggestItemSelected: function(event) {
-        this._mainContent.showMsg("SuggestItem selected", "Identifier: " + event.data);        
+        this._mainContent.showMsg("SuggestItem selected", "Identifier: " + event.data);
     },
 
     _triggerClient: function() {

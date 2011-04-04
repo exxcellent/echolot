@@ -67,8 +67,13 @@
                 'background': this.styling.suggestAreaColor
             }
 
+            // if there is a bg-color defined by echo we have to set this to the style of the bg-image
+            var echoDefinedBGColor = this.element.css('backgroundColor');
+            if(!echoDefinedBGColor) {
+                echoDefinedBGColor = 'transparent';
+            }
             var style__icon = {
-                'background': ' url(' + this.styling.magnifier_img + ') right center no-repeat'
+                'background': ' url(' + this.styling.magnifier_img + ') right center no-repeat ' + echoDefinedBGColor
             }
 
             if (this.styling.magnifier_img) {
@@ -273,14 +278,19 @@
          * @param doLoading
          */
         setLoadingAnimation: function(doLoading) {
+            // pick up tzhe actual bg-color to set it to the new styling of the img
+            var actualDefinedBGColor = this.element.css('backgroundColor');
+            if(!actualDefinedBGColor) {
+                actualDefinedBGColor = 'transparent';
+            }
             if (doLoading && this.styling.loading_img) {
                 var style__icon = {
-                    'background': ' url(' + this.styling.loading_img + ') right center no-repeat'
+                    'background': ' url(' + this.styling.loading_img + ') right center no-repeat ' + actualDefinedBGColor
                 }
                 this.element.css(style__icon);
             } else if (!doLoading && this.styling.magnifier_img) {
                 var style__icon = {
-                    'background': ' url(' + this.styling.magnifier_img + ') right center no-repeat'
+                    'background': ' url(' + this.styling.magnifier_img + ') right center no-repeat ' + actualDefinedBGColor
                 }
                 this.element.css(style__icon);
 
