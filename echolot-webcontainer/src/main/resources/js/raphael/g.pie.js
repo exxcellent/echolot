@@ -24,7 +24,7 @@
  * @param opts - the options, contains also the legend
  * @param style - echo-specific styling
  */
-Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
+Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style) {
     opts = opts || {};
     var paper = this,
             sectors = [],
@@ -228,17 +228,31 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, opts, style) {
         dir = (dir && dir.toLowerCase && dir.toLowerCase()) || "east";
         mark = paper.g.markers[mark && mark.toLowerCase()] || "disc";
         chart.labels = paper.set();
-        for (var i = 0; i < len; i++) {
-            var clr = series[i].attr("fill"),
-                    j = values[i].order,
-                    txt;
-            values[i].others && (labels[j] = otherslabel || "Others");
-            labels[j] = paper.g.labelise(labels[j], values[i], total);
-            chart.labels.push(paper.set());
-            chart.labels[i].push(paper.g[mark](x + 5, h, 5).attr({fill: clr, stroke: "none"}));
-            chart.labels[i].push(txt = paper.text(x + 20, h, labels[j] || values[j]).attr(style.legendFont || paper.g.txtattr).attr({fill: opts.legendcolor || "#000", "text-anchor": "start"}));
-            covers[i].label = chart.labels[i];
-            h += txt.getBBox().height * style.legendGapFactor;
+        for (var i = 0; i < labels.length; i++) {
+            // if it's a label that fits to a values-Object:
+            if (i < len) {
+                var clr = series[i].attr("fill"),
+                        j = values[i].order,
+                        txt;
+                values[i].others && (labels[j] = otherslabel || "Others");
+                labels[j] = paper.g.labelise(labels[j], values[i], total);
+                chart.labels.push(paper.set());
+                chart.labels[i].push(paper.g[mark](x + 5, h, 5).attr({fill: clr, stroke: "none"}));
+                chart.labels[i].push(txt = paper.text(x + 20, h, labels[j] || values[j]).attr(style.legendFont || paper.g.txtattr).attr({fill: opts.legendcolor || "#000", "text-anchor": "start"}));
+                covers[i].label = chart.labels[i];
+                h += txt.getBBox().height * style.legendGapFactor;
+            }
+            // if it's a label for a 'ZERO' value:
+            else {
+                var clr = valuesToIgnore[i-len].color || fallbackColorFactory(),
+                        j = i,
+                        txt;
+                labels[i] = paper.g.labelise(labels[i], 0, total); // we labelise with ZERO
+                chart.labels.push(paper.set());
+                chart.labels[i].push(paper.g[mark](x + 5, h, 5).attr({fill: clr, stroke: "none"}));
+                chart.labels[i].push(txt = paper.text(x + 20, h, labels[i] || 0).attr(style.legendFont || paper.g.txtattr).attr({fill: opts.legendcolor || "#000", "text-anchor": "start"}));
+                h += txt.getBBox().height * style.legendGapFactor;
+            }
         }
         var bb = chart.labels.getBBox(),
                 tr = {

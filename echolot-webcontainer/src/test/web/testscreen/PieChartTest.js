@@ -116,7 +116,7 @@ exxcellent.test.PieChartTest = Core.extend({
             showLegend : true,
             showPopUp : true,
             doAnimation : true,
-            width : 300,
+            width : 400,
             height : 200,
             events: {
                 pieSectorSelect: Core.method(this, this._dummyAction) }
@@ -131,7 +131,7 @@ exxcellent.test.PieChartTest = Core.extend({
         var sectors = new Array(
                 new exxcellent.model.PieSector("Blubber", 90, "Blubber PopUp", true, '#33FF99', 'Abbrev 1', 10)
                 ,
-                new exxcellent.model.PieSector("Foo", 40, "Foo PopUp", true, '#663399', 'Abbrev 2', '#fff', 11)
+                new exxcellent.model.PieSector("Foo", 0, "Foo PopUp", true, '#663399', 'Abbrev 2', '#fff', 11)
                 ,
                 new exxcellent.model.PieSector("Bar", 20, "Bar PopUp", true, '#666633', 'Abbrev 3', null, 12)
                 );

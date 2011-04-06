@@ -224,10 +224,13 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
 
         // we step through all sectors and throw away those with ZERO
         var sectorsToPaint = [];
+        var sectorsNotToPaint = [];
         var count;
         for (count in sectors) {
             if (sectors[count].value != 0) {
                 sectorsToPaint.push(sectors[count])
+            } else {
+                sectorsNotToPaint.push(sectors[count]);
             }
         }
 
@@ -242,12 +245,20 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
                     legendValues[i] = sectorsToPaint[i].name;
                 }
             }
+            for (i = 0; i < sectorsNotToPaint.length; i++) {
+                if (sectorsNotToPaint[i].showPercentage) {
+                    // if we should show percentage
+                    legendValues.push('%%.%%' + exxcellent.PieChartSync._percentageDelimiter + sectorsNotToPaint[i].name);
+                } else {
+                    legendValues.push(sectorsNotToPaint[i].name);
+                }
+            }
         } else {
             // if we don't want to have a legend we just pass 'null' to raphael -it will handle this for us
             legendValues = null;
         }
 
-        var pie = this._raphael.g.piechart(x_offset, y_offset, radius, sectorsToPaint, {legend: legendValues, legendpos: style.legendPosition, legendcolor: style.legendForeground}, style);
+        var pie = this._raphael.g.piechart(x_offset, y_offset, radius, sectorsToPaint, sectorsNotToPaint, {legend: legendValues, legendpos: style.legendPosition, legendcolor: style.legendForeground}, style);
 
         if (style.doAnimation) {
             // Let's do some animation

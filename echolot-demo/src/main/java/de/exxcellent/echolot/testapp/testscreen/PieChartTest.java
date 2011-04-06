@@ -267,7 +267,7 @@ public class PieChartTest extends SplitPane {
         PieSector sector_1 = new PieSector("Test", 70, "Test", "T", null, Color.LIGHTGRAY, null);
         PieSector sector_2 = new PieSector("Blubber", 20, "Blubber", "Bl", null, null);
         PieSector sector_3 = new PieSector("Bar", 150, "Bar", "Ba", null, null);
-        PieSector sector_4 = new PieSector("Foo", 55, "Bar", "Ba", null, Color.WHITE, null);
+        PieSector sector_4 = new PieSector("Foo", 0, "Bar", "Ba", null, Color.WHITE, null);
         return new PieModel(new PieSector[]{sector_1, sector_2, sector_3, sector_4});
     }
 
