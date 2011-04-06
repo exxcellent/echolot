@@ -1,5 +1,5 @@
 /**
- * g.Raphael - eXXcellent version
+ * g.pie Raphael - eXXcellent version
  * Extended to be used in echo3 Framework
  *
  * ---------------------------------------------------------------------------------------
@@ -21,6 +21,7 @@
  * @param cy - yOffset
  * @param r - radius
  * @param values - pieValues [will be an Array of exxcellent.model.PieSector]
+ * @param valuesToIgnore - the pieValues with ZERO-value, will be ignored in most cases
  * @param opts - the options, contains also the legend
  * @param style - echo-specific styling
  */
@@ -138,6 +139,11 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
         }
     }
 
+    /**
+     * Callback for hover
+     * @param fin - In-Callback
+     * @param fout - Out-Callback
+     */
     chart.hover = function (fin, fout) {
         fout = fout || function () {
         };
@@ -167,10 +173,11 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
         }
         return this;
     };
-    // x: where label could be put
-    // y: where label could be put
-    // value: value to show
-    // total: total number to count %
+
+    /**
+     * Callback - will be applied to all sectors
+     * @param f - the callback function
+     */
     chart.each = function (f) {
         var that = this;
         for (var i = 0; i < len; i++) {
@@ -193,6 +200,11 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
         }
         return this;
     };
+
+    /**
+     * Callback to handle a click of a sector
+     * @param f - callback function that will be triggered by clicking a sector
+     */
     chart.click = function (f) {
         var that = this;
         for (var i = 0; i < len; i++) {
@@ -217,9 +229,23 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
         }
         return this;
     };
+
+    /**
+     * Inject a sector dynamically
+     * <i>Untested in this echo3 use</i>
+     * @param element - the element you want to add
+     */
     chart.inject = function (element) {
         element.insertBefore(covers[0]);
     };
+
+    /**
+     * Drawing the legend of the pie
+     * @param labels
+     * @param otherslabel
+     * @param mark
+     * @param dir
+     */
     var legend = function (labels, otherslabel, mark, dir) {
         var x = cx + r + r / 5,
                 y = cy,

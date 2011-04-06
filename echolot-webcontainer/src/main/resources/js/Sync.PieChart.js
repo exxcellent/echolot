@@ -2,7 +2,10 @@
  * PieChart Version 1.0
  * Used to draw nice PieCharts as an Echo-Component with the help
  * of raphael and g.raphael.
- * See 'http://raphaeljs.com/' for further information
+ * See
+ * - http://raphaeljs.com/
+ * - http://g.raphaeljs.com/
+ * for further information
  *
  * @author Ralf Enderle  <r.enderle@exxcellent.de>
  * @version 1.0
@@ -213,7 +216,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
 
         var radius = this._calculatePieRadius(width, height, style.showLegend, style.legendPosition, pieModel.sectors.length);
 
-        var sectors = pieModel.sectors;             // the various sectors of the pie
+        var sectors = pieModel.sectors; // the various sectors of the pie
 
         // calculate layout-data
         var x_offset = radius + (exxcellent.PieChartSync._offsetValue * exxcellent.PieChartSync._scaleFactor);
@@ -222,9 +225,10 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
         this._raphael = Raphael(this._div, width, height);
         var raphael_self = this._raphael;
 
-        // we step through all sectors and throw away those with ZERO
-        var sectorsToPaint = [];
-        var sectorsNotToPaint = [];
+
+        var sectorsToPaint = []; // will contain all sectors with: value > ZERO
+        var sectorsNotToPaint = [];  // will contain all sectors with: value == ZERO
+        // we step through all sectors and put those with ZERO in sectorsNotToPaint
         var count;
         for (count in sectors) {
             if (sectors[count].value != 0) {
@@ -260,6 +264,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
 
         var pie = this._raphael.g.piechart(x_offset, y_offset, radius, sectorsToPaint, sectorsNotToPaint, {legend: legendValues, legendpos: style.legendPosition, legendcolor: style.legendForeground}, style);
 
+        // if animation is defined we inject a callback into raphael
         if (style.doAnimation) {
             // Let's do some animation
             pie.hover(

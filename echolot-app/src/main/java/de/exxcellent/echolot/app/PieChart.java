@@ -45,7 +45,10 @@ import java.util.EventListener;
  */
 public class PieChart extends Component {
 
-
+    /**
+     * The PieModel - will be complex type of de.exxcellent.echolot.model.PieModel
+     * Transport to Client will be done by serialization to JSON
+     */
     public static final String PROPERTY_PIEMODEL = "pieModel";
 
 
@@ -126,13 +129,25 @@ public class PieChart extends Component {
         super();
     }
 
+    // --- Property: PROPERTY_LEGEND_POSITION
+
+    /**
+     * Set the position of the legend
+     * @param location - the location to set
+     */
     public void setLegendPosition(Location location) {
         set(PROPERTY_LEGEND_POSITION, location.getLocationValue());
     }
 
+    /**
+     * Returns the actual legend position
+     * @return - the legend position
+     */
     public Location getLegendPosition() {
         return Location.toLocationValue((String) get(PROPERTY_LEGEND_POSITION));
     }
+
+    // --- Property: PROPERTY_LEGEND_GAP_FACTOR
 
     /**
      * Set the gap-factor that's used while calculating the space of the legendValues
@@ -143,24 +158,48 @@ public class PieChart extends Component {
         set(PROPERTY_LEGEND_GAP_FACTOR, factor);
     }
 
+    /**
+     * Returns the gap-factor of the legend
+     * @return
+     */
     public double getLegendGapFactor() {
         return (Double) get(PROPERTY_LEGEND_GAP_FACTOR);
     }
 
+
+    // --- Property: PROPERTY_SHOW_LEGEND
+    /**
+     * Returns true, if the legend should be shown
+     * @return - true, if legend should be shown on client
+     */
     public Boolean isShowLegend() {
         return (Boolean) get(PROPERTY_SHOW_LEGEND);
     }
 
+    /**
+     * Should the legend be shown on client?
+     * @param showLegend - true, if the legend should be shown
+     */
     public void setShowLegend(final Boolean showLegend) {
         set(PROPERTY_SHOW_LEGEND, showLegend);
     }
 
+    // --- Property: PROPERTY_SHOW_POPUP
+
+    /**
+     * Returns true, if the PopUp should be shown
+     * @return - true, if PopUp should be shown on client
+     */
     public Boolean isShowPopUp() {
         return (Boolean) get(PROPERTY_SHOW_POPUP);
     }
 
-    public void setShowPopUp(final Boolean showPopU) {
-        set(PROPERTY_SHOW_POPUP, showPopU);
+    /**
+     * Should the PopUp be shown on client
+     * @param showPop - true, if the PopUp should be shown on client
+     */
+    public void setShowPopUp(final Boolean showPop) {
+        set(PROPERTY_SHOW_POPUP, showPop);
     }
 
     // --- Property: PROPERTY_POPUP_BACKGROUND
@@ -502,6 +541,11 @@ public class PieChart extends Component {
         return getEventListenerList().getListenerCount(PieSectorSelectListener.class) > 0;
     }
 
+    /**
+     * Searches in the actual PieModel for a sector with the corresponding identifier
+     * @param identifier
+     * @return - the corresponding sector or null, if there is no match
+     */
     private PieSector findPieSectorForIdentifier(String identifier) {
         if (getPieModel() != null) {
             for (PieSector sector : getPieModel().getSectors()) {
