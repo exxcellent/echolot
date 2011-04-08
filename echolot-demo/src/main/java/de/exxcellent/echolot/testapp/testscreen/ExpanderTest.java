@@ -79,9 +79,8 @@ public class ExpanderTest extends SplitPane {
         hidden.setLayoutData(fld);
         content.setLayoutData(fld);
 
-        // the notifier instance
+        // the expander instance
         final Expander exp = new Expander();
-
         exp.setTitlePosition("left");
         exp.setHeaderHeight(new Extent(32));
         exp.setHeaderInsets(new Insets(10, 10));
@@ -110,8 +109,26 @@ public class ExpanderTest extends SplitPane {
             }
         });
 
-        final Component pane = new ContentPane();
+
+
+        final Grid exp1 = new Grid(2);
+        exp1.setInsets(new Insets(5));
+        final Expander expHidden = new Expander();
+        expHidden.setContent(new Label("Expanded Content"));
+        expHidden.setHeaderHide(true);
+        expHidden.setShow(false);
+        Button button = new Button("Click me!");
+        button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                expHidden.setShow(true);
+            }
+        });
+        exp1.add(button);
+        exp1.add(expHidden);
+
+        final Component pane = new Column();
         pane.add(exp);
+        pane.add(exp1);
         add(pane);
 
         controlsColumn.addButton("Set Random Header Background", new ActionListener() {

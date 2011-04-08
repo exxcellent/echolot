@@ -49,7 +49,8 @@ exxcellent.Expander = Core.extend(Echo.Component, {
         FOCUSED_BORDER: "focusedBorder",
 
         CONTENT_TOGGLED: "contentToggled",
-        SHOW: "show"
+        SHOW: "show",
+        HEADER_HIDE: "headerHide"
     },
 
     /** @see Echo.Component#componentType */
@@ -81,7 +82,8 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
             titleInsets: "0px",
             iconTextMarginRL: "5px",
             iconTextMarginTop: "10px",
-            showInitially: true
+            showInitially: true,
+            headerHide: false
         },
         _supportedPartialProperties: [
             exxcellent.Expander.SHOW]
@@ -116,7 +118,9 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         Core.Web.Event.add(this._div, "blur", Core.method(this, this._processBlur), false);
         Core.Web.Event.add(this._div, "keydown", Core.method(this, this._processKeyPress), false);
 
-        this._renderHeader(update);
+        if (!this.component.render(exxcellent.Expander.HEADER_HIDE)) {
+            this._renderHeader(update);
+        }
         this._renderChildren(update);
         
         parentElement.appendChild(this._div);
@@ -285,6 +289,9 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * @param hide if true the hide text and image is shown
      */
     _toggleHeader: function(hide) {
+        if (this.component.render(exxcellent.Expander.HEADER_HIDE)) {
+            return;
+        }
         $(this._txtDiv).empty();
         if (hide) {
             this._txtDiv.appendChild(document.createTextNode(this.component.render(exxcellent.Expander.HIDE_TEXT)));

@@ -160,9 +160,35 @@ exxcellent.test.ExpanderTest = Core.extend({
                     ]
                 })
             ]
-
         }));
-
+        var hideExpander = new exxcellent.Expander({
+                                styleName: "ExpanderTest",
+                                headerHide: true,
+                                show: false,
+                                // the content
+                                children: [new Echo.Grid({
+                                    styleName: "Default",
+                                    size: 2,
+                                    children: [
+                                        new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
+                                        new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default",text: "Oliver"}),
+                                        new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default",text: "Germany"}),
+                                        new Echo.Label({text: "Status"}), new Echo.CheckBox({selected: true})
+                                    ]})
+                                ]});
+        // a button with a hidden expander component
+        testColumn.add(new Echo.Grid({
+                        styleName: "Default",
+                        size: 2,
+                        children: [
+                            new Echo.Label({icon: "image/magnifier.png"}),
+                            this._createButton('btn.hideexp', "Click me!",
+                                function() {
+                                    hideExpander.set(exxcellent.Expander.SHOW, !hideExpander.get(exxcellent.Expander.SHOW));
+                                }),
+                            hideExpander
+                        ]})
+        );
 
         var contentPane = new Echo.ContentPane({
             styleName: "TestArea",

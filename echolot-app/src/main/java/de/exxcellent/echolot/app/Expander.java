@@ -123,6 +123,7 @@ public class Expander extends Component {
     public static final String PROPERTY_FOCUSED_BACKGROUND = "focusedBackground";
     public static final String PROPERTY_FOCUSED_BACKGROUND_IMAGE = "focusedBackgroundImage";
     public static final String PROPERTY_FOCUSED_BORDER = "focusedBorder";
+    public static final String PROPERTY_HEADER_HIDE = "headerHide";
 
     // events
     public static final String PROPERTY_ACTION_COMMAND = "actionCommand";
@@ -770,4 +771,25 @@ public class Expander extends Component {
     public void setTitle(Component titleComponent) {
         add(titleComponent, 2);
     }
+
+    /**
+     * Returns true if the header is hidden. Hidden means
+     * not even rendered.
+     *
+     * @return true if the header is hidden.
+     */
+    public boolean isHeaderHide() {
+        final Object property = get(PROPERTY_HEADER_HIDE);
+        return null == property || ((Boolean) property).booleanValue();
+    }
+
+    /**
+     * Sets the header to be invisible - actually not even rendered.
+     *
+     * @param newValue true will hide the header
+     */
+    public void setHeaderHide(final boolean newValue) {
+        set(PROPERTY_HEADER_HIDE, Boolean.valueOf(newValue));
+    }
+
 }
