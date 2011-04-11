@@ -1,3 +1,10 @@
+/*
+ * This file (Sync.Expander.js) is part of the Echolot Project (hereinafter "Echolot").
+ * Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+ *
+ * Version: MPL 1.1/GPL 2.0/LGPL 2.1
+ */
+
 /**
  * Expander component: A container which has either one or two children. It renders a section
  * line with an optional title at the top of its content. The content can be hidden and shown by
@@ -316,6 +323,8 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
 
             // toggle the shown index
             self._shown = !self._shown;
+            // sync the component value to reflect the current state
+            self.component.set(exxcellent.Expander.SHOW, self._shown);
             self._onContentToggled(self._shown);
             self._toggleHeader(self._shown);
 

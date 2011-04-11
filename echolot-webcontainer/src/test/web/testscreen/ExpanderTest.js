@@ -217,7 +217,10 @@ exxcellent.test.ExpanderTest = Core.extend({
         if (event && window.console) {
             console.log("Action triggered event: " + event.type + " data: " + event.data);
         }
-        this._mainContent.showMsg("Action triggered!", event.type + " data: " + event.data)
+        this._mainContent.showMsg(
+                "Action triggered!", event.type
+                + " data: " + event.data
+                + " show: " + event.source.get(exxcellent.Expander.SHOW));
         return false;
     }
 });
