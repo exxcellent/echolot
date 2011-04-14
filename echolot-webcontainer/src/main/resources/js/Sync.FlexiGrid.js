@@ -391,7 +391,10 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
         // Remove out attached keylisteners from the DIV
         Core.Web.Event.removeAll(this._div);
         // Call internal flexigrid destroy.
-        this._flexigrid.flexDestroy();
+        if(this._flexigrid) {
+            // only destroy it, when it's not already null see: https://github.com/exxcellent/echolot/issues/6
+            this._flexigrid.flexDestroy();
+        }
 
         this._table = null;
         this._flexigrid = null;
