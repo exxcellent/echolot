@@ -29,14 +29,11 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import java.io.Serializable;
 
 /**
  * @author Ralf Enderle
  */
-@XStreamAlias("pieModel")
 public class PieModel implements Serializable {
 
     private final PieSector[] sectors;

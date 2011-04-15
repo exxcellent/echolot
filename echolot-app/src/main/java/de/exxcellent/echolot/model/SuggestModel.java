@@ -29,9 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
-@XStreamAlias("suggestModel")
 public class SuggestModel {
     private SuggestItem[] suggestItems;
 

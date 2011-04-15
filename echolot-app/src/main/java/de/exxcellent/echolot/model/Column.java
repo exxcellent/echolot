@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 
 /**
@@ -43,12 +42,10 @@ import java.io.Serializable;
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("column")
 public class Column implements Serializable {
 	private static final long serialVersionUID = 1l;
 
 	/** The name for the column, i.e. id */
-    @XStreamAlias("name")
 	private int id;
 	
 	/** The display/title for the column (headline). */

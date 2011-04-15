@@ -29,14 +29,11 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * A {@link SortingColumn} class describes a column and its sortOrder order.
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("sortingColumn")
 public class SortingColumn {
     private final int columnId;
     private final String sortOrder;

@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 
 /**
@@ -53,7 +52,6 @@ import java.io.Serializable;
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("row")
 public class Row implements Serializable {
 	private static final long serialVersionUID = 2l;
 

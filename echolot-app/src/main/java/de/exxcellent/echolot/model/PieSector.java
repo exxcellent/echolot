@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import nextapp.echo.app.ApplicationInstance;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.serial.SerialException;
@@ -44,7 +43,6 @@ import java.io.Serializable;
  *
  * @author Ralf Enderle
  */
-@XStreamAlias("sectors")
 public class PieSector implements Serializable {
 
     /**

@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.app;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import de.exxcellent.echolot.event.TableColumnToggleEvent;
 import de.exxcellent.echolot.event.TableRowSelectEvent;
 import de.exxcellent.echolot.event.TableSortingChangeEvent;
@@ -239,18 +237,6 @@ public class FlexiGrid extends Component implements Pane {
     private static final ImageReference LOAD_BTN_IMG =
             new ResourceImageReference("js/flexigrid/css/flexigrid/images/load.gif");
 
-    /** The serializer used to serialize model instances. */
-    protected static final XStream xstream;
-
-    static {
-        /* The JsonHierarchicalStreamDriver can only write JSON */
-        xstream = new XStream(new JettisonMappedXmlDriver());
-        xstream.processAnnotations(RowSelection.class);
-        xstream.processAnnotations(ColumnVisibility.class);
-        xstream.processAnnotations(SortingModel.class);
-        xstream.processAnnotations(SortingColumn.class);
-        xstream.setMode(XStream.NO_REFERENCES);
-    }
 
     private TableModel tableModel;
     private ColumnModel columnModel;
@@ -850,74 +836,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public String getDecimalDelimiter() {
         return (String) get(PROPERTY_DECIMAL_DELIMITER);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void processInput(String inputName, Object inputValue) {
-        super.processInput(inputName, inputValue);
-        if (INPUT_TABLE_ROW_SELECT.equals(inputName)) {
-            final String jsonMessage = (String) inputValue;
-            /**
-             * <pre>
-             * Parse input JSON message:
-             * {"rowSelection": {
-             *  "rowId": 1 
-             * }}
-             * </pre>
-             */
-            try {
-                final RowSelection rowSelection = (RowSelection) xstream.fromXML(jsonMessage);
-                userTableRowSelect(rowSelection);
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not unmarshall rowSelection from JSON msg: '" + jsonMessage + "', CM== '"
-                        + columnModel + "', SM== '" + sortingModel + "'", e);
-            }
-        } else if (INPUT_TABLE_COLUMN_TOGGLE.equals(inputName)) {
-            final String jsonMessage = (String) inputValue;
-            /**
-             * <pre>
-             * {"columnVisibility": {
-             *      "columnId": 0,
-             *      "visible": true 
-             * }}
-             * </pre>
-             */
-            try {
-                final ColumnVisibility columnToggle = (ColumnVisibility) xstream.fromXML(jsonMessage);
-                userTableColumnToggle(columnToggle);
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not unmarshall columnVisibility from JSON msg: '" + jsonMessage + "', CM== '"
-                        + columnModel + "', SM== '" + sortingModel + "'", e);
-            }
-        } else if (INPUT_TABLE_SORTING_CHANGE.equals(inputName)) {
-            final String jsonMessage = (String) inputValue;
-            /**
-             * <pre>
-             * {"sortingModel": {
-             *      "columns": {
-             *        "sortingColumn" : [{
-             *              "columnId": 0,
-             *              "sortOrder": "asc"
-             *          },
-             *          {
-             *           "columnId": 1,
-             *           "sortOrder": "desc"
-             *          }
-             *        }]
-             *   }}
-             * </pre>
-             */
-            try {
-                final SortingModel aSortingModel = (SortingModel) xstream.fromXML(jsonMessage);
-                userTableSortingChange(aSortingModel);
-            } catch (NumberFormatException e) {
-                throw new RuntimeException("Could not unmarshall sortingModel from JSON msg== '" + jsonMessage + "', CM== '"
-                        + columnModel + "', SM== '" + sortingModel + "'", e);
-            }
-        }
     }
 
     /**

@@ -81,6 +81,9 @@ public class DatePickerPeer extends AbstractComponentSynchronizePeer {
         WebContainerServlet.getResourceRegistry().add("DatePickerStylesheet", "datepicker-template.css", ContentType.TEXT_CSS);
         /* JSON Stream Driver */
         xstream = new XStream(new JsonHierarchicalStreamDriver());
+
+        xstream.alias("localeModel", LocaleModel.class);
+
         xstream.processAnnotations(LocaleModel.class);
     }
 

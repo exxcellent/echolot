@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import nextapp.echo.app.ApplicationInstance;
 import nextapp.echo.app.Color;
 import nextapp.echo.app.serial.SerialException;
@@ -38,7 +37,6 @@ import nextapp.echo.app.serial.property.ColorPeer;
 /**
  * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
-@XStreamAlias("bar")
 public class Bar {
 
     private final Integer value;

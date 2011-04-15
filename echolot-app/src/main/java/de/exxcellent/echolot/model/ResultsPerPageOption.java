@@ -29,14 +29,11 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * A class to specify the results per page options.
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("resultsPerPageOption")
 public class ResultsPerPageOption {
     private int[] pageOptions;
     private int initialOption;

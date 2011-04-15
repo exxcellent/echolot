@@ -30,17 +30,11 @@
 package de.exxcellent.echolot.webcontainer.sync.component;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
 import de.exxcellent.echolot.SharedService;
 import de.exxcellent.echolot.app.FlexiGrid;
-import de.exxcellent.echolot.model.Column;
-import de.exxcellent.echolot.model.ColumnModel;
-import de.exxcellent.echolot.model.Page;
-import de.exxcellent.echolot.model.ResultsPerPageOption;
-import de.exxcellent.echolot.model.Row;
-import de.exxcellent.echolot.model.SortingColumn;
-import de.exxcellent.echolot.model.SortingModel;
-import de.exxcellent.echolot.model.TableModel;
+import de.exxcellent.echolot.model.*;
 import nextapp.echo.app.Component;
 import nextapp.echo.app.util.Context;
 import nextapp.echo.webcontainer.AbstractComponentSynchronizePeer;
@@ -65,7 +59,8 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
     private static final String FLEXIGRID_STYLESHEET;
 
     /** The serializer used to serialize model instances. */
-    protected static final XStream xstream;
+    protected static final XStream xstreamOut;
+    protected static final XStream xstreamIn;
 
     static {
         FLEXIGRID_SERVICE = JavaScriptService.forResource("exxcellent.FlexiGridService",
@@ -83,15 +78,40 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
         WebContainerServlet.getResourceRegistry().add("FlexiGridStylesheet", "flexigrid.css", ContentType.TEXT_CSS);
 
         /* JSON Stream Driver */
-        xstream = new XStream(new JsonHierarchicalStreamDriver());
-        xstream.processAnnotations(TableModel.class);
-        xstream.processAnnotations(ColumnModel.class);
-        xstream.processAnnotations(Column.class);
-        xstream.processAnnotations(Row.class);
-        xstream.processAnnotations(Page.class);
-        xstream.processAnnotations(ResultsPerPageOption.class);
-        xstream.processAnnotations(SortingModel.class);
-        xstream.processAnnotations(SortingColumn.class);
+        xstreamOut = new XStream(new JsonHierarchicalStreamDriver());
+        xstreamOut.alias("tableModel", TableModel.class);
+        xstreamOut.alias("columnModel", ColumnModel.class);
+        xstreamOut.alias("column", Column.class);
+        xstreamOut.aliasField("name", Column.class, "id");
+
+        xstreamOut.alias("row", Row.class);
+        xstreamOut.alias("page", Page.class);
+        xstreamOut.alias("resultsPerPageOption", ResultsPerPageOption.class);
+        xstreamOut.alias("sortingModel", SortingModel.class);
+        xstreamOut.alias("sortingColumn", SortingColumn.class);
+
+        xstreamOut.processAnnotations(TableModel.class);
+        xstreamOut.processAnnotations(ColumnModel.class);
+        xstreamOut.processAnnotations(Column.class);
+        xstreamOut.processAnnotations(Row.class);
+        xstreamOut.processAnnotations(Page.class);
+        xstreamOut.processAnnotations(ResultsPerPageOption.class);
+        xstreamOut.processAnnotations(SortingModel.class);
+        xstreamOut.processAnnotations(SortingColumn.class);
+
+
+        xstreamIn = new XStream(new JettisonMappedXmlDriver());
+        xstreamIn.alias("rowSelection", RowSelection.class);
+        xstreamIn.alias("columnVisibility", ColumnVisibility.class);
+        xstreamIn.alias("sortingModel", SortingModel.class);
+        xstreamIn.alias("sortingColumn", SortingColumn.class);
+
+        xstreamIn.processAnnotations(RowSelection.class);
+        xstreamIn.processAnnotations(ColumnVisibility.class);
+        xstreamIn.processAnnotations(SortingModel.class);
+        xstreamIn.processAnnotations(SortingColumn.class);
+        xstreamIn.setMode(XStream.NO_REFERENCES);
+
     }
 
     /** Default constructor for a {@link FlexiGridPeer}. Registers an event peer for client events. */
@@ -103,6 +123,27 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
             public boolean hasListeners(Context context, Component c) {
                 return ((FlexiGrid) c).hasTableRowSelectListeners();
             }
+
+            @Override
+            public void processEvent(Context context, Component component, Object eventData) {
+                final FlexiGrid flexigrid = (FlexiGrid) component;
+                final String jsonMessage = (String) eventData;
+
+                /**
+                 * <pre>
+                 * Parse input JSON message:
+                 * {"rowSelection": {
+                 *  "rowId": 1
+                 * }}
+                 * </pre>
+                 */
+                try {
+                    final RowSelection rowSelection = (RowSelection) xstreamIn.fromXML(jsonMessage);
+                    flexigrid.userTableRowSelect(rowSelection);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Could not unmarshall rowSelection from JSON msg: '" + jsonMessage + "'", e);
+                }
+            }
         });
         addEvent(new EventPeer(FlexiGrid.INPUT_TABLE_COLUMN_TOGGLE,
                                FlexiGrid.TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY, String.class) {
@@ -110,12 +151,64 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
             public boolean hasListeners(Context context, Component c) {
                 return ((FlexiGrid) c).hasTableColumnToggleListeners();
             }
+
+            @Override
+            public void processEvent(Context context, Component component, Object eventData) {
+                final FlexiGrid flexigrid = (FlexiGrid) component;
+                final String jsonMessage = (String) eventData;
+
+                /**
+                 * <pre>
+                 * {"columnVisibility": {
+                 *      "columnId": 0,
+                 *      "visible": true
+                 * }}
+                 * </pre>
+                 */
+                try {
+                    final ColumnVisibility columnToggle = (ColumnVisibility) xstreamIn.fromXML(jsonMessage);
+                    flexigrid.userTableColumnToggle(columnToggle);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Could not unmarshall columnVisibility from JSON msg: '" + jsonMessage + "'", e);
+                }
+            }
+
         });
         addEvent(new EventPeer(FlexiGrid.INPUT_TABLE_SORTING_CHANGE,
                                FlexiGrid.TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY, String.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
                 return ((FlexiGrid) c).hasTableSortingChangeListeners();
+            }
+
+            @Override
+            public void processEvent(Context context, Component component, Object eventData) {
+                final FlexiGrid flexigrid = (FlexiGrid) component;
+                final String jsonMessage = (String) eventData;
+                /**
+                 * <pre>
+                 * {"sortingModel": {
+                 *      "columns": {
+                 *        "sortingColumn" : [{
+                 *              "columnId": 0,
+                 *              "sortOrder": "asc"
+                 *          },
+                 *          {
+                 *           "columnId": 1,
+                 *           "sortOrder": "desc"
+                 *          }
+                 *        }]
+                 *   }}
+                 * </pre>
+                 */
+                try {
+                    final SortingModel aSortingModel = (SortingModel) xstreamIn.fromXML(jsonMessage);
+                    flexigrid.setSortingModel(aSortingModel);
+                    flexigrid.userTableSortingChange(aSortingModel);
+                    super.processEvent(context, flexigrid, aSortingModel);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Could not unmarshall sortingModel from JSON msg== '" + jsonMessage + "'", e);
+                }
             }
         });
     }
@@ -157,13 +250,13 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
                                     final int propertyIndex) {
 
         if (FlexiGrid.PROPERTY_TABLEMODEL.equals(propertyName)) {
-            return xstream.toXML(((FlexiGrid) component).getTableModel());
+            return xstreamOut.toXML(((FlexiGrid) component).getTableModel());
         } else if (FlexiGrid.PROPERTY_COLUMNMODEL.equals(propertyName)) {
-            return xstream.toXML(((FlexiGrid) component).getColumnModel());
+            return xstreamOut.toXML(((FlexiGrid) component).getColumnModel());
         } else if (FlexiGrid.PROPERTY_RESULTS_PPAGE_OPTION.equals(propertyName)) {
-            return xstream.toXML(((FlexiGrid) component).getResultsPerPageOption());
+            return xstreamOut.toXML(((FlexiGrid) component).getResultsPerPageOption());
         } else if (FlexiGrid.PROPERTY_SORTINGMODEL.equals(propertyName)) {
-            return xstream.toXML(((FlexiGrid) component).getSortingModel());
+            return xstreamOut.toXML(((FlexiGrid) component).getSortingModel());
         }
         return super.getOutputProperty(context, component, propertyName, propertyIndex);
     }

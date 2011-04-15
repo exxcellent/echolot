@@ -84,6 +84,10 @@ public class PieChartPeer extends AbstractComponentSynchronizePeer {
 
         /* JSON Stream Driver */
         xstream = new XStream(new JsonHierarchicalStreamDriver());
+
+        xstream.alias("pieModel", PieModel.class);
+        xstream.alias("sectors", PieSector.class);
+
         xstream.processAnnotations(PieModel.class);
         xstream.processAnnotations(PieSector.class);
     }

@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import java.io.Serializable;
 
 /**
@@ -39,7 +37,6 @@ import java.io.Serializable;
  *
  * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
-@XStreamAlias("axisModel")
 public class AxisModel implements Serializable{
 
     private String[] xAxisValues;

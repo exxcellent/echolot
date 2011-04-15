@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import java.io.Serializable;
 
 /**
@@ -51,7 +49,6 @@ import java.io.Serializable;
  * @author Ralf Enderle <r.enderle@exxcellent.de>
  * @version 1.0
  */
-@XStreamAlias("barChartModel")
 public class BarChartModel implements Serializable {
 
     private final Bar[][] barValues;

@@ -29,8 +29,8 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import de.exxcellent.echolot.app.DatePicker;
+
 import java.io.Serializable;
 
 /**
@@ -39,7 +39,6 @@ import java.io.Serializable;
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("localeModel")
 public class LocaleModel implements Serializable {
 	private static final long serialVersionUID = 32;
 	

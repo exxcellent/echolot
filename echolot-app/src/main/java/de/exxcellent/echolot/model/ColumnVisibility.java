@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * JSON Message:
  * 
@@ -43,7 +41,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * 
  * @author oliver
  */
-@XStreamAlias("columnVisibility")
 public class ColumnVisibility {
     private int columnId;
     private boolean visible;

@@ -91,6 +91,10 @@ public class BarChartPeer extends AbstractComponentSynchronizePeer {
 
         /* JSON Stream Driver */
         xstream = new XStream(new JsonHierarchicalStreamDriver());
+
+        xstream.alias("barChartModel", BarChartModel.class);
+        xstream.alias("bar", Bar.class);
+
         xstream.processAnnotations(BarChartModel.class);
         xstream.processAnnotations(Bar.class);
     }

@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * JSON Message:
  * 
@@ -42,7 +40,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * 
  * @author oliver
  */
-@XStreamAlias("rowSelection")
 public class RowSelection {
     private int rowId;
 

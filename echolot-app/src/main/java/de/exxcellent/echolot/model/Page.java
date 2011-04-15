@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * A Page is a logical part of the table model and describes the rows in paged model.
  * 
@@ -52,7 +50,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("page")
 public class Page {
 	private static final long serialVersionUID = 3l;
 	

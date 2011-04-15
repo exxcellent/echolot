@@ -87,6 +87,11 @@ public class LineChartPeer extends AbstractComponentSynchronizePeer {
 
         /* JSON Stream Driver */
         xstream = new XStream(new JsonHierarchicalStreamDriver());
+
+        xstream.alias("lineChartModel", LineChartModel.class);
+        xstream.alias("points", LineChartPoint.class);
+        xstream.alias("axisModel", AxisModel.class);
+
         xstream.processAnnotations(LineChartModel.class);
         xstream.processAnnotations(LineChartPoint.class);
         xstream.processAnnotations(AxisModel.class);

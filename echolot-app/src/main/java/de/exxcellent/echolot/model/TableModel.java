@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -54,7 +53,6 @@ import java.util.Arrays;
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("tableModel")
 public class TableModel implements Serializable {
 	private static final long serialVersionUID = 4l;
 

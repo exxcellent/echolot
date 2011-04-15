@@ -29,15 +29,12 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 /**
  * Object that represents a SuggestItem for a SuggestField (it's covered by a list in SuggestModel)
  *
  * @author Ralf Enderle
  * @version 1.0
  */
-@XStreamAlias("suggestItem")
 public class SuggestItem {
     private String label;
     private String description;

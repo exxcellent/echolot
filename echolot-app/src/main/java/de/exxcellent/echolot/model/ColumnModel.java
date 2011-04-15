@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.io.Serializable;
 import java.util.Arrays;
 
@@ -43,9 +42,7 @@ import java.util.Arrays;
  * </pre>
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
- * todo get rid of XTSTREAM in the echolot-app module (either another impl. or using xml config)
  */
-@XStreamAlias("columnModel")
 public class ColumnModel implements Serializable {
 	private static final long serialVersionUID = 4l;
 

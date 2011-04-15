@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
 import java.io.Serializable;
 
 /**
@@ -38,7 +36,6 @@ import java.io.Serializable;
  * 
  * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
-@XStreamAlias("lineChartModel")
 public class LineChartModel implements Serializable{
 
     private final LineChartPoint[] points;

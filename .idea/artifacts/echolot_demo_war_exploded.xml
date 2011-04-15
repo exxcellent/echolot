@@ -11,8 +11,8 @@
         <element id="directory" name="lib">
           <element id="file-copy" path="$PROJECT_DIR$/echolot-app/lib/echo3-app-3.0.b8-SNAPSHOT.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-app/lib/echo3-webcontainer-3.0.b8-SNAPSHOT.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/echolot-app/lib/jettison-1.1.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/echolot-app/lib/xstream-1.3.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/echolot-webcontainer/lib/jettison-1.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/echolot-webcontainer/lib/xstream-1.3.1.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-demo/lib/runtime/rhino-1.6R7-strippedforyui.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-demo/lib/runtime/yuicompressor-2.4.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-webcontainer/lib/jdk15/stax-api-1.0-2.jar" />

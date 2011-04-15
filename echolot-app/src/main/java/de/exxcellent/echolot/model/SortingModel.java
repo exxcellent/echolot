@@ -29,7 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 import java.util.Arrays;
 
 /**
@@ -48,7 +47,6 @@ import java.util.Arrays;
  * 
  * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
-@XStreamAlias("sortingModel")
 public class SortingModel {
     private SortingColumn[] columns;
 

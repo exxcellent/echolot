@@ -29,25 +29,15 @@
 
 package de.exxcellent.echolot.app;
 
-import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
-import java.util.EventListener;
-import nextapp.echo.app.Alignment;
-import nextapp.echo.app.Border;
-import nextapp.echo.app.Color;
-import nextapp.echo.app.Component;
-import nextapp.echo.app.Extent;
-import nextapp.echo.app.FillImage;
-import nextapp.echo.app.Font;
-import nextapp.echo.app.ImageReference;
-import nextapp.echo.app.Insets;
-import nextapp.echo.app.ResourceImageReference;
+import de.exxcellent.echolot.model.LocaleModel;
+import nextapp.echo.app.*;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 import nextapp.echo.app.event.DocumentEvent;
 import nextapp.echo.app.event.DocumentListener;
 import nextapp.echo.app.text.Document;
-import de.exxcellent.echolot.model.LocaleModel;
+
+import java.util.EventListener;
 
 /**
  * DatePicker component: an calendar that can be used to select dates. The DatePicker can
@@ -169,15 +159,6 @@ public class DatePicker extends Component {
             new ResourceImageReference("js/datepicker/css/images/datepicker_y.png");
     private static final ImageReference DATEPICKER_Z_IMG =
             new ResourceImageReference("js/datepicker/css/images/datepicker_z.png");
-    
-    /** The serializer used to serialize model instances. */
-    protected static final XStream xstream;
-
-    static {
-        /* The JsonHierarchicalStreamDriver can only write JSON */
-        xstream = new XStream(new JettisonMappedXmlDriver());
-        xstream.processAnnotations(LocaleModel.class);
-    }
     
     private Document document;
 

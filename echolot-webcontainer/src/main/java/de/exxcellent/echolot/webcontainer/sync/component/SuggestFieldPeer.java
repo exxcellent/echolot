@@ -88,6 +88,10 @@ public class SuggestFieldPeer extends TextComponentPeer {
 
         /* JSON Stream Driver */
         xstream = new XStream(new JsonHierarchicalStreamDriver());
+
+        xstream.alias("suggestItem", SuggestItem.class);
+        xstream.alias("suggestModel", SuggestModel.class);
+
         xstream.processAnnotations(SuggestModel.class);
         xstream.processAnnotations(SuggestItem.class);
 
