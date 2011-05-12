@@ -10,6 +10,7 @@
 <project name="echolot" default="dist">
 
     <property name="dir.dist" value="dist"/>
+    <property name="dir.site" value="target/site"/>
     <property name="dir.tools" value="build-tools"/>
     <property name="profile" value="custom"/>
 
@@ -148,5 +149,57 @@
                 <include name="*/**"/>
             </packageset>
         </javadoc>
+    </target>
+
+    <target name="site.test" description="Creates a testsite for testing the components">
+        <mkdir dir="${dir.site}/test"/>
+        <echo message="Creating test application site for echolot"/>
+
+        <property name="dir.test.web" value="${webcontainer.path}/src/test/web/"/>
+        <property name="dir.main.resources" value="${webcontainer.path}/src/main/resources"/>
+        <!--
+        1. gather test application
+        -->
+
+        <copy todir="${dir.site}/test/image">
+            <fileset includes="**/*" dir="${dir.test.web}/image"/>
+        </copy>
+
+        <copy todir="${dir.site}/test/lib">
+            <fileset includes="**/*" dir="${dir.test.web}/lib"/>
+        </copy>
+
+        <copy todir="${dir.site}/test/testscreen">
+            <fileset includes="**/*" dir="${dir.test.web}/testscreen"/>
+        </copy>
+
+        <!--
+        2. gather libraries used in test
+        -->
+        <copy todir="${dir.site}/test/js">
+            <fileset dir="${dir.main.resources}/js" includes="**/*"/>
+        </copy>
+
+        <!--
+        3. include index.html and rewrite the path to the js files.
+        -->
+        <copy todir="${dir.site}/test">
+            <fileset dir="${dir.test.web}" includes="*.html"/>
+        </copy>
+
+        <replaceregexp byline="true">
+            <regexp pattern="../../main/resources/js"/>
+            <substitution expression="js/"/>
+            <fileset dir="${dir.site}/test">
+                <include name="index.html"/>
+            </fileset>
+        </replaceregexp>
+
+        <!--
+        4. include a whole node.js based server
+        -->
+        <copy todir="${dir.site}/test">
+            <fileset dir="${dir.test.web}" includes="*.js"/>
+        </copy>
     </target>
 </project>
