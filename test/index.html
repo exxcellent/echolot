@@ -1,0 +1,146 @@
+<!--
+  ~ This file (index.html) is part of the Echolot Project (hereinafter "Echolot").
+  ~ Copyright (C) 2008-2011 eXXcellent Solutions GmbH.
+  ~
+  ~ Version: MPL 1.1/GPL 2.0/LGPL 2.1
+  -->
+
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN'
+        'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type='text/javascript' src='lib/corejs/Core.js'></script>
+    <script type='text/javascript' src='lib/corejs/Core.Web.js'></script>
+
+    <script type='text/javascript' src='lib/echo/Application.js'></script>
+    <script type='text/javascript' src='lib/echo/Render.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.Composite.js'></script>
+    <script type='text/javascript' src='lib/echo/Serial.js'></script>
+    <script type='text/javascript' src='lib/echo/Client.js'></script>
+    <script type='text/javascript' src='lib/echo/FreeClient.js'></script>
+    <script type='text/javascript' src='lib/echo/DebugConsole.js'></script>
+    <script type='text/javascript' src='lib/echo/Arc.js'></script>
+    <script type='text/javascript' src='lib/echo/DebugConsole.js'></script>
+
+    <script type='text/javascript' src='lib/echo/Sync.Button.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.ToggleButton.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.ArrayContainer.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.ContentPane.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.Grid.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.Label.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.List.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.SplitPane.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.TextComponent.js'></script>
+    <script type='text/javascript' src='lib/echo/Sync.WindowPane.js'></script>
+
+    <script type='text/javascript' src='js//waitindicator/echolot-waitindicator.js'></script>
+    <script type='text/javascript' src='js//ComponentsCommon.js'></script>
+
+    <!-- JSON -->
+    <script type='text/javascript' src='js//json/json2.js'></script>
+
+    <!-- JQUERY -->
+    <script type='text/javascript' src='js//jquery/jquery-1.3.2.js'></script>
+
+    <!-- JQUERY UI -->
+    <script type='text/javascript' src='js//jquery/ui/jquery.ui.core.js'></script>
+    <script type='text/javascript' src='js//jquery/ui/jquery.ui.widget.js'></script>
+    <script type='text/javascript' src='js//jquery/ui/jquery.ui.position.js'></script>
+    <!-- JQUERY UI  Plugin: autocomplete-->
+    <script type='text/javascript' src='js//suggest/jquery.ui.autocomplete.js'></script>
+
+    <!-- FlexiGrid 1.0b3 -->
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="js//flexigrid/css/flexigrid/flexigrid.css"/>
+    <script type='text/javascript' src='js//flexigrid/flexigrid.js'></script>
+
+    <!-- DatePicker -->
+    <link rel="stylesheet" type="text/css" media="screen" href="js//datepicker/css/datepicker.css"/>
+    <script type='text/javascript' src='js//datepicker/datepicker.js'></script>
+
+    <!-- Notifier -->
+    <script type='text/javascript' src='js//notifier/notifier.js'></script>
+
+    <!-- Raphael CORE -->
+    <script type="text/javascript" src="js//raphael/raphael.js"></script>
+    <script type="text/javascript" src="js//raphael/popup.raphael.js"></script>
+
+    <!-- Raphael G-JS -->
+    <script type='text/javascript' src='js//raphael/g.raphael.js'></script>
+    <script type='text/javascript' src='js//raphael/g.pie.js'></script>
+    <!-- for PieChart -->
+    <script type='text/javascript' src='js//raphael/g.bar.js'></script>
+    <!-- for BarChart -->
+
+    <!-- Raphael exxcellent-JS -->
+    <script type='text/javascript' src='js//raphael/exx.raphael.js'></script>
+    <script type='text/javascript' src='js//raphael/exx.linechart.js'></script>
+
+
+
+    <!-- -->
+
+    <!-- Echo3 components -->
+    <script type='text/javascript' src='js//Sync.FlexiGrid.js'></script>
+    <script type='text/javascript' src='js//Sync.KeystrokeListener.js'></script>
+    <script type='text/javascript' src='js//SpinButton.js'></script>
+    <script type='text/javascript' src='js//ScrollPane.js'></script>
+    <script type='text/javascript' src='js//TextPane.js'></script>
+    <script type='text/javascript' src='js//Sync.Block.js'></script>
+    <script type='text/javascript' src='js//Sync.LazyBlock.js'></script>
+    <script type='text/javascript' src='js//Sync.DatePicker.js'></script>
+    <script type='text/javascript' src='js//Sync.Notifier.js'></script>
+    <script type='text/javascript' src='js//Sync.Expander.js'></script>
+    <script type='text/javascript' src='js//Sync.PieChart.js'></script>
+    <script type='text/javascript' src='js//Sync.LineChart.js'></script>
+    <script type='text/javascript' src='js//Sync.BarChart.js'></script>
+    <script type='text/javascript' src='js//Sync.PlainHtml.js'></script>
+
+
+    <!--
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="js//jquery/ui/css/jquery.ui.core.css"/>
+        <link rel="stylesheet" type="text/css" media="screen"
+          href="js//jquery/ui/css/jquery.ui.theme.css"/>
+    <link rel="stylesheet" type="text/css" media="screen"
+          href="js//suggest/css/jquery.ui.autocomplete.css"/>
+    -->
+
+    <script type='text/javascript' src='js//Sync.SuggestField.js'></script>
+
+    <script type='text/javascript' src='testscreen/TestApp.js'></script>
+    <script type='text/javascript' src='testscreen/Default.StyleSheet.js'></script>
+
+    <script type='text/javascript' src='testscreen/OverviewContent.js'></script>
+    <script type='text/javascript' src='testscreen/MainContent.js'></script>
+    <script type='text/javascript' src='testscreen/TestButton.js'></script>
+    <script type='text/javascript' src='testscreen/TestComponentListColumn.js'></script>
+
+    <!-- Testcases -->
+    <script type='text/javascript' src='testscreen/SpinButtonTest.js'></script>
+    <script type='text/javascript' src='testscreen/FlexiGridTest.js'></script>
+    <script type='text/javascript' src='testscreen/ScrollPaneTest.js'></script>
+    <script type='text/javascript' src='testscreen/KeystrokeListenerTest.js'></script>
+    <script type='text/javascript' src='testscreen/BlockTest.js'></script>
+    <script type='text/javascript' src='testscreen/LazyBlockTest.js'></script>
+    <script type='text/javascript' src='testscreen/DatePickerTest.js'></script>
+    <script type='text/javascript' src='testscreen/ButtonToggleTest.js'></script>
+    <script type='text/javascript' src='testscreen/NotifierTest.js'></script>
+    <script type='text/javascript' src='testscreen/ExpanderTest.js'></script>
+    <script type='text/javascript' src='testscreen/PieChartTest.js'></script>
+    <script type='text/javascript' src='testscreen/BarChartTest.js'></script>
+    <script type='text/javascript' src='testscreen/LineChartTest.js'></script>
+    <script type='text/javascript' src='testscreen/SuggestFieldTest.js'></script>
+    <script type='text/javascript' src='testscreen/PlainHtmlTest.js'></script>
+
+    <title>Client-Side Test Application</title>
+</head>
+<!-- height and width = 100% because of IE -->
+<body onload='init();'
+      style='height: 100%; width: 100%; margin:0;padding: 0;overflow:auto;font-family:verdana, arial, helvetica, sans-serif;font-size:10pt'>
+<div id='rootArea' style='position:absolute;width:100%;height:100%;'></div>
+</body>
+</html>
