@@ -522,10 +522,7 @@
             }
 
             var style__ui_widget_content = {
-                'border': '1px solid #aaaaaa',
-                //'background': '#ffffff', // <- we define Background-color direct in autocomplete. We want to style this via Echo
-                'font-weight': 'normal',
-                'color': '#212121'
+                'border': '1px solid #aaaaaa'
             }
 
             var style__ui_corner_all = {
@@ -619,12 +616,9 @@
 
         activate: function(event, item) {
             var style__ui_state_hover = {
-                'font-weight': 'normal',
                 'margin': '-1px',
                 'border': '1px solid #999999',
-                //'background': '#dadada',
-                'background': this.styling.suggestAreaHover, // <- we want to style this
-                'color': '#212121'
+                'background': this.styling.suggestAreaHover // <- we want to style this
             }
             this.deactivate();
             if (this.hasScroll()) {
@@ -647,11 +641,9 @@
 
         deactivate: function() {
             var style_remove__ui_state_hover = {
-                'font-weight': 'inherit',
-                'margin': 'inherit',
-                'border': 'inherit',
-                'background': 'inherit',
-                'color': 'inherit'
+                'margin': '0px',
+                'border': 'none',
+                'background': 'transparent'
             }
             if (!this.active) {
                 return;
