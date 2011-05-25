@@ -914,7 +914,7 @@
 				 * instead of ajax URL based approach.
 				 */
 				if (p.onPopulateCallback) {
-					var data = p.onPopulateCallback.call(p.owner, data);
+					data = p.onPopulateCallback.call(p.owner, data);
 					if (!data) {
 						try { if (p.onError) p.onError(data); } catch (e) {};
 					} else {
