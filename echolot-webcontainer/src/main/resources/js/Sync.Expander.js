@@ -461,7 +461,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
 
     /** Processes a key press event. */
     _processKeyPress: function(e) {
-        // only toggle content, when a keyPress is triggered by a DIV
+        // only toggle content, when a keyPress is triggered by a BOX-DIV
         if (!this.client || !this.client.verifyInput(this.component) || e.target.nodeName != 'DIV') {
             return true;
         }
