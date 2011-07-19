@@ -36,6 +36,8 @@ import de.exxcellent.echolot.listener.TableColumnToggleListener;
 import de.exxcellent.echolot.listener.TableRowSelectListener;
 import de.exxcellent.echolot.listener.TableSortingChangeListener;
 import de.exxcellent.echolot.model.*;
+import de.exxcellent.echolot.model.Column;
+import de.exxcellent.echolot.model.Row;
 import nextapp.echo.app.*;
 
 import java.util.EventListener;
@@ -50,7 +52,7 @@ import java.util.EventListener;
  * <li>Paging</li>
  * <li>Show/hide columns</li>
  * </ul>
- * 
+ * <p/>
  * <pre>
  * +--------------------------+-+
  * | Title                    |+|
@@ -64,9 +66,9 @@ import java.util.EventListener;
  * | Footer                     |
  * +----------------------------+
  * </pre>
- * 
+ * <p/>
  * Use the {@link FlexiGrid} like this:
- * 
+ * <p/>
  * <pre>
  * final FlexiGrid FlexiGrid = new FlexiGrid();
  * final Column[] columns = new Column[]{
@@ -74,19 +76,19 @@ import java.util.EventListener;
  *       		new Column(1, "Name", 50, false, "right"),
  *       		new Column(2, "Email", 10, true, "center")};
  * final Row[] rows = new Row[]{
- *				new Row(0, new String[]{"Bob", "Doe","bob.doe@email.com"}),
- *				new Row(1, new String[]{"Lisa", "Minelli", "lisa.minelli@email.com"}),
- *				new Row(2, new String[]{"Ronald","McDonald","ronald.mcdonald@email.com"})		
+ * 				new Row(0, new String[]{"Bob", "Doe","bob.doe@email.com"}),
+ * 				new Row(1, new String[]{"Lisa", "Minelli", "lisa.minelli@email.com"}),
+ * 				new Row(2, new String[]{"Ronald","McDonald","ronald.mcdonald@email.com"})
  * };
  * final Page page = new Page(pageIdx, 3, rows);
  * final TableModel model = new TableModel(columns, page);
- * 
+ *
  * FlexiGrid.setTableModel(model);
  * </pre>
- * 
+ *
+ * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  * @see <a href="http://www.flexigrid.info/">Flexigrid Home</a>
  * @see <a href="http://codeigniter.com/forums/viewthread/75326">CodeIgniter Flexigrid Forum</a>
- * @author Oliver Pehnke <o.pehnke@exxcellent.de>
  */
 public class FlexiGrid extends Component implements Pane {
     private static final long serialVersionUID = 7873962246421609162L;
@@ -98,25 +100,43 @@ public class FlexiGrid extends Component implements Pane {
         public void sortingChange(TableSortingChangeEvent e) {
         }
     };
-    
+
     private static final String CSS_REFERENCE =
             ResourceHelper.getFileAsString("js/flexigrid/css/flexigrid/flexigrid-template.css");
 
-    /** the sorting model to be displayed in the grid and used as parameter if the sorting changes */
+    /**
+     * the sorting model to be displayed in the grid and used as parameter if the sorting changes
+     */
     public static final String PROPERTY_SORTINGMODEL = "sortingModel";
-    /** the table data model to be displayed in the grid */
+    /**
+     * the table data model to be displayed in the grid
+     */
     public static final String PROPERTY_TABLEMODEL = "tableModel";
-    /** the column model to be displayed in the grid */
+
+    public static final String PROPERTY_ACTIVE_PAGE = "activePage";
+    /**
+     * the column model to be displayed in the grid
+     */
     public static final String PROPERTY_COLUMNMODEL = "columnModel";
-    /** the title at the top of the grid */
+    /**
+     * the title at the top of the grid
+     */
     public static final String PROPERTY_TITLE = "title";
-    /** the width of the grid itself */
+    /**
+     * the width of the grid itself
+     */
     public static final String PROPERTY_WIDTH = "width";
-    /** the height of the grid itself */
+    /**
+     * the height of the grid itself
+     */
     public static final String PROPERTY_HEIGHT = "height";
-    /** the heightOffset is used to determine the correct maximum height if height is 'auto'. */
+    /**
+     * the heightOffset is used to determine the correct maximum height if height is 'auto'.
+     */
     public static final String PROPERTY_HEIGHT_OFFSET = "heightOffset";
-    /** the width unit of the column width in the table */
+    /**
+     * the width unit of the column width in the table
+     */
     public static final String PROPERTY_COLUMN_WIDTH_UNIT = "columnWidthUnit";
 
     /**
@@ -127,11 +147,17 @@ public class FlexiGrid extends Component implements Pane {
      * the css as string injected in the html-head, since echo3 doesn't support any css styling by default
      */
     public static final String PROPERTY_CSS = "css";
-    /** if <code>true</code> the grid is resizable horizontally and vertically */
+    /**
+     * if <code>true</code> the grid is resizable horizontally and vertically
+     */
     public static final String PROPERTY_RESIZABLE = "resizable";
-    /** if <code>true</code> the debug mode is enabled and logs are written to the console. */
+    /**
+     * if <code>true</code> the debug mode is enabled and logs are written to the console.
+     */
     public static final String PROPERTY_DEBUG = "debug";
-    /** if <code>true</code> the client side sorting algorithm is enabled. */
+    /**
+     * if <code>true</code> the client side sorting algorithm is enabled.
+     */
     public static final String PROPERTY_CLIENT_SORTING = "clientSorting";
     /**
      * if the client side sorting algorithm is enabled you need to specify this delimiter value to sort numbers,e.g.
@@ -144,49 +170,91 @@ public class FlexiGrid extends Component implements Pane {
      */
     public static final String PROPERTY_DECIMAL_DELIMITER = "decimalDelimiter";
 
-    /** <code>true</code> if the pager is shown */
+    /**
+     * <code>true</code> if the pager is shown
+     */
     public static final String PROPERTY_SHOW_PAGER = "showPager";
-    /** <code>true</code> if the page statistics are shown in the footer */
+    /**
+     * <code>true</code> if the page statistics are shown in the footer
+     */
     public static final String PROPERTY_SHOW_PAGE_STAT = "showPageStatistics";
-    /** <code>true</code> if the results per page are shown */
+    /**
+     * <code>true</code> if the results per page are shown
+     */
     public static final String PROPERTY_SHOW_RESULTS_PPAGE = "showResultsPerPage";
     /**
      * the initial number shown results per page from the options of number of shown results per page, e.g.
      * "[10,15,20,25]"
      */
     public static final String PROPERTY_RESULTS_PPAGE_OPTION = "resultsPerPageOption";
-    /** the message displayed if no items were found, e.g. "no items found" */
+    /**
+     * the message displayed if no items were found, e.g. "no items found"
+     */
     public static final String PROPERTY_NO_ITEMS_MSG = "messageNoItems";
-    /** the message displayed while processing the data */
+    /**
+     * the message displayed while processing the data
+     */
     public static final String PROPERTY_PROCESS_MSG = "messageProcessing";
-    /** the message displayed as tooltip on a column */
+    /**
+     * the message displayed as tooltip on a column
+     */
     public static final String PROPERTY_HIDE_COLUMN_MSG = "messageColumnHiding";
-    /** the message displayed on the button to hide the table */
+    /**
+     * the message displayed on the button to hide the table
+     */
     public static final String PROPERTY_MIN_TABLE_MSG = "messageTableHiding";
-    /** the message displayed as page statistics */
+    /**
+     * the message displayed as page statistics
+     */
     public static final String PROPERTY_PAGE_STATISTICS_MSG = "messagePageStatistics";
-    /** the state if the even and odd rows have different colors, i.e. "striped". */
+    /**
+     * the state if the even and odd rows have different colors, i.e. "striped".
+     */
     public static final String PROPERTY_STRIPED = "striped";
-    /** the minimal width of the grid if the user resizes */
+    /**
+     * the minimal width of the grid if the user resizes
+     */
     public static final String PROPERTY_COLUMN_MIN_WIDTH = "minColumnWidth";
-    /** the minimal height of the grid if the user resizes */
+    /**
+     * the minimal height of the grid if the user resizes
+     */
     public static final String PROPERTY_MIN_COLUMN_HEIGHT = "minColumnHeight";
-    /** <code>true</code> if no wrap is enabled */
+    /**
+     * <code>true</code> if no wrap is enabled
+     */
     public static final String PROPERTY_NO_WRAP = "noWrap";
-    /** if <code>true</code> the selection is switched to single select otherwise multiselect */
+    /**
+     * if <code>true</code> the selection is switched to single select otherwise multiselect
+     */
     public static final String PROPERTY_SINGLE_SELECT = "singleSelect";
 
-    /** The constant used to track changes to the action listener list. */
+    /**
+     * The constant used to track changes to the action listener list.
+     */
     public static final String TABLE_ROWSELECT_LISTENERS_CHANGED_PROPERTY = "tableRowSelectListeners";
-    /** The constant used to track changes to the action listener list. */
+
+    public static final String TABLE_ACTIVE_PAGE_CHANGED_LISTENERS_CHANGED_PROPERTY = "activePageChangedListeners";
+    /**
+     * The constant used to track changes to the action listener list.
+     */
     public static final String TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY = "tableColumnToggleListeners";
-    /** The constant used to track changes to the action listener list. */
+    /**
+     * The constant used to track changes to the action listener list.
+     */
     public static final String TABLE_SORTCHANGE_LISTENERS_CHANGED_PROPERTY = "tableSortingChangeListeners";
-    /** The name of the action event registered in the peer when action listeners are added or removed. */
+    /**
+     * The name of the action event registered in the peer when action listeners are added or removed.
+     */
     public static final String INPUT_TABLE_ROW_SELECT = "tableRowSelect";
-    /** The name of the action event registered in the peer when action listeners are added or removed. */
+
+    public static final String INPUT_ACTIVE_PAGE_CHANGED = "activePageChanged";
+    /**
+     * The name of the action event registered in the peer when action listeners are added or removed.
+     */
     public static final String INPUT_TABLE_COLUMN_TOGGLE = "tableColumnToggle";
-    /** The name of the action event registered in the peer when action listeners are added or removed. */
+    /**
+     * The name of the action event registered in the peer when action listeners are added or removed.
+     */
     public static final String INPUT_TABLE_SORTING_CHANGE = "tableSortingChange";
 
     public static final String PROPERTY_LINE_IMG = "LINE_IMG";
@@ -239,6 +307,7 @@ public class FlexiGrid extends Component implements Pane {
 
 
     private TableModel tableModel;
+    private FlexTableModel flexTableModel;
     private ColumnModel columnModel;
     private SortingModel sortingModel;
 
@@ -281,14 +350,14 @@ public class FlexiGrid extends Component implements Pane {
         set(PROPERTY_LAST_IMG, LAST_IMG);
         set(PROPERTY_LOAD_IMG, LOAD_IMG);
         set(PROPERTY_LOAD_BTN_IMG, LOAD_BTN_IMG);
-        
+
         // this is due to the lack of knowledge how to force a sync on the client
         addTableSortingChangeListener(SYNC_CHANGE_LISTENER);
     }
 
     /**
      * Returns <code>true</code> the selection is switched to single select otherwise multiple selection is used.
-     * 
+     *
      * @return <code>true</code> single select, otherwise multiple selection of rows
      */
     public Boolean getSingleSelect() {
@@ -298,7 +367,7 @@ public class FlexiGrid extends Component implements Pane {
     /**
      * Sets the selection mode. The selection is switched to single select with <code>true</code> otherwise multiple
      * selection is used.
-     * 
+     *
      * @param newValue the state of single selection/ or multiple selection
      */
     public void setSingleSelect(Boolean newValue) {
@@ -307,7 +376,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns <code>true</code> if no wrap is enabled.
-     * 
+     *
      * @return <code>true</code> if no wrap is enabled
      */
     public Boolean getNoWrap() {
@@ -316,7 +385,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the state if no wrap is enabled.
-     * 
+     *
      * @param newValue the state if no wrap is enabled
      */
     public void setNoWrap(Boolean newValue) {
@@ -325,7 +394,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the minimal of the columns in the grid if the user resizes.
-     * 
+     *
      * @return the amount of minimal height used by a column if the user resizes
      */
     public int getMinimalColumnHeight() {
@@ -334,7 +403,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the minimal height of the columns in the grid if the user resizes.
-     * 
+     *
      * @param newValue the minimal height of the grid if the user resizes
      */
     public void setMinimalColumnHeight(int newValue) {
@@ -343,7 +412,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the minimal width of the columns in the grid if the user resizes.
-     * 
+     *
      * @return the amount of minimal width used by each column if the user resizes
      */
     public int getMinimalColumnWidth() {
@@ -352,7 +421,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the minimal width of the columns in the grid if the user resizes.
-     * 
+     *
      * @param newValue the minimal width of the columns in the grid if the user resizes
      */
     public void setMinimalColumnWidth(int newValue) {
@@ -361,7 +430,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the state if the even and odd rows have different colors, i.e. "striped".
-     * 
+     *
      * @return <code>true</code> if the even and odd rows have different colors
      */
     public Boolean getStriped() {
@@ -370,7 +439,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the state if the even and odd rows have different colors.
-     * 
+     *
      * @param newValue the state if the even and odd rows have different colors
      */
     public void setStriped(Boolean newValue) {
@@ -379,7 +448,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the message displayed as page statistics.
-     * 
+     *
      * @return the message displayed as page statistics
      */
     public String getMessagePageStatistics() {
@@ -389,7 +458,7 @@ public class FlexiGrid extends Component implements Pane {
     /**
      * Sets the message displayed as page statistics. Use may use tokens to be replaced, such as
      * "Displaying {from} to {to} of {total} items".
-     * 
+     *
      * @param newValue the message displayed as page statistics
      */
     public void setMessagePageStatistics(String newValue) {
@@ -398,7 +467,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the message displayed while processing the data.
-     * 
+     *
      * @return the message while processing the data
      */
     public String getMessageProcessing() {
@@ -407,7 +476,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the message displayed while processing the data.
-     * 
+     *
      * @param newValue the message while processing the data
      */
     public void setMessageProcessing(String newValue) {
@@ -416,7 +485,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the message displayed as tooltip on the hide button on the table headline.
-     * 
+     *
      * @return the tooltip on the hide button on the table headline
      */
     public String getMessageTableHiding() {
@@ -425,7 +494,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the message displayed as tooltip on the hide button on the table headline.
-     * 
+     *
      * @param newValue the message as tooltip on the hide button on the table headline
      */
     public void setMessageTableHiding(String newValue) {
@@ -434,7 +503,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the message displayed as tooltip on a column.
-     * 
+     *
      * @return the tooltip on a column
      */
     public String getMessageColumnHiding() {
@@ -443,7 +512,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the message displayed as tooltip on a column.
-     * 
+     *
      * @param newValue the message displayed as tooltip on a column
      */
     public void setMessageColumnHiding(String newValue) {
@@ -452,7 +521,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the message displayed if no items were found.
-     * 
+     *
      * @return the message displayed if no items were found
      */
     public String getMessageNoItems() {
@@ -461,7 +530,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the message displayed if no items were found, e.g. "no items found".
-     * 
+     *
      * @param newValue the message displayed if no items were found
      */
     public void setMessageNoItems(String newValue) {
@@ -470,7 +539,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the options of number of shown results per page.
-     * 
+     *
      * @return the options of number of shown results per page
      */
     public ResultsPerPageOption getResultsPerPageOption() {
@@ -479,7 +548,8 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the options of number of shown results per page, e.g. "[10,15,20,25]".
-     * 
+     * Don't set this manually if you don't know what you are doing... - will be done by flexigrid for you
+     *
      * @param newValue the initial number shown of results per page
      */
     public void setResultsPerPageOption(ResultsPerPageOption newValue) {
@@ -488,7 +558,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns <code>true</code> if the results per page are shown.
-     * 
+     *
      * @return <code>true</code> if results per page are shown
      */
     public Boolean getShowResultsPerPage() {
@@ -497,7 +567,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the visibility of the results per page.
-     * 
+     *
      * @param newValue <code>true</code> the results per page are visible
      */
     public void setShowResultsPerPage(Boolean newValue) {
@@ -506,7 +576,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns <code>true</code> if the pager is shown.
-     * 
+     *
      * @return <code>true</code> if the pager is shown
      */
     public boolean getShowPager() {
@@ -515,7 +585,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the visibility of the pager.
-     * 
+     *
      * @param newValue <code>true</code> the pager is visible
      */
     public void setShowPager(boolean newValue) {
@@ -524,7 +594,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns <code>true</code> if the page statistics are shown.
-     * 
+     *
      * @return <code>true</code> if the page statistics are shown
      */
     public boolean getShowPageStatistics() {
@@ -533,7 +603,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the visibility of the page statistics.
-     * 
+     *
      * @param newValue <code>true</code> the page statistics are visible
      */
     public void setShowPageStatistics(boolean newValue) {
@@ -542,7 +612,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Returns the cascading style sheet for this component.
-     * 
+     *
      * @return the cascading style sheet
      */
     public String getCSS() {
@@ -551,7 +621,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Sets the cascading style sheet for this component.
-     * 
+     *
      * @param newValue the new css
      */
     public void setCSS(String newValue) {
@@ -560,7 +630,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the table model.
-     * 
+     *
      * @return The table model object or {@code null} if no such exists.
      */
     public TableModel getTableModel() {
@@ -570,7 +640,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the value of the {@link #PROPERTY_TABLEMODEL} property.
-     * 
+     *
      * @param newTableModel The table model to be represented in this component.
      */
     public void setTableModel(final TableModel newTableModel) {
@@ -579,9 +649,87 @@ public class FlexiGrid extends Component implements Pane {
         set(PROPERTY_TABLEMODEL, newTableModel);
         firePropertyChange(PROPERTY_TABLEMODEL, null, newTableModel);
     }
+
+    /**
+     * Set the flexTableModel
+     *
+     * @param flexTableModel the TableModel for FlexiGrid
+     */
+    public void setFlexTableModel(FlexTableModel flexTableModel) {
+        this.flexTableModel = flexTableModel;
+        setActivePage(1);
+
+        // erzeugen des ColumnModels
+        Column[] columns = new Column[flexTableModel.getColumnCount()];
+        for (int currentCol = 0; currentCol < flexTableModel.getColumnCount(); currentCol++) {
+            FlexColumnModel flexColumnModel = flexTableModel.getColumnModel(currentCol);
+            Column column = new Column(flexColumnModel.getId(), flexColumnModel.getTitle(), flexColumnModel.getWidth(), flexColumnModel.isSortable(), flexColumnModel.getAlign(), flexColumnModel.isHiddenByDefault(), flexColumnModel.getTooltip());
+            columns[currentCol] = column;
+        }
+        setColumnModel(new ColumnModel(columns));
+
+        // setzen der RowsPerPage Option
+        if (flexTableModel.getRowsPerPageCount() == FlexTableModel.SHOW_ALL_ROWS_ON_ONE_PAGE) {
+            setResultsPerPageOption(new ResultsPerPageOption(flexTableModel.getRowCount(), new int[]{flexTableModel.getRowCount()}));
+        } else {
+            setResultsPerPageOption(new ResultsPerPageOption(flexTableModel.getRowsPerPageCount(), new int[]{flexTableModel.getRowsPerPageCount()}));
+        }
+    }
+
+    /**
+     * Set the current activePage of the TableModel
+     *
+     * @param page
+     */
+    public void setActivePage(int page) {
+        int firstRowStart;
+        int rowEnd;
+
+        if (flexTableModel.getRowsPerPageCount() == FlexTableModel.SHOW_ALL_ROWS_ON_ONE_PAGE) {
+            firstRowStart = 0;
+            rowEnd = flexTableModel.getRowCount();
+        } else {
+            firstRowStart = (page - 1) * flexTableModel.getRowsPerPageCount();
+            rowEnd = firstRowStart + flexTableModel.getRowsPerPageCount();
+            if (rowEnd > flexTableModel.getRowCount()) {
+                rowEnd = flexTableModel.getRowCount();
+            }
+        }
+
+        // die Anzahl an Zeilen für diese Page
+        int amountOfRows = rowEnd - firstRowStart;
+
+        // Aufbau der Page
+        // ----------------
+        Row[] rows = new Row[amountOfRows];
+        int rowCounter = 0;
+        for (int currentRow = firstRowStart; currentRow < rowEnd; currentRow++) {
+            String[] cells = new String[flexTableModel.getColumnCount()];
+            for (int currentColumn = 0; currentColumn < flexTableModel.getColumnCount(); currentColumn++) {
+                cells[currentColumn] = flexTableModel.getValueAt(currentRow, currentColumn);
+            }
+            Row row = new Row(rowCounter, cells);
+            rows[rowCounter] = row;
+            rowCounter++;
+        }
+        Page newPage = new Page(page, flexTableModel.getRowCount(), rows);
+
+        // setze diese Page als Active
+        setActivePage(newPage);
+    }
+
+    public void setActivePage(final Page page) {
+        set(PROPERTY_ACTIVE_PAGE, page);
+        firePropertyChange(PROPERTY_ACTIVE_PAGE, null, page);
+    }
+
+    public Page getActivePage() {
+        return (Page) get(PROPERTY_ACTIVE_PAGE);
+    }
+
     /**
      * Return the table model.
-     * 
+     *
      * @return The table model object or {@code null} if no such exists.
      */
     public ColumnModel getColumnModel() {
@@ -591,7 +739,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the value of the {@link #PROPERTY_COLUMNMODEL} property.
-     * 
+     *
      * @param newTableModel The table model to be represented in this component.
      */
     public void setColumnModel(final ColumnModel newColumnModel) {
@@ -602,7 +750,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the value of the {@link #PROPERTY_SORTINGMODEL} property.
-     * 
+     *
      * @param newSortingModel The sorting model to be represented in this component.
      */
     public void setSortingModel(final SortingModel newSortingModel) {
@@ -613,7 +761,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the sorting model of the grid.
-     * 
+     *
      * @return The sorting model object or {@code null} if no such exists.
      */
     public SortingModel getSortingModel() {
@@ -623,7 +771,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the table title above the table.
-     * 
+     *
      * @return The title is the name above the table.
      */
     public String getTitle() {
@@ -632,7 +780,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the title above the table, see {@link #PROPERTY_TITLE} property.
-     * 
+     *
      * @param title The table title to be represented in this component.
      */
     public void setTitle(final String title) {
@@ -641,7 +789,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the table height of the table.
-     * 
+     *
      * @return The height of the table.
      */
     public int getHeight() {
@@ -650,16 +798,16 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the height of the table, see {@link #PROPERTY_HEIGHT} property. If the value is -1 its set to "auto" height.
-     * 
+     *
      * @param height The table height of this component.
      */
     public void setHeight(final int height) {
         set(PROPERTY_HEIGHT, height);
     }
-    
+
     /**
      * Return the heightOffset is used to determine the correct maximum height if height is 'auto'.
-     * 
+     *
      * @return The height of the table.
      */
     public int getHeightOffset() {
@@ -668,7 +816,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the heightOffset is used to determine the correct maximum height if height is 'auto'.
-     * 
+     *
      * @param height the heightOffset is used to determine the correct maximum height if height is 'auto'.
      */
     public void setHeightOffset(final int height) {
@@ -677,7 +825,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the table width of the table.
-     * 
+     *
      * @return The width of the table.
      */
     public int getWidth() {
@@ -687,7 +835,7 @@ public class FlexiGrid extends Component implements Pane {
     /**
      * Set the width of the table, see {@link #PROPERTY_WIDTH} property. Can be a value like "400" interpreted as 400px
      * or "auto". If the value is -1 its set to "auto" height.
-     * 
+     *
      * @param width The table width of this component.
      */
     public void setWidth(final int width) {
@@ -696,7 +844,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the column width unit of the table, e.g. "em", "px" etc.
-     * 
+     *
      * @return The columnWidthUnit of the table.
      */
     public String getColumnWidthUnit() {
@@ -717,7 +865,7 @@ public class FlexiGrid extends Component implements Pane {
      * <li>{@link Extent#PT}</li>
      * <li>{@link Extent#PX}</li>
      * </ul>
-     * 
+     *
      * @param columnWidthUnit The column width unit of this component.
      */
     public void setColumnWidthUnit(final String columnWidthUnit) {
@@ -726,7 +874,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Shows the button to hide and show the the table grid.
-     * 
+     *
      * @param showTableToggleButton <code>true</code> the button will be shown
      */
     public void setShowTableToggleButton(boolean showTableToggleButton) {
@@ -735,7 +883,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return <code>true</code> if the button to hide and show the the table grid is visible.
-     * 
+     *
      * @return <code>true</code> if the button to hide and show the the table grid is visible.
      */
     public boolean getShowTableToggleButton() {
@@ -744,7 +892,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * If <code>true</code> the whole grid is resizable vertically and horizontally.
-     * 
+     *
      * @param resizable <code>true</code> the grid is resizable
      */
     public void setResizable(boolean resizable) {
@@ -753,7 +901,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return <code>true</code> if the grid is resizable vertically and horizontally.
-     * 
+     *
      * @return <code>true</code> if the grid is resizable.
      */
     public boolean getResizable() {
@@ -762,7 +910,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * If <code>true</code> the debug mode is enabled and log messages are written to the console.
-     * 
+     *
      * @param debug <code>true</code> the debug mode is enabled.
      */
     public void setDebug(boolean debug) {
@@ -771,7 +919,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return <code>true</code> if the debug mode is enabled and log messages are written to the console.
-     * 
+     *
      * @return <code>true</code> if the debug mode is enabled.
      */
     public boolean getDebug() {
@@ -779,12 +927,17 @@ public class FlexiGrid extends Component implements Pane {
     }
 
     /**
+     * !!!!!
+     * Does no longer work with lazy loading
+     * ! Feel free to fix this !
+     * !!!!!
+     * <p/>
      * If <code>true</code> the client side sorting algorithm is enabled. The client side sorting reduces the bandwidth
      * and supports multicolumn sorting for alpha numeric values. You can also use your own sorting method server side
      * by implementing an {@link TableSortingChangeListener} to sort and setting the updated {@link TableModel}
      * containing all sorted data. However this clientSorting value should then be set to <code>false</code> to avoid
      * double sorting.
-     * 
+     *
      * @param clientSorting <code>true</code> activates the client side sorting.
      */
     public void setClientSorting(boolean clientSorting) {
@@ -793,7 +946,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return <code>true</code> if the client side sorting algorithm is enabled.
-     * 
+     *
      * @return <code>true</code> if the debug mode is enabled.
      */
     public boolean getClientSorting() {
@@ -803,7 +956,7 @@ public class FlexiGrid extends Component implements Pane {
     /**
      * If the client side sorting algorithm is enabled you need to specify this delimiter value to sort numbers,e.g.
      * '1000,00' regarding to you locale.
-     * 
+     *
      * @param digitGroupDelimiter the delimiter, such as '.' or ',' or whatever.
      */
     public void setDigitGroupDelimiter(String digitGroupDelimiter) {
@@ -812,7 +965,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Return the delimiter used for sorting numbers.
-     * 
+     *
      * @return the delimiter used for sorting numbers.
      */
     public String getDigitGroupDelimiter() {
@@ -840,7 +993,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Adds a {@link TableRowSelectListener}.
-     * 
+     *
      * @param l will be informed if a row is selected
      */
     public void addTableRowSelectListener(TableRowSelectListener l) {
@@ -850,7 +1003,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Removes a {@link TableRowSelectListener}
-     * 
+     *
      * @param l will be removed from listener list.
      */
     public void removeTableRowSelectListener(TableRowSelectListener l) {
@@ -860,7 +1013,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Adds a {@link TableColumnToggleListener}.
-     * 
+     *
      * @param l will be informed if the state of a column changes from visible to invisible
      */
     public void addTableColumnToggleListener(TableColumnToggleListener l) {
@@ -870,7 +1023,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Removes a {@link TableColumnToggleListener}
-     * 
+     *
      * @param l will be removed from listener list.
      */
     public void removeTableColumnToggleListener(TableColumnToggleListener l) {
@@ -880,7 +1033,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Adds a {@link TableSortingChangeListener}.
-     * 
+     *
      * @param l will be informed if the sorting changes for columns
      */
     public void addTableSortingChangeListener(TableSortingChangeListener l) {
@@ -890,7 +1043,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Removes a {@link TableSortingChangeListener}
-     * 
+     *
      * @param l will be removed from listener list.
      */
     public void removeTableSortingChangeListener(TableSortingChangeListener l) {
@@ -900,7 +1053,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Processes a user request to select a row with the given parameter.
-     * 
+     *
      * @param rowSelection the object containing information about the selection
      */
     public void userTableRowSelect(RowSelection rowSelection) {
@@ -909,7 +1062,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Processes a user request to toggle the visibility state of a column.
-     * 
+     *
      * @param columnVisibility the object containing information about the toggle
      */
     public void userTableColumnToggle(ColumnVisibility columnVisibility) {
@@ -918,7 +1071,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Processes a user request to change the sorting of columns
-     * 
+     *
      * @param sortingModel the object containing information about the sorting
      */
     public void userTableSortingChange(SortingModel sortingModel) {
@@ -978,7 +1131,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Determines the any <code>TableRowSelectListener</code>s are registered.
-     * 
+     *
      * @return true if any <code>TableRowSelectListener</code>s are registered
      */
     public boolean hasTableRowSelectListeners() {
@@ -990,7 +1143,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Determines the any <code>TableColumnToggleListener</code>s are registered.
-     * 
+     *
      * @return true if any <code>TableColumnToggleListener</code>s are registered
      */
     public boolean hasTableColumnToggleListeners() {
@@ -1002,7 +1155,7 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Determines the any <code>TableSortingChangeListener</code>s are registered.
-     * 
+     *
      * @return true if any <code>TableSortingChangeListener</code>s are registered
      */
     public boolean hasTableSortingChangeListeners() {

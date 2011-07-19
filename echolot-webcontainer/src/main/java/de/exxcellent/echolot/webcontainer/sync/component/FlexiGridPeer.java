@@ -58,15 +58,17 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
 
     private static final String FLEXIGRID_STYLESHEET;
 
-    /** The serializer used to serialize model instances. */
+    /**
+     * The serializer used to serialize model instances.
+     */
     protected static final XStream xstreamOut;
     protected static final XStream xstreamIn;
 
     static {
         FLEXIGRID_SERVICE = JavaScriptService.forResource("exxcellent.FlexiGridService",
-                                                          "js/flexigrid/flexigrid.js");
+                "js/flexigrid/flexigrid.js");
         FLEXIGRID_SYNC_SERVICE = JavaScriptService.forResource("exxcellent.FlexiGrid.Sync",
-                                                                       "js/Sync.FlexiGrid.js");
+                "js/Sync.FlexiGrid.js");
 
         FLEXIGRID_STYLESHEET = "js/flexigrid/css/flexigrid/";
 
@@ -86,6 +88,7 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
 
         xstreamOut.alias("row", Row.class);
         xstreamOut.alias("page", Page.class);
+        xstreamOut.alias("activePage", Page.class);
         xstreamOut.alias("resultsPerPageOption", ResultsPerPageOption.class);
         xstreamOut.alias("sortingModel", SortingModel.class);
         xstreamOut.alias("sortingColumn", SortingColumn.class);
@@ -114,11 +117,13 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
 
     }
 
-    /** Default constructor for a {@link FlexiGridPeer}. Registers an event peer for client events. */
+    /**
+     * Default constructor for a {@link FlexiGridPeer}. Registers an event peer for client events.
+     */
     public FlexiGridPeer() {
         addEvent(new EventPeer(FlexiGrid.INPUT_TABLE_ROW_SELECT,
-                               FlexiGrid.TABLE_ROWSELECT_LISTENERS_CHANGED_PROPERTY,
-                               String.class) {
+                FlexiGrid.TABLE_ROWSELECT_LISTENERS_CHANGED_PROPERTY,
+                String.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
                 return ((FlexiGrid) c).hasTableRowSelectListeners();
@@ -145,8 +150,28 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
                 }
             }
         });
+
+        // ---
+        addEvent(new EventPeer(FlexiGrid.INPUT_ACTIVE_PAGE_CHANGED,
+                FlexiGrid.TABLE_ROWSELECT_LISTENERS_CHANGED_PROPERTY,
+                Integer.class) {
+            @Override
+            public boolean hasListeners(Context context, Component c) {
+                return true;
+            }
+
+            @Override
+            public void processEvent(Context context, Component component, Object eventData) {
+                final FlexiGrid flexigrid = (FlexiGrid) component;
+                final Integer data = (Integer) eventData;
+
+                flexigrid.setActivePage(data);
+            }
+        });
+
+        // ---
         addEvent(new EventPeer(FlexiGrid.INPUT_TABLE_COLUMN_TOGGLE,
-                               FlexiGrid.TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY, String.class) {
+                FlexiGrid.TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY, String.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
                 return ((FlexiGrid) c).hasTableColumnToggleListeners();
@@ -175,7 +200,7 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
 
         });
         addEvent(new EventPeer(FlexiGrid.INPUT_TABLE_SORTING_CHANGE,
-                               FlexiGrid.TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY, String.class) {
+                FlexiGrid.TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY, String.class) {
             @Override
             public boolean hasListeners(Context context, Component c) {
                 return ((FlexiGrid) c).hasTableSortingChangeListeners();
@@ -218,14 +243,18 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
         return "exxcellent.FlexiGrid";
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     @Override
     public Class getComponentClass() {
         // Return server-side Java class.
         return FlexiGrid.class;
     }
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     */
     @Override
     public void init(Context context, Component component) {
         super.init(context, component);
@@ -251,6 +280,8 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
 
         if (FlexiGrid.PROPERTY_TABLEMODEL.equals(propertyName)) {
             return xstreamOut.toXML(((FlexiGrid) component).getTableModel());
+        } else if (FlexiGrid.PROPERTY_ACTIVE_PAGE.equals(propertyName)) {
+            return xstreamOut.toXML(((FlexiGrid) component).getActivePage());
         } else if (FlexiGrid.PROPERTY_COLUMNMODEL.equals(propertyName)) {
             return xstreamOut.toXML(((FlexiGrid) component).getColumnModel());
         } else if (FlexiGrid.PROPERTY_RESULTS_PPAGE_OPTION.equals(propertyName)) {
