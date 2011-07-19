@@ -652,6 +652,15 @@ public class FlexiGrid extends Component implements Pane {
     }
 
     /**
+     * Returns the FlexTableModel
+     *
+     * @return the flexTableModel
+     */
+    public FlexTableModel getFlexTableModel() {
+        return flexTableModel;
+    }
+
+    /**
      * Set the current activePage of the TableModel
      *
      * @param page
@@ -683,7 +692,7 @@ public class FlexiGrid extends Component implements Pane {
             for (int currentColumn = 0; currentColumn < flexTableModel.getColumnCount(); currentColumn++) {
                 cells[currentColumn] = flexTableModel.getValueAt(currentRow, currentColumn);
             }
-            Row row = new Row(rowCounter, cells);
+            Row row = new Row(currentRow, cells);
             rows[rowCounter] = row;
             rowCounter++;
         }
