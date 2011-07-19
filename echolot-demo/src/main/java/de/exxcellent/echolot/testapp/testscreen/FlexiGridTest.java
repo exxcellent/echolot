@@ -446,17 +446,10 @@ public class FlexiGridTest extends SplitPane {
         });
         controlsColumn.addButton("Set Email Table Model", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-//                final Object[] modelContainer = createEmailSampleTableModel(true);
                 final FlexTableModel emailFlexTableModel = createEmailSampleTableModel(true);
-//                final TableModel tableModel = (TableModel) modelContainer[0];
-//                final ColumnModel columnModel = (ColumnModel) modelContainer[1];
-
                 final SortingModel sortingModel =
                         new SortingModel(new SortingColumn[]{new SortingColumn(0, SortDirection.DESCENDING),
                                 new SortingColumn(2, SortDirection.ASCENDING)});
-
-//                flexiGrid.setColumnModel(columnModel);
-//                flexiGrid.setTableModel(tableModel);
                 flexiGrid.setFlexTableModel(emailFlexTableModel);
                 flexiGrid.setSortingModel(sortingModel);
             }
