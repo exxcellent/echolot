@@ -81,7 +81,6 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
 
         /* JSON Stream Driver */
         xstreamOut = new XStream(new JsonHierarchicalStreamDriver());
-        xstreamOut.alias("tableModel", TableModel.class);
         xstreamOut.alias("columnModel", ColumnModel.class);
         xstreamOut.alias("column", Column.class);
         xstreamOut.aliasField("name", Column.class, "id");
@@ -93,7 +92,6 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
         xstreamOut.alias("sortingModel", SortingModel.class);
         xstreamOut.alias("sortingColumn", SortingColumn.class);
 
-        xstreamOut.processAnnotations(TableModel.class);
         xstreamOut.processAnnotations(ColumnModel.class);
         xstreamOut.processAnnotations(Column.class);
         xstreamOut.processAnnotations(Row.class);
@@ -278,9 +276,7 @@ public class FlexiGridPeer extends AbstractComponentSynchronizePeer {
                                     final Component component, final String propertyName,
                                     final int propertyIndex) {
 
-        if (FlexiGrid.PROPERTY_TABLEMODEL.equals(propertyName)) {
-            return xstreamOut.toXML(((FlexiGrid) component).getTableModel());
-        } else if (FlexiGrid.PROPERTY_ACTIVE_PAGE.equals(propertyName)) {
+        if (FlexiGrid.PROPERTY_ACTIVE_PAGE.equals(propertyName)) {
             return xstreamOut.toXML(((FlexiGrid) component).getActivePage());
         } else if (FlexiGrid.PROPERTY_COLUMNMODEL.equals(propertyName)) {
             return xstreamOut.toXML(((FlexiGrid) component).getColumnModel());

@@ -108,11 +108,10 @@ public class FlexiGrid extends Component implements Pane {
      * the sorting model to be displayed in the grid and used as parameter if the sorting changes
      */
     public static final String PROPERTY_SORTINGMODEL = "sortingModel";
-    /**
-     * the table data model to be displayed in the grid
-     */
-    public static final String PROPERTY_TABLEMODEL = "tableModel";
 
+    /**
+     * The current active page of the Flexigrid
+     */
     public static final String PROPERTY_ACTIVE_PAGE = "activePage";
     /**
      * the column model to be displayed in the grid
@@ -305,8 +304,6 @@ public class FlexiGrid extends Component implements Pane {
     private static final ImageReference LOAD_BTN_IMG =
             new ResourceImageReference("js/flexigrid/css/flexigrid/images/load.gif");
 
-
-    private TableModel tableModel;
     private FlexTableModel flexTableModel;
     private ColumnModel columnModel;
     private SortingModel sortingModel;
@@ -626,28 +623,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public void setCSS(String newValue) {
         set(PROPERTY_CSS, newValue);
-    }
-
-    /**
-     * Return the table model.
-     *
-     * @return The table model object or {@code null} if no such exists.
-     */
-    public TableModel getTableModel() {
-        tableModel = (TableModel) get(PROPERTY_TABLEMODEL);
-        return tableModel;
-    }
-
-    /**
-     * Set the value of the {@link #PROPERTY_TABLEMODEL} property.
-     *
-     * @param newTableModel The table model to be represented in this component.
-     */
-    public void setTableModel(final TableModel newTableModel) {
-        //	    final TableModel oldTableModel = tableModel;
-        assert newTableModel != null;
-        set(PROPERTY_TABLEMODEL, newTableModel);
-        firePropertyChange(PROPERTY_TABLEMODEL, null, newTableModel);
     }
 
     /**

@@ -575,73 +575,75 @@ public class FlexiGridTest extends SplitPane {
     }
 
     private void setMultiplicationTableModel(final FlexiGrid flexiGrid, int columns, int rows, boolean reverse) {
-        final Object[] modelContainer;
-        if (reverse) {
-            modelContainer = createReverseMultiplicationTableModel(columns, rows);
-        } else {
-            modelContainer = createMultiplicationTableModel(columns, rows);
-        }
-        final TableModel tableModel = (TableModel) modelContainer[0];
-        final ColumnModel columnModel = (ColumnModel) modelContainer[1];
-
-        SortingModel sortingModel = new SortingModel(new SortingColumn[]{new SortingColumn(1, SortDirection.ASCENDING)});
-
-        flexiGrid.setColumnModel(columnModel);
-        flexiGrid.setTableModel(tableModel);
-        flexiGrid.setSortingModel(sortingModel);
+//        final Object[] modelContainer;
+//        if (reverse) {
+//            modelContainer = createReverseMultiplicationTableModel(columns, rows);
+//        } else {
+//            modelContainer = createMultiplicationTableModel(columns, rows);
+//        }
+//        final TableModel tableModel = (TableModel) modelContainer[0];
+//        final ColumnModel columnModel = (ColumnModel) modelContainer[1];
+//
+//        SortingModel sortingModel = new SortingModel(new SortingColumn[]{new SortingColumn(1, SortDirection.ASCENDING)});
+//
+//        flexiGrid.setColumnModel(columnModel);
+//        flexiGrid.setTableModel(tableModel);
+//        flexiGrid.setSortingModel(sortingModel);
     }
 
     private void updateMultiplicationTableModel(final FlexiGrid flexiGrid, int columns, int rows, boolean reverse) {
-        final Object[] modelContainer;
-        if (reverse) {
-            modelContainer = createReverseMultiplicationTableModel(columns, rows);
-        } else {
-            modelContainer = createMultiplicationTableModel(columns, rows);
-        }
-        final TableModel tableModel = (TableModel) modelContainer[0];
-        flexiGrid.setTableModel(tableModel);
+//        final Object[] modelContainer;
+//        if (reverse) {
+//            modelContainer = createReverseMultiplicationTableModel(columns, rows);
+//        } else {
+//            modelContainer = createMultiplicationTableModel(columns, rows);
+//        }
+//        final TableModel tableModel = (TableModel) modelContainer[0];
+//        flexiGrid.setTableModel(tableModel);
     }
 
     /**
      * Creates a complex multiplication model.
      */
     private Object[] createMultiplicationTableModel(int columnCount, int rowCount) {
-        final Column[] columns = new Column[columnCount];
-        final Row[] rows = new Row[rowCount];
-        for (int i = 0; i < columns.length; i++) {
-            columns[i] = new Column(i + 1, String.valueOf(i + 1), 25, true, "left", false);
-        }
-        for (int i = 0; i < rows.length; i++) {
-            final String[] cellValue = new String[columns.length];
-            for (int j = 0; j < columns.length; j++) {
-                cellValue[j] = String.valueOf((j + 1) * (i + 1));
-            }
-            rows[i] = new Row(i, cellValue);
-        }
-
-        final Page[] pages = new Page[]{new Page(1, rowCount, rows)};
-        return new Object[]{new TableModel(pages), new ColumnModel(columns)};
+//        final Column[] columns = new Column[columnCount];
+//        final Row[] rows = new Row[rowCount];
+//        for (int i = 0; i < columns.length; i++) {
+//            columns[i] = new Column(i + 1, String.valueOf(i + 1), 25, true, "left", false);
+//        }
+//        for (int i = 0; i < rows.length; i++) {
+//            final String[] cellValue = new String[columns.length];
+//            for (int j = 0; j < columns.length; j++) {
+//                cellValue[j] = String.valueOf((j + 1) * (i + 1));
+//            }
+//            rows[i] = new Row(i, cellValue);
+//        }
+//
+//        final Page[] pages = new Page[]{new Page(1, rowCount, rows)};
+//        return new Object[]{new TableModel(pages), new ColumnModel(columns)};
+        return null;
     }
 
     /**
      * Creates a complex multiplication model.
      */
     private Object[] createReverseMultiplicationTableModel(int columnCount, int rowCount) {
-        final Column[] columns = new Column[columnCount];
-        final Row[] rows = new Row[rowCount];
-        for (int i = 0; i < columns.length; i++) {
-            columns[i] = new Column(i + 1, String.valueOf(columns.length - i), 25, true, "left", false);
-        }
-        for (int i = 0; i < rows.length; i++) {
-            final String[] cellValue = new String[columns.length];
-            for (int j = 0; j < columns.length; j++) {
-                cellValue[j] = String.valueOf((columns.length - j) * (rows.length - i));
-            }
-            rows[i] = new Row(i, cellValue);
-        }
-
-        final Page[] pages = new Page[]{new Page(1, rowCount, rows)};
-        return new Object[]{new TableModel(pages), new ColumnModel(columns)};
+//        final Column[] columns = new Column[columnCount];
+//        final Row[] rows = new Row[rowCount];
+//        for (int i = 0; i < columns.length; i++) {
+//            columns[i] = new Column(i + 1, String.valueOf(columns.length - i), 25, true, "left", false);
+//        }
+//        for (int i = 0; i < rows.length; i++) {
+//            final String[] cellValue = new String[columns.length];
+//            for (int j = 0; j < columns.length; j++) {
+//                cellValue[j] = String.valueOf((columns.length - j) * (rows.length - i));
+//            }
+//            rows[i] = new Row(i, cellValue);
+//        }
+//
+//        final Page[] pages = new Page[]{new Page(1, rowCount, rows)};
+//        return new Object[]{new TableModel(pages), new ColumnModel(columns)};
+        return null;
     }
 
     /**
@@ -729,25 +731,25 @@ public class FlexiGridTest extends SplitPane {
      * Creates a sample Table Model.
      */
     private Object[] createNumbersTableModel(String digitDelimiter, String decimalDelimiter) {
-        final Column[] columns =
-                new Column[]{new Column(0, "Id", 50, true, "center", false),
-                        new Column(1, "Description", 300, false, "left", false),
-                        new Column(2, "Amount", 100, true, "right", false), new Column(3, "Ratio", 50, true, "right", false)};
-        final Row[] rows1 =
-                new Row[]{new Row(0, new String[]{"ISD", "International security domain", "250" + digitDelimiter + "000" + decimalDelimiter + "123", "1.5 %"}),
-                        new Row(1, new String[]{"QBA", "Quality based Archivments", "580" + digitDelimiter + "000" + decimalDelimiter + "32"}),
-                        new Row(2, new String[]{"UDO", "Universal data objects", "1" + digitDelimiter + "980" + digitDelimiter + "000", "2.4 %"}),
-                        new Row(3, new String[]{"ZBI", "Zen business international", "9" + digitDelimiter + "870" + digitDelimiter + "000" + decimalDelimiter + "3345", "0.2 %"})};
-        final Row[] rows2 =
-                new Row[]{new Row(4, new String[]{"NOI", "No ordered index", "4" + digitDelimiter + "565" + digitDelimiter + "000", "7.9 %"}),
-                        new Row(5, new String[]{"DGD", "Damn good doodle", "127" + digitDelimiter + "500", "8.2 %"}),
-                        new Row(6, new String[]{"LOA", "The limited organizations", "12" + digitDelimiter + "000", "5.5 %"}),
-                        new Row(7, new String[]{"XZU", "Xenomorph zulu", "8" + digitDelimiter + "800", "25.3 %"})};
-        final int rowsCount = rows1.length + rows2.length;
-        final Page[] pages = new Page[]{new Page(1, rowsCount, rows1), new Page(2, rowsCount, rows2)};
-        return new Object[]{new TableModel(pages), new ColumnModel(columns)};
+//        final Column[] columns =
+//                new Column[]{new Column(0, "Id", 50, true, "center", false),
+//                        new Column(1, "Description", 300, false, "left", false),
+//                        new Column(2, "Amount", 100, true, "right", false), new Column(3, "Ratio", 50, true, "right", false)};
+//        final Row[] rows1 =
+//                new Row[]{new Row(0, new String[]{"ISD", "International security domain", "250" + digitDelimiter + "000" + decimalDelimiter + "123", "1.5 %"}),
+//                        new Row(1, new String[]{"QBA", "Quality based Archivments", "580" + digitDelimiter + "000" + decimalDelimiter + "32"}),
+//                        new Row(2, new String[]{"UDO", "Universal data objects", "1" + digitDelimiter + "980" + digitDelimiter + "000", "2.4 %"}),
+//                        new Row(3, new String[]{"ZBI", "Zen business international", "9" + digitDelimiter + "870" + digitDelimiter + "000" + decimalDelimiter + "3345", "0.2 %"})};
+//        final Row[] rows2 =
+//                new Row[]{new Row(4, new String[]{"NOI", "No ordered index", "4" + digitDelimiter + "565" + digitDelimiter + "000", "7.9 %"}),
+//                        new Row(5, new String[]{"DGD", "Damn good doodle", "127" + digitDelimiter + "500", "8.2 %"}),
+//                        new Row(6, new String[]{"LOA", "The limited organizations", "12" + digitDelimiter + "000", "5.5 %"}),
+//                        new Row(7, new String[]{"XZU", "Xenomorph zulu", "8" + digitDelimiter + "800", "25.3 %"})};
+//        final int rowsCount = rows1.length + rows2.length;
+//        final Page[] pages = new Page[]{new Page(1, rowsCount, rows1), new Page(2, rowsCount, rows2)};
+//        return new Object[]{new TableModel(pages), new ColumnModel(columns)};
+        return null;
     }
-
     private class SimpleTableSortingChangeListener implements TableSortingChangeListener {
         private final FlexiGrid flexiGrid;
 
@@ -758,17 +760,12 @@ public class FlexiGridTest extends SplitPane {
         public void sortingChange(TableSortingChangeEvent event) {
             if (!flexiGrid.getClientSorting()) {
                 System.out.println("Sorting server side: " + event.getSortingModel());
-                final SortingModel eventSortingModel = event.getSortingModel();
-                final TableModel model = flexiGrid.getTableModel();
                 // do some sorting here
-                //TableModelSorter.sort(model, flexiGrid.getColumnModel(), eventSortingModel);
-
-                flexiGrid.setSortingModel(eventSortingModel);
-                flexiGrid.setTableModel(model);
             } else {
                 System.out.println("Sorting client side: " + event.getSortingModel());
             }
         }
+
     }
 
     private class TestTableModel implements FlexTableModel {
