@@ -29,7 +29,6 @@ exxcellent.FlexiGrid = Core.extend(Echo.Component, {
                 SORTINGMODEL : "sortingModel",
                 COLUMNMODEL : "columnModel",
 
-                TABLEMODEL : "tableModel",
                 ACTIVE_PAGE : "activePage",
                 ACTIVE_PAGE_CHANGED : "activePageChanged",
 
@@ -573,22 +572,6 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                 return css;
             },
 
-
-            /**
-             * Method to return the tablemodel object.
-             */
-            _getTableModel : function() {
-                var value = this.component.render(exxcellent.FlexiGrid.TABLEMODEL);
-                if (value) {
-                    if (value instanceof exxcellent.model.TableModel) {
-                        this._tableModel = value;
-                    } else if (value) {
-                        this._tableModel = this._fromJsonString(value).tableModel;
-                    }
-                }
-                return this._tableModel;
-            },
-
             _getActivePage : function() {
                 var value = this.component.render(exxcellent.FlexiGrid.ACTIVE_PAGE);
                 if (value) {
@@ -705,14 +688,6 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                 this.component.doChangePage(page * 1);
 
                 return this._getActivePage();
-
-                if (this._getTableModel()) {
-                    // get page from populate call
-                    var page = param[0].value;
-                    return this._getTableModel().pages[page - 1];
-                } else {
-                    return false;
-                }
             },
 
             _onPopulateFinish : function() {

@@ -305,6 +305,7 @@ public class FlexiGrid extends Component implements Pane {
             new ResourceImageReference("js/flexigrid/css/flexigrid/images/load.gif");
 
     private FlexTableModel flexTableModel;
+    private int activePageIdx;
     private ColumnModel columnModel;
     private SortingModel sortingModel;
 
@@ -634,6 +635,11 @@ public class FlexiGrid extends Component implements Pane {
         this.flexTableModel = flexTableModel;
         setActivePage(1);
 
+        // wenn das flexTableModel null ist, dann wars das hier auch schon
+        if(flexTableModel == null) {
+            setColumnModel(new ColumnModel(new Column[0]));
+            return;
+        }
         // erzeugen des ColumnModels
         Column[] columns = new Column[flexTableModel.getColumnCount()];
         for (int currentCol = 0; currentCol < flexTableModel.getColumnCount(); currentCol++) {
@@ -662,17 +668,26 @@ public class FlexiGrid extends Component implements Pane {
 
     /**
      * Set the current activePage of the TableModel
+     * The needed Rows for this page will be extracted and transported to client to be visible in flexigrid.
      *
      * @param page
      */
     public void setActivePage(int page) {
+        if(flexTableModel == null) {
+            setActivePage(new Page(1, 1, new Row[0]));
+            return;
+        }
+        activePageIdx = page;
         int firstRowStart;
         int rowEnd;
 
+        // if all Rows should be displayed on one page...
         if (flexTableModel.getRowsPerPageCount() == FlexTableModel.SHOW_ALL_ROWS_ON_ONE_PAGE) {
+            // ... we set rowStart to zero and rowEnd to maximum
             firstRowStart = 0;
             rowEnd = flexTableModel.getRowCount();
         } else {
+            // otherwise if there is some paging active we have to calculate the range of rows to display
             firstRowStart = (page - 1) * flexTableModel.getRowsPerPageCount();
             rowEnd = firstRowStart + flexTableModel.getRowsPerPageCount();
             if (rowEnd > flexTableModel.getRowCount()) {
@@ -690,7 +705,11 @@ public class FlexiGrid extends Component implements Pane {
         for (int currentRow = firstRowStart; currentRow < rowEnd; currentRow++) {
             String[] cells = new String[flexTableModel.getColumnCount()];
             for (int currentColumn = 0; currentColumn < flexTableModel.getColumnCount(); currentColumn++) {
-                cells[currentColumn] = flexTableModel.getValueAt(currentRow, currentColumn);
+                String value = flexTableModel.getValueAt(currentRow, currentColumn);
+                if (value == null) {
+                    value = "";
+                }
+                cells[currentColumn] = value;
             }
             Row row = new Row(currentRow, cells);
             rows[rowCounter] = row;
@@ -702,13 +721,36 @@ public class FlexiGrid extends Component implements Pane {
         setActivePage(newPage);
     }
 
+    /**
+     * Set the current active Page
+     * !! --------------------------------------------- !!
+     * !! Be careful by calling this manually
+     * !! It's better to use {@link #setActivePage(int)}
+     * !! --------------------------------------------- !!
+     *
+     * @param page the active page to be set to current
+     */
     public void setActivePage(final Page page) {
         set(PROPERTY_ACTIVE_PAGE, page);
         firePropertyChange(PROPERTY_ACTIVE_PAGE, null, page);
     }
 
+    /**
+     * Return the current active Page
+     *
+     * @return the current active page
+     */
     public Page getActivePage() {
         return (Page) get(PROPERTY_ACTIVE_PAGE);
+    }
+
+    /**
+     * Returns the current activePage Index
+     *
+     * @return the index of the current active page
+     */
+    public int getActivePageIdx() {
+        return activePageIdx;
     }
 
     /**
@@ -727,7 +769,6 @@ public class FlexiGrid extends Component implements Pane {
      * @param newTableModel The table model to be represented in this component.
      */
     public void setColumnModel(final ColumnModel newColumnModel) {
-        //	    final TableModel oldTableModel = tableModel;
         set(PROPERTY_COLUMNMODEL, newColumnModel);
         firePropertyChange(PROPERTY_COLUMNMODEL, null, newColumnModel);
     }
@@ -923,6 +964,7 @@ public class FlexiGrid extends Component implements Pane {
      * double sorting.
      *
      * @param clientSorting <code>true</code> activates the client side sorting.
+     * @deprecated
      */
     public void setClientSorting(boolean clientSorting) {
         set(PROPERTY_CLIENT_SORTING, clientSorting);
@@ -932,6 +974,7 @@ public class FlexiGrid extends Component implements Pane {
      * Return <code>true</code> if the client side sorting algorithm is enabled.
      *
      * @return <code>true</code> if the debug mode is enabled.
+     * @deprecated
      */
     public boolean getClientSorting() {
         return (Boolean) get(PROPERTY_CLIENT_SORTING);
