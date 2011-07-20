@@ -79,7 +79,6 @@ exxcellent.test.FlexiGridTest = Core.extend(
                             title: "Test Flexigrid",
                             pageStatisticsMessage: 'Displaying {total} items',
                             showTableToggle: true,
-                            tableModel: model.tableModel,
                             activePage: model.tableModel.pages[0],
                             columnModel: model.columnModel,
                             showPager : true,
@@ -88,7 +87,7 @@ exxcellent.test.FlexiGridTest = Core.extend(
                             striped : true,
                             noWrap: true,
                             showResultsPerPage : false,
-                            resultsPerPageOption: new exxcellent.model.ResultsPerPageOption(4, [4]),
+                            resultsPerPageOption: new exxcellent.model.ResultsPerPageOption(8, [8]),
                             singleSelect: true,
                             debug: true,
                             clientSorting: false,
@@ -146,11 +145,9 @@ exxcellent.test.FlexiGridTest = Core.extend(
                 if (event && window.console) {
                     console.log("Update model triggered event: " + event.type + " data: " + event.data);
                 }
-                var sortingModel = this._createEmptySortingModel();
                 var model = this._createEmptyTableModel();
-                //this._flexiGrid.set(exxcellent.FlexiGrid.SORTINGMODEL, sortingModel);
-                this._flexiGrid.set(exxcellent.FlexiGrid.TABLEMODEL, model.tableModel);
-                //this._flexiGrid.set(exxcellent.FlexiGrid.COLUMNMODEL, model.columnModel);
+                this._flexiGrid.set(exxcellent.FlexiGrid.ACTIVE_PAGE, model.tableModel.pages[0]);
+                this._flexiGrid.set(exxcellent.FlexiGrid.COLUMNMODEL, model.columnModel);
                 testApp.setFocusedComponent(this._flexiGrid);
             },
 
@@ -158,11 +155,10 @@ exxcellent.test.FlexiGridTest = Core.extend(
                 if (event && window.console) {
                     console.log("Update model triggered event: " + event.type + " data: " + event.data);
                 }
-                var sortingModel = this._createOneColumnSortingModel(1, 'desc');
                 var model = this._createMultiplicationTableModel(30, 50);
-                this._flexiGrid.set(exxcellent.FlexiGrid.SORTINGMODEL, sortingModel);
-                this._flexiGrid.set(exxcellent.FlexiGrid.TABLEMODEL, model.tableModel);
+                this._flexiGrid.set(exxcellent.FlexiGrid.ACTIVE_PAGE, model.tableModel.pages[0]);
                 this._flexiGrid.set(exxcellent.FlexiGrid.COLUMNMODEL, model.columnModel);
+                this._flexiGrid.set(exxcellent.FlexiGrid.RESULTS_PPAGE_OPTION, new exxcellent.model.ResultsPerPageOption(50, [50]));
                 testApp.setFocusedComponent(this._flexiGrid);
             },
 
@@ -170,11 +166,10 @@ exxcellent.test.FlexiGridTest = Core.extend(
                 if (event && window.console) {
                     console.log("Update model triggered event: " + event.type + " data: " + event.data);
                 }
-                //var sortingModel = this._createOneColumnSortingModel(1, 'desc');
-                var model = this.createReverseMultiplicationTableModel(30, 50);
-                //this._flexiGrid.set(exxcellent.FlexiGrid.SORTINGMODEL, sortingModel);
-                this._flexiGrid.set(exxcellent.FlexiGrid.TABLEMODEL, model.tableModel);
-                //this._flexiGrid.set(exxcellent.FlexiGrid.COLUMNMODEL, model.columnModel);
+                var model = this._createReverseMultiplicationTableModel(30, 50);
+                this._flexiGrid.set(exxcellent.FlexiGrid.ACTIVE_PAGE, model.tableModel.pages[0]);
+                this._flexiGrid.set(exxcellent.FlexiGrid.COLUMNMODEL, model.columnModel);
+                this._flexiGrid.set(exxcellent.FlexiGrid.RESULTS_PPAGE_OPTION, new exxcellent.model.ResultsPerPageOption(50, [50]));
                 testApp.setFocusedComponent(this._flexiGrid);
             },
 
@@ -182,11 +177,10 @@ exxcellent.test.FlexiGridTest = Core.extend(
                 if (event && window.console) {
                     console.log("Update model triggered event: " + event.type + " data: " + event.data);
                 }
-                var sortingModel = this._createEmptySortingModel();
                 var model = this._createEmailModel();
-                this._flexiGrid.set(exxcellent.FlexiGrid.SORTINGMODEL, sortingModel);
-                this._flexiGrid.set(exxcellent.FlexiGrid.TABLEMODEL, model.tableModel);
+                this._flexiGrid.set(exxcellent.FlexiGrid.ACTIVE_PAGE, model.tableModel.pages[0]);
                 this._flexiGrid.set(exxcellent.FlexiGrid.COLUMNMODEL, model.columnModel);
+                this._flexiGrid.set(exxcellent.FlexiGrid.RESULTS_PPAGE_OPTION, new exxcellent.model.ResultsPerPageOption(8, [8]));
                 testApp.setFocusedComponent(this._flexiGrid);
             },
 
@@ -248,7 +242,7 @@ exxcellent.test.FlexiGridTest = Core.extend(
             /**
              * Creates a complex multiplication model.
              */
-            createReverseMultiplicationTableModel: function(columnCount, rowCount) {
+            _createReverseMultiplicationTableModel: function(columnCount, rowCount) {
                 var columns = [];
                 var rows = [];
                 var i,j;
@@ -284,8 +278,8 @@ exxcellent.test.FlexiGridTest = Core.extend(
                     new exxcellent.model.Page(1, rows.length, rows)];
 
                 return {
-                    tableModel: new exxcellent.model.TableModel(pages)//,
-                    //columnModel: new exxcellent.model.ColumnModel(columns)
+                    tableModel: new exxcellent.model.TableModel(pages),
+                    columnModel: new exxcellent.model.ColumnModel(columns)
                 };
             },
 
