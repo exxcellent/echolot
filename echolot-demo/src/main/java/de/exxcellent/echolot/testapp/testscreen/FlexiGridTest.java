@@ -624,7 +624,7 @@ public class FlexiGridTest extends SplitPane {
          * {@inheritDoc}
          */
         public int getRowsPerPageCount() {
-            return 5;
+            return 6;
         }
 
         /**

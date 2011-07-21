@@ -680,13 +680,25 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                     // if there is already a waitHandle do not create another one so we just create a new if it is null...
                     this._waitDialogHandle = this.client.createInputRestriction();
                     this.client._waitIndicatorActivate();
+
+                    var page = param[0].value;
+                    // CALL Listener
+                    this.component.doChangePage(page * 1);
+                    if(page != 1) {
+                        // if we come to this section of code there can be two situation:
+                        // initial call on first time flexigrid is created or one has changed page and the server call is not yet triggered(because there is no wait handle)
+                        // if we don't change to first page now it's not necessary to give back active page - will be done by renderUpdate on a second call
+                        return false;
+                    } else {
+                        // first page is requested - better give this back because this could be the initial creation
+                      return this._getActivePage();
+                    }
                 }
 
                 // the requested Page
                 var page = param[0].value;
                 // CALL Listener
                 this.component.doChangePage(page * 1);
-
                 return this._getActivePage();
             },
 
