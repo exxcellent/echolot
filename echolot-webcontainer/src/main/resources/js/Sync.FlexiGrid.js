@@ -429,6 +429,12 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
             renderUpdate: function(update) {
                 var partitialUpdate = true;
                 var updatedProperties = update.getUpdatedPropertyNames();
+
+                if (updatedProperties.length === 0) {
+                    // there are some cases were an empty update is triggered - that can lead to errors in IE so just go back with true because nothing to do for us
+                    return true;
+                }
+
                 if (Core.Arrays.indexOf(
                         updatedProperties, exxcellent.FlexiGrid.COLUMNMODEL) >= 0) {
                     partitialUpdate = false;
@@ -684,14 +690,14 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                     var page = param[0].value;
                     // CALL Listener
                     this.component.doChangePage(page * 1);
-                    if(page != 1) {
+                    if (page != 1) {
                         // if we come to this section of code there can be two situation:
                         // initial call on first time flexigrid is created or one has changed page and the server call is not yet triggered(because there is no wait handle)
                         // if we don't change to first page now it's not necessary to give back active page - will be done by renderUpdate on a second call
                         return false;
                     } else {
                         // first page is requested - better give this back because this could be the initial creation
-                      return this._getActivePage();
+                        return this._getActivePage();
                     }
                 }
 
