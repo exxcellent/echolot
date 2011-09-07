@@ -20,7 +20,6 @@ exxcellent.FlexiGrid = Core.extend(Echo.Component, {
                 DECIMAL_DELIMITER: "decimalDelimiter",
                 CSS : "css",
                 CLIENT_SORTING: "clientSorting",
-                DEBUG : "debug",
                 WIDTH : "width",
                 HEIGHT : "height",
                 COLUMN_WIDTH_UNIT : "columnWidthUnit",
@@ -452,7 +451,6 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                     var options = this._renderUpdateOptions();
                     this._flexigrid.flexOptions(options);
                     this._flexigrid.flexReload();
-
                 }
                 return true;
             },
@@ -486,6 +484,7 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                     onSelectRow: this._onSelectRow,
                     onSuccess: this._onPopulateFinish,
                     onDragCol: this._onArrangeColumn,
+                    onChangePage : this._onChangePage,
                     onResizeCol: this._onResizeColumn,
                     onResizeGrid: this._onResizeGrid,
                     sortModel: this._getSortingModel(),
@@ -510,7 +509,6 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                     minheight: this.component.render(exxcellent.FlexiGrid.MIN_COLUMN_HEIGHT),
                     nowrap: this.component.render(exxcellent.FlexiGrid.NO_WRAP),
                     singleSelect: this.component.render(exxcellent.FlexiGrid.SINGLE_SELECT),
-                    debug: this.component.render(exxcellent.FlexiGrid.DEBUG),
                     clientsort: this.component.render(exxcellent.FlexiGrid.CLIENT_SORTING),
                     digitGroupDL: this.component.render(exxcellent.FlexiGrid.DIGITGROUP_DELIMITER),
                     decimalDelimiter: this.component.render(exxcellent.FlexiGrid.DECIMAL_DELIMITER),
@@ -543,7 +541,6 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
                             minheight: this.component.render(exxcellent.FlexiGrid.MIN_COLUMN_HEIGHT),
                             nowrap: this.component.render(exxcellent.FlexiGrid.NO_WRAP),
                             singleSelect: this.component.render(exxcellent.FlexiGrid.SINGLE_SELECT),
-                            debug: this.component.render(exxcellent.FlexiGrid.DEBUG),
                             clientsort: this.component.render(exxcellent.FlexiGrid.CLIENT_SORTING),
                             digitGroupDL: this.component.render(exxcellent.FlexiGrid.DIGITGROUP_DELIMITER),
                             decimalDelimiter: this.component.render(exxcellent.FlexiGrid.DECIMAL_DELIMITER),
@@ -580,13 +577,12 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
 
             _getActivePage : function() {
                 var value = this.component.render(exxcellent.FlexiGrid.ACTIVE_PAGE);
-                if (value) {
-                    if (value instanceof exxcellent.model.Page) {
-                        // TODO
-                        this._activePage = value;
-                    } else if (value) {
-                        this._activePage = this._fromJsonString(value).activePage;
-                    }
+                if (value && value instanceof exxcellent.model.Page) {
+                    // Client-side usage: property containts page model
+                    this._activePage = value;
+                } else if (value) {
+                    // Server-side usage: property contains JSON Sting containing the page
+                    this._activePage = this._fromJsonString(value).activePage;
                 }
                 return this._activePage;
             },
@@ -622,7 +618,7 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
             /**
              * Method to parse a JSON string into an object.
              * @see "http://www.json.org/js.html"
-             * @param {} json the string to be transformed into an object
+             * @param {} jsonStr the string to be transformed into an object
              * @return {} the object
              */
             _fromJsonString : function(jsonStr) {
@@ -680,32 +676,33 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
              * - selecting a rows per page option
              */
             _onPopulate : function (param) {
+                // This method will be called twice!
+                // 1) by flexigrid directly after the "nextpage" click
+                // 2) by Sync.FlexiGrid in the renderUpdate() method
+                //
+                // Intended behaviour: Just lock the screen in the first round and process the updated page
+                // in the second round
+
+                // The desired page number
+                var page = param[0].value;
+
                 // add an input restriction to have the 'please wait' dialog show explicitly
                 // only on update, because otherwise flexigrid will 'puke'
                 if (this._waitDialogHandle == null) {
                     // if there is already a waitHandle do not create another one so we just create a new if it is null...
                     this._waitDialogHandle = this.client.createInputRestriction();
-                    this.client._waitIndicatorActivate();
-
-                    var page = param[0].value;
-                    // CALL Listener
-                    this.component.doChangePage(page * 1);
-                    if (page != 1) {
-                        // if we come to this section of code there can be two situation:
-                        // initial call on first time flexigrid is created or one has changed page and the server call is not yet triggered(because there is no wait handle)
-                        // if we don't change to first page now it's not necessary to give back active page - will be done by renderUpdate on a second call
-                        return false;
-                    } else {
-                        // first page is requested - better give this back because this could be the initial creation
-                        return this._getActivePage();
-                    }
                 }
 
-                // the requested Page
-                var page = param[0].value;
                 // CALL Listener
                 this.component.doChangePage(page * 1);
                 return this._getActivePage();
+            },
+
+            _onChangePage : function() {
+                // If flexigrid changes page, then we forget the current data in the first place
+                this._activePage = null;
+                // onPopulate called by the renderUpdate() from echo will provide the new data
+                this.component.set(exxcellent.FlexiGrid.ACTIVE_PAGE, null);
             },
 
             _onPopulateFinish : function() {
@@ -903,7 +900,7 @@ exxcellent.FlexiGridSync = Core.extend(Echo.Render.ComponentSync, {
             /** @see Echo.Render.ComponentSync#getFocusFlags */
             getFocusFlags: function() {
                 // we doesn't allow any of the keys: arrow up,down,left,right to change the focus
-                return;
+                return false;
             },
 
             /** Processes a focus blur event. */

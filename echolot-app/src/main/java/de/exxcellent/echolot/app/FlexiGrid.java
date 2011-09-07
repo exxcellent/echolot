@@ -151,10 +151,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public static final String PROPERTY_RESIZABLE = "resizable";
     /**
-     * if <code>true</code> the debug mode is enabled and logs are written to the console.
-     */
-    public static final String PROPERTY_DEBUG = "debug";
-    /**
      * if <code>true</code> the client side sorting algorithm is enabled.
      */
     public static final String PROPERTY_CLIENT_SORTING = "clientSorting";
@@ -695,7 +691,7 @@ public class FlexiGrid extends Component implements Pane {
             }
         }
 
-        // die Anzahl an Zeilen für diese Page
+        // die Anzahl an Zeilen fÃ¼r diese Page
         int amountOfRows = rowEnd - firstRowStart;
 
         // Aufbau der Page
@@ -931,24 +927,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public boolean getResizable() {
         return (Boolean) get(PROPERTY_RESIZABLE);
-    }
-
-    /**
-     * If <code>true</code> the debug mode is enabled and log messages are written to the console.
-     *
-     * @param debug <code>true</code> the debug mode is enabled.
-     */
-    public void setDebug(boolean debug) {
-        set(PROPERTY_DEBUG, debug);
-    }
-
-    /**
-     * Return <code>true</code> if the debug mode is enabled and log messages are written to the console.
-     *
-     * @return <code>true</code> if the debug mode is enabled.
-     */
-    public boolean getDebug() {
-        return (Boolean) get(PROPERTY_DEBUG);
     }
 
     /**

@@ -81,8 +81,6 @@ public class FlexiGridTest extends SplitPane {
         flexiGrid.setClientSorting(false);
         flexiGrid.setSortingModel(sortModel);
 
-        flexiGrid.setDebug(true);
-
         flexiGrid.setTitle("Test Flexigrid");
         flexiGrid.setRenderId("flex1");
         flexiGrid.setStyleName("Default");
@@ -661,12 +659,6 @@ public class FlexiGridTest extends SplitPane {
          * {@inheritDoc}
          */
         public String getValueAt(int rowIndex, int columnIndex) {
-            // Just add some delay - a real application would call Database here
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             return "Value for row:" + rowIndex + " col:" + columnIndex + " id:" + System.currentTimeMillis();
         }
     }

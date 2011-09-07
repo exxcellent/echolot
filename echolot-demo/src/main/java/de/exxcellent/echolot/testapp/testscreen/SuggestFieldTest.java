@@ -347,12 +347,6 @@ public class SuggestFieldTest extends SplitPane {
         System.out.println("Callback triggered for input " + input);
         _input = input;
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
-
         SuggestItem newItem = new SuggestItem(input + Math.round(Math.random() * 1000));
         SuggestItem[] oldItems = suggestModel.getSuggestItems();
         SuggestItem[] newItems = new SuggestItem[oldItems.length + 1];
