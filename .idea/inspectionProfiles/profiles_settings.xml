@@ -1,0 +1,103 @@
+<component name="InspectionProjectProfileManager">
+  <settings>
+    <option name="PROJECT_PROFILE" value="echolot inspections" />
+    <option name="USE_PROJECT_PROFILE" value="true" />
+    <version value="1.0" />
+    <info>
+      <option name="FOREGROUND" />
+      <option name="BACKGROUND" />
+      <option name="FONT_TYPE" value="0" />
+      <option name="EFFECT_COLOR" value="ccccff" />
+      <option name="EFFECT_TYPE" value="2" />
+      <option name="ERROR_STRIPE_COLOR" />
+      <option name="myName" value="DECENT_HINT" />
+      <option name="myVal" value="50" />
+      <option name="myExternalName" value="DECENT_HINT" />
+      <option name="myDefaultAttributes">
+        <value>
+          <option name="FOREGROUND" />
+          <option name="BACKGROUND" />
+          <option name="FONT_TYPE" value="0" />
+          <option name="EFFECT_COLOR" />
+          <option name="EFFECT_TYPE" value="0" />
+          <option name="ERROR_STRIPE_COLOR" />
+        </value>
+      </option>
+    </info>
+    <info>
+      <option name="FOREGROUND" />
+      <option name="BACKGROUND" value="ebebff" />
+      <option name="FONT_TYPE" value="0" />
+      <option name="EFFECT_COLOR" value="9999ff" />
+      <option name="EFFECT_TYPE" value="2" />
+      <option name="ERROR_STRIPE_COLOR" />
+      <option name="myName" value="HINT" />
+      <option name="myVal" value="50" />
+      <option name="myExternalName" value="HINT" />
+      <option name="myDefaultAttributes">
+        <value>
+          <option name="FOREGROUND" />
+          <option name="BACKGROUND" />
+          <option name="FONT_TYPE" value="0" />
+          <option name="EFFECT_COLOR" />
+          <option name="EFFECT_TYPE" value="0" />
+          <option name="ERROR_STRIPE_COLOR" />
+        </value>
+      </option>
+    </info>
+    <info>
+      <option name="FOREGROUND" />
+      <option name="BACKGROUND" value="f0ffff" />
+      <option name="FONT_TYPE" value="0" />
+      <option name="EFFECT_COLOR" value="d9f6fb" />
+      <option name="EFFECT_TYPE" value="2" />
+      <option name="ERROR_STRIPE_COLOR" />
+      <option name="myName" value="NOTE_THIS" />
+      <option name="myVal" value="300" />
+      <option name="myExternalName" value="NOTE_THIS" />
+      <option name="myDefaultAttributes">
+        <value>
+          <option name="FOREGROUND" />
+          <option name="BACKGROUND" />
+          <option name="FONT_TYPE" value="0" />
+          <option name="EFFECT_COLOR" />
+          <option name="EFFECT_TYPE" value="0" />
+          <option name="ERROR_STRIPE_COLOR" />
+        </value>
+      </option>
+    </info>
+    <info color="ffff00">
+      <option name="FOREGROUND" />
+      <option name="BACKGROUND" value="ffff00" />
+      <option name="FONT_TYPE" value="0" />
+      <option name="EFFECT_COLOR" value="0" />
+      <option name="EFFECT_TYPE" value="2" />
+      <option name="ERROR_STRIPE_COLOR" value="ffff00" />
+      <option name="myName" value="SEVERE_WARNING" />
+      <option name="myVal" value="50" />
+      <option name="myExternalName" value="SEVERE_WARNING" />
+      <option name="myDefaultAttributes">
+        <value>
+          <option name="FOREGROUND" />
+          <option name="BACKGROUND" />
+          <option name="FONT_TYPE" value="0" />
+          <option name="EFFECT_COLOR" />
+          <option name="EFFECT_TYPE" value="0" />
+          <option name="ERROR_STRIPE_COLOR" />
+        </value>
+      </option>
+    </info>
+    <list size="10">
+      <item index="0" class="java.lang.String" itemvalue="DECENT_HINT" />
+      <item index="1" class="java.lang.String" itemvalue="HINT" />
+      <item index="2" class="java.lang.String" itemvalue="NOTE_THIS" />
+      <item index="3" class="java.lang.String" itemvalue="TYPO" />
+      <item index="4" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+      <item index="5" class="java.lang.String" itemvalue="INFO" />
+      <item index="6" class="java.lang.String" itemvalue="SEVERE_WARNING" />
+      <item index="7" class="java.lang.String" itemvalue="WEAK WARNING" />
+      <item index="8" class="java.lang.String" itemvalue="WARNING" />
+      <item index="9" class="java.lang.String" itemvalue="ERROR" />
+    </list>
+  </settings>
+</component>
