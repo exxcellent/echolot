@@ -8,6 +8,6 @@ To start the demo simply clone this branch and open
     
 in your favorite Browser or just view the live demo here:
 
-http://exxcellent.github.com/echolot/test/index.html
+http://exxcellent.github.com/echolot/index.html
 
 Have fun :-)
