@@ -121,9 +121,10 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         Echo.Sync.Insets.render(this.component.render(exxcellent.Expander.INSETS), this._div, "padding");
 
         // register events
+                Core.Web.Event.add(this._div, "keydown", Core.method(this, this._processKeyPress), false);
         Core.Web.Event.add(this._div, "focus", Core.method(this, this._processFocus), false);
         Core.Web.Event.add(this._div, "blur", Core.method(this, this._processBlur), false);
-        Core.Web.Event.add(this._div, "keydown", Core.method(this, this._processKeyPress), false);
+
 
         if (!this.component.render(exxcellent.Expander.HEADER_HIDE)) {
             this._renderHeader(update);
@@ -140,6 +141,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     _renderHeader: function(update) {
         this._mDiv = document.createElement("div");
         this._mDiv.style.cursor = "pointer";
+
         var headerHeight = this.component.render(exxcellent.Expander.HEADER_HEIGHT)
         Echo.Sync.Extent.render(headerHeight, this._mDiv, "height", false, false);
         Echo.Sync.Border.render(this.component.render(exxcellent.Expander.HEADER_BORDER), this._mDiv);
@@ -459,7 +461,8 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
 
     /** Processes a key press event. */
     _processKeyPress: function(e) {
-        if (!this.client || !this.client.verifyInput(this.component)) {
+        // only toggle content, when a keyPress is triggered by a BOX-DIV
+        if (!this.client || !this.client.verifyInput(this.component) || e.target.nodeName != 'DIV') {
             return true;
         }
         if (e.keyCode === 13 || e.keyCode === 40 || e.keyCode === 38

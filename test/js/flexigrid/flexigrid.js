@@ -7,14 +7,14 @@
  *
  * $Date: 2008-07-14 00:09:43 +0800 (Tue, 14 Jul 2008) $
  */
- 
+
 (function($){
-		  
+
 	$.addFlex = function(t,p)
 	{
 
 		if (t.grid) return false; //return if already exist
-		
+
 		// apply default properties
 		p = $.extend({
 			 height: 'auto', //auto height
@@ -50,9 +50,8 @@
 			 hideOnSubmit: true,
 			 autoload: true,
 			 blockOpacity: 0.5,
-			 onToggleCol: false,// using custom change visibility of column function 
+			 onToggleCol: false,// using custom change visibility of column function
 			 onChangeSort: false, // using custom change sort function
-			 preProcess: false, // using custom pre processing before addData function 
 			 onSuccess: false, // using custom validate after addData function
 			 onChangePage: false, // using custom change page function
 			 onSubmit: false, // using a custom populate function
@@ -70,12 +69,12 @@
 			 heightOffset: 100, // the offset used to correctly auto height the flexigrid table. Just play with the value.
              searchitems: false
 		  }, p);
-		  		
+
 
 		$(t)
 		.show() //show if hidden
 		.attr({cellPadding: 0, cellSpacing: 0, border: 0})  //remove padding and spacing
-		.removeAttr('width') //remove width properties	
+		.removeAttr('width') //remove width properties
 		;
 
         // -----------------------------------------------------------------------------------------------------------
@@ -114,7 +113,7 @@
                     console.log('Duration of rePosDrag :' + (new Date() - startTime) + 'ms');
                 }
             },
-			
+
             /* ~~~~~ ECHO3 special handling start ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
             autoColumnWidth: function () {
             	// If Debugging is enabled record the start time of the rendering process.
@@ -154,11 +153,11 @@
                     // If debugging is enabled log the duration of this operation.
                     var nowTime = new Date();
                     console.log('Duration of autoColumnWidth :' + (nowTime - startTime) + 'ms');
-                }                        
+                }
             },
             /* ~~~~~ ECHO3 special handling END   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 			/**
-			 * Method used to fix the height of the column drag-lines and the 
+			 * Method used to fix the height of the column drag-lines and the
 			 * column visibility menu height (nDiv).
 			 */
 			fixHeight: function (newH) {
@@ -175,8 +174,8 @@
 							$(this).height(newH+hdHeight);
 						}
 				);
-				
-				/* 
+
+				/*
 				 * adjust the column visibility menu height (nDiv).
 				 */
 				/*
@@ -187,20 +186,20 @@
 					$(g.nDiv).height('auto').width('auto');
 				*/
 				$(g.block).css({height:newH,marginBottom:(newH * -1)});
-				
+
 				var hrH = g.bDiv.offsetTop + newH;
 				if (p.height != 'auto' && p.resizable) hrH = g.vDiv.offsetTop;
 					$(g.rDiv).css({height: hrH});
-					
+
 				if (p.debug && window.console && window.console.log) {
                     // If debugging is enabled log the duration of this operation.
                     var nowTime = new Date();
                     console.log('Duration of fixHeight :' + (nowTime - startTime) + 'ms');
-                } 
-				
+                }
+
 			},
 			dragStart: function (dragtype,e,obj) { //default drag function start
-				
+
 				if (dragtype=='colresize') //column resize
 					{
 						$(g.nDiv).hide();$(g.nBtn).hide();
@@ -208,7 +207,7 @@
 						var ow = $('th:visible div:eq('+n+')',this.hDiv).width();
 						$(obj).addClass('dragging').siblings().hide();
 						$(obj).prev().addClass('dragging').show();
-						
+
 						this.colresize = {startX: e.pageX, ol: parseInt(obj.style.left), ow: ow, n : n };
 						$('body').css('cursor','col-resize');
 					}
@@ -216,13 +215,13 @@
 					{
 						var hgo = false;
 						$('body').css('cursor','row-resize');
-						if (obj) 
+						if (obj)
 							{
 							hgo = true;
 							$('body').css('cursor','col-resize');
 							}
 						this.vresize = {h: p.height, sy: e.pageY, w: p.width, sx: e.pageX, hgo: hgo};
-						
+
 					}
 
 				else if (dragtype=='colMove') //column header drag
@@ -233,7 +232,7 @@
 						this.hset.bottom = this.hset.top + $('table',this.hDiv).height();
 						this.dcol = obj;
 						this.dcoln = $('th',this.hDiv).index(obj);
-						
+
 						this.colCopy = document.createElement("div");
 						this.colCopy.className = "colCopy";
 						this.colCopy.innerHTML = obj.innerHTML;
@@ -241,15 +240,15 @@
 						{
 						this.colCopy.className = "colCopy ie";
 						}
-						
-						
+
+
 						$(this.colCopy).css({position:'absolute',"float":'left',display:'none', textAlign: obj.align});
-						
+
 						$('body').append(this.colCopy);
 						$(this.cDrag).hide();
-						
+
 					}
-														
+
                 // ECHO3: Die entsprechende Eigeneschaft wird wohl nicht  inherited, weil vermutlich
                 // umliegende Echo-Komponenten diese woanders definierem:
                 // Daher auf dem flexigrid-DIV selber arbeiten statt dem globalen BODY-Tag
@@ -258,7 +257,7 @@
 
 			},
 			dragMove: function (e) {
-			
+
 				if (this.colresize) //column resize
 					{
 						var n = this.colresize.n;
@@ -276,11 +275,11 @@
 						var v = this.vresize;
 						var y = e.pageY;
 						var diff = y-v.sy;
-						
+
 						if (!p.defwidth) {
                             p.defwidth = p.width;
                         }
-						
+
 						if (p.width != 'auto' && !p.nohresize && v.hgo)
 						{
 							var x = e.pageX;
@@ -292,7 +291,7 @@
 									p.width = newW;
 								}
 						}
-						
+
 						var newH = v.h + diff;
 						if ((newH > p.minheight || p.height < p.minheight) && !v.hgo)
 							{
@@ -303,7 +302,7 @@
 						v = null;
 					}
 				else if (this.colCopy) {
-					$(this.dcol).addClass('thMove').removeClass('thOver'); 
+					$(this.dcol).addClass('thMove').removeClass('thOver');
 					if (e.pageX > this.hset.right || e.pageX < this.hset.left
                             || e.pageY > this.hset.bottom || e.pageY < this.hset.top)
                     {
@@ -313,8 +312,8 @@
                         $('body').css('cursor', 'pointer');
                     }
 					$(this.colCopy).css({top:e.pageY + 10,left:e.pageX + 20, display: 'block'});
-				}													
-			
+				}
+
 			},
 			dragEnd: function () {
 				// If Debugging is enabled record the start time of the rendering process.
@@ -343,7 +342,7 @@
 						this.rePosDrag();
 						this.fixHeight();
 						this.colresize = false;
-						
+
 						if (p.onResizeCol && p.colModel) {
 							var columnId = p.colModel[n].name;
 							p.onResizeCol.call(p.owner, columnId, nw);
@@ -366,63 +365,63 @@
 						$(this.colCopy).remove();
 						if (this.dcolt != null)
 							{
-							
-							
+
+
 							if (this.dcoln>this.dcolt)
 								$('th:eq('+this.dcolt+')',this.hDiv).before(this.dcol);
 							else
 								$('th:eq('+this.dcolt+')',this.hDiv).after(this.dcol);
-							
-							
-							
+
+
+
 							this.switchCol(this.dcoln,this.dcolt);
 							$(this.cdropleft).remove();
 							$(this.cdropright).remove();
 							this.rePosDrag();
-							
-							if (p.onDragCol && p.colModel) 
+
+							if (p.onDragCol && p.colModel)
 								var sourceColumnId = p.colModel[this.dcoln].name;
 								var targetColumnId = p.colModel[this.dcolt].name;
 								p.onDragCol.call(p.owner, sourceColumnId, targetColumnId);
-																			
+
 						}
-						
+
 						this.dcol = null;
 						this.hset = null;
 						this.dcoln = null;
 						this.dcolt = null;
 						this.colCopy = null;
-						
+
 						$('.thMove',this.hDiv).removeClass('thMove');
 						$(this.cDrag).show();
-						
+
 						if (p.debug && window.console && window.console.log) {
 		                    // If debugging is enabled log the duration of this operation.
 		                    var nowTime = new Date();
 		                    console.log('Duration of dragEnd (colCopy) :' + (nowTime - startTime) + 'ms');
 		                }
-					}										
+					}
 				$('body').css('cursor','default');
 				// $('body').noSelect(false);
                 // ECHO3 : siehe comment in dragStart
 				$(g.gDiv).noSelect(false);
 			},
 			toggleCol: function(cid,visible) {
-				
+
 				var ncol = $("th[axis='col"+cid+"']",this.hDiv)[0];
 				var n = $('thead th',g.hDiv).index(ncol);
 				var cb = $('input[value='+cid+']',g.nDiv)[0];
-				
-				
+
+
 				if (visible==null)
 					{
 						visible = ncol.hide;
 					}
-				
-				
-				
+
+
+
 				if ($('input:checked',g.nDiv).length<p.minColToggle&&!visible) return false;
-				
+
 				if (visible)
 					{
 						ncol.hide = false;
@@ -435,7 +434,7 @@
 						$(ncol).hide();
 						cb.checked = false;
 					}
-					
+
 						$('tbody tr',t).each
 							(
 								function ()
@@ -445,12 +444,12 @@
 										else
 											$('td:eq('+n+')',this).hide();
 									}
-							);							
-				
+							);
+
 				this.rePosDrag();
-				
-				if (p.onToggleCol && p.colModel){ 
-					/* 
+
+				if (p.onToggleCol && p.colModel){
+					/*
 					 * ECHO3 we need the owner of the object as 'this'.
 					 * Event if column visibility is changed.
 					 */
@@ -459,10 +458,10 @@
 				}
 				return visible;
 			},
-			
+
 			// After columns are dragged and dropped the data has to be adjusted.
 			switchCol: function(cdrag,cdrop) { //switch columns
-				
+
 				$('tbody tr',t).each
 					(
 						function ()
@@ -473,38 +472,34 @@
 									$('td:eq('+cdrop+')',this).after($('td:eq('+cdrag+')',this));
 							}
 					);
-					
+
 					//switch order in nDiv
 					if (cdrag>cdrop)
 						$('tr:eq('+cdrop+')',this.nDiv).before($('tr:eq('+cdrag+')',this.nDiv));
 					else
 						$('tr:eq('+cdrop+')',this.nDiv).after($('tr:eq('+cdrag+')',this.nDiv));
-						
-					if ($.browser.msie&&$.browser.version<7.0){ $('tr:eq('+cdrop+') input',this.nDiv)[0].attr('checked', true);}	
-					
+
+					if ($.browser.msie&&$.browser.version<7.0){ $('tr:eq('+cdrop+') input',this.nDiv)[0].attr('checked', true);}
+
 					this.hDiv.scrollLeft = this.bDiv.scrollLeft;
-					
+
 					if (p.debug && window.console && window.console.log) {
 	                    console.log('Triggered switchCol.');
 	                }
-			},	
+			},
 
 			// the action triggered by the scroll event in the body div (bDiv)
 			scroll: function() {
 					this.hDiv.scrollLeft = this.bDiv.scrollLeft;
 					this.rePosDrag();
 			},
-			
-			addData: function (data) { //parse data
-				
-				if (p.preProcess)
-					data = p.preProcess(data);
-				
-				if (!data) {
+
+			addData: function (data) {
+                if (!data) {
                     // There is no data after loading. Interrupt the loading here,
                     // set busy to to false and display an error message.
                     g.setBusy(false);
-                    $('.pPageStat',this.pDiv).html(p.errormsg);
+                    finalizeRendering();
                     return false;
                 }
 
@@ -512,8 +507,8 @@
                     p.total = +$('rows total',data).text();
                 } else {
                     p.total = data.total;
-                }				
-					
+                }
+
 				if (p.total==0)
 					{
 					$('tr, a, td, div',t).unbind();
@@ -526,26 +521,27 @@
                     if (p.onSuccess) {
                     	p.onSuccess.call(p.owner);
                     }
-					g.setBusy(false);	
+					g.setBusy(false);
 					return false;
 				}
-				
+
 				p.pages = Math.ceil(p.total/p.rp);
-				
+
 				if (p.dataType=='xml')
 					p.page = +$('rows page',data).text();
 				else
 					p.page = data.page;
-				
+
 				// Build new tbody...
 				var tbody = document.createElement('tbody');
-				// Select the body before. This is better because this selected jQuery object could be used more then one times in the next steps.
+				// Select the body before. This is better because this selected jQuery object could
+				// be used more then one times in the next steps.
 				var qtbody = $(tbody);
-				
+
 				// set the heights before rendering finished
                 if (p.height == 'auto') {
                 	var globalDiv = $(g.gDiv);
-                	/* 
+                	/*
                 	 * can not be used... its more complicated.
                 	 * the idea was to measure all prev siblings (divs)
                 	 *
@@ -554,17 +550,18 @@
 				        componentHeight += $(this).attr('offsetHeight');
 					});
 					*/
-                    var bHeight = globalDiv.offsetParent().attr('offsetHeight') - p.heightOffset; 
+                    var bHeight = globalDiv.offsetParent().attr('offsetHeight') - p.heightOffset;
 			        // adjust the flexigrid body (table) height
-	                $(g.bDiv).css({ height: bHeight+"px"})
+	                $(g.bDiv).css({ height: bHeight+"px"});
 	                // adjust the column visibility menu height and width
 	                var mHeight = bHeight - 100;
 	                $(g.nDiv).height(mHeight > 50 ? mHeight : 100).width(200);
 					if (p.debug && window.console && window.console.log) {
-			            console.log('Finalize calculated height :' + bHeight + ' px, heightOffset: ' + p.heightOffset + ' px, menuHeight: ' + mHeight);
-			        } 
+			            console.log('Finalize calculated height :' + bHeight + ' px, ' +
+                                'heightOffset: ' + p.heightOffset + ' px, menuHeight: ' + mHeight);
+			        }
                 }
-				
+
                 if (p.debug) {
                     // If Debugging is enabled record the start time of the rendering process.
                     var startTime = new Date();
@@ -580,18 +577,18 @@
                     $('tr', qt).unbind();
                     qt.empty();
                     qt.append(qtbody);
-					
-					g.rePosDrag();		
-							
+
+					g.rePosDrag();
+
                     // This is paranoid but set the variables back to null. It is better for debugging.
                     tbody = null;
                     qtbody = null;
-                    data = null;		
-							
+                    data = null;
+
                     // Call the onSuccess hook (if present).
                     if (p.onSuccess) {
                     	p.onSuccess.call(p.owner);
-                    }					
+                    }
                     // Deactivate the busy mode.
                     g.setBusy(false);
                     if (g.lazyFocus) {
@@ -603,33 +600,44 @@
                         var nowTime = new Date();
                         console.log('Duration of rendering data of type "' + p.dataType + '": ' + (nowTime - startTime) + 'ms');
                     }
+                    return false;
                 }
                 // We will need the header cell at this point more times.
                 // So we do better to store it not for further usages.
-                var headers = $('thead tr:first th',g.hDiv);			
+                var headers = $('thead tr:first th',g.hDiv);
+
                 // What is going on here? Because of many rows we have to render, we do not
                 // iterate with a regular foreach method. We make a pseudo asynchron process with
                 // the setTimeout method. We do better to do this because in other way we will
                 // force a lagging of the whole browser. In the worst case the user will get a
                 // dialog box of an "endless looping javaScript".
+
                 if (p.dataType=='json') {
                     // Prepare the looping parameters.
                     var ji = 0;
                     var row = null;
+
+                    /**
+                     * Processes a data row in the JSON data stream
+                     * @return true if data was processed, false otherwise (no more data)
+                     */
                     function doJsonRow() {
-                        // Only if there are more rows we will render a next row.
-                        if (data.rows.length > ji) {
-                            row = data.rows[ji];
-                            // Paranoid I know but it possible that there is an array selected with
-                            // null entries.
-                            if (row) {
+                        // Let's try to process this amount of rows per "timeout" cycle
+                        // Hopefully MSIE will be fast enough.
+                        var rowsPerBatch = 20;
+
+                        do {
+                            rowsPerBatch--;
+                            // Only if there are more rows we will render a next row.
+                            if (data && data.rows.length > ji && data.rows[ji]) {
+                                row = data.rows[ji];
                                 var tr = document.createElement('tr');
                                 var qtr = $(tr);
                                 if (ji % 2 && p.striped) {
                                     tr.className = 'erow';
                                 }
                                 if (row.id === null) {
-                                	// nothing to do.
+                                    // nothing to do.
                                 } else {
                                     tr.id = 'row' + row.id;
                                 }
@@ -650,21 +658,32 @@
                                 g.addRowProp(qtr);
                                 // Prepare the next step.
                                 ji++;
-                                setTimeout(doJsonRow, 1);
+                                if (rowsPerBatch <= 0) {
+                                    setTimeout(doJsonRow, 1);
+                                    return true;
+                                }
                             } else {
-                                finalizeRendering();
+                                rowsPerBatch = 0;
                             }
-                        } else {
-                            finalizeRendering();
-                        }
+                        } while (rowsPerBatch > 0);
+
+                        // No more data? Finalize
+                        finalizeRendering();
+                        return false;
                     }
+
                     // Start the pseudo asynchron iteration.
+                    // Processing the JSON input may take some time esp. on crappy MSIEs.
+                    // Using this timeout mechanism we avoid "unresponsible script" warn dialogs.
                     setTimeout(doJsonRow, 1);
+
                 } else if (p.dataType=='xml') {
                     // Prepare the looping parameters.
                     var index = 1;
                     var xi = 0;
                     var rows = $("rows row", data);
+
+
                     function doXmlRow() {
                         // Only if there are more rows we will render a next row.
                         if (xi < rows.length) {
@@ -673,7 +692,7 @@
                             // null entries.
                             if (row) {
                                 var qrow = $(row);
-                                index++;														
+                                index++;
                                 var tr = document.createElement('tr');
                                 var qtr = $(tr);
                                 if (index % 2 && p.striped) {
@@ -682,7 +701,7 @@
                                 var nid = qrow.attr('id');
                                 if (nid === null) {
                                 	// nothing to do
-                                } else {	
+                                } else {
                                     tr.id = 'row' + nid;
                                 }
                                 nid = null;
@@ -710,10 +729,12 @@
                         }
                     }
                     // Start the pseudo asynchron iteration.
+                    // Processing the XML input may take some time esp. on crappy MSIEs.
+                    // Using this timeout mechanism we avoid "unresponsible script" warn dialogs.
                     setTimeout(doXmlRow, 1);
                 } else {
                     throw new Error('DataType "' + p.dataType + '" could not be handled.');
-                }							
+                }
 			},
 
 			/**
@@ -721,37 +742,37 @@
 			 */
 			changeSort: function(th, multiSelect) { //change sortorder
 				if (p.debug){ var startTime = new Date(); }
-				
+
 				if (this.loading) return true;
-				
+
 				// we are sorting, so visualize the processing
 				this.setBusy(true);
 				$(g.nDiv).hide();$(g.nBtn).hide();
-				
+
 				if (!multiSelect) {
 					if (p.debug){ var cleanStartTime = new Date(); }
-					// remove all sorted columns from the model 
+					// remove all sorted columns from the model
 					p.sortModel.columns = [];
 					// remove all classes from the other header columns.
 					var thDiv = $('div', th);
 					$('thead tr:first th div', this.hDiv).not(thDiv).removeClass('sdesc').removeClass('sasc');
-					
+
 					$(th).siblings().removeClass('sorted');
 					if (p.debug && window.console && window.console.log){
-						console.log('Multiselect is false, cleaned up columns in ' + (new Date() - cleanStartTime) + 'ms. ' 
-							+ 'remaining column: "' + $(th).attr('abbr') + '" classes: "' + thDiv.attr('class') + '"'); 
+						console.log('Multiselect is false, cleaned up columns in ' + (new Date() - cleanStartTime) + 'ms. '
+							+ 'remaining column: "' + $(th).attr('abbr') + '" classes: "' + thDiv.attr('class') + '"');
 					}
 				}
-				
+
 				// set or add the sorting order in the model
 				var thdiv = $('div', th);
 				var isSorted = $(th).hasClass('sorted');
-				
-				var sortColumn = new Object(); 
+
+				var sortColumn = new Object();
 				var abbrSelector = $(th).attr('abbr');
 				// if already sorted column, toggle sorting
 				if (isSorted){
-					var no = ''; 
+					var no = '';
 					if (p.sortModel.columns.length > 0) {
 						for (var idx = 0; idx < p.sortModel.columns.length; idx++) {
 							var column = p.sortModel.columns[idx];
@@ -779,42 +800,42 @@
 					});
 					p.sortModel.columns.push(sortColumn);
 				}
-					
+
 				if (p.onChangeSort){
-					/* 
+					/*
 					 * ECHO3 we need the owner of the object as 'this'.
 					 */
 					p.onChangeSort.call(p.owner, p.sortModel);
 				}
-				
+
 				this.setBusy(false);
 				if (p.debug && window.console && window.console.log) {
                     // If debugging is enabled log the duration of this operation.
                     var nowTime = new Date();
                     var multiSelectMsg = multiSelect ? 'yes':'no';
-                    console.log('Change sort to ' + sortColumn.sortOrder + ' for column ' + sortColumn.columnId + ':' 
+                    console.log('Change sort to ' + sortColumn.sortOrder + ' for column ' + sortColumn.columnId + ':'
                     + (nowTime - startTime) + 'ms' + ' (CRTL pressed: ' + multiSelectMsg + ')');
                 }
 			},
 
 			buildpager: function(){ //rebuild pager based on new properties
-			
+
 				$('.pcontrol input',this.pDiv).val(p.page);
 				$('.pcontrol span',this.pDiv).html(p.pages);
-				
-				var r1 = (p.page-1) * p.rp + 1; 
-				var r2 = r1 + p.rp - 1; 
-				
+
+				var r1 = (p.page-1) * p.rp + 1;
+				var r2 = r1 + p.rp - 1;
+
 				if (p.total<r2) r2 = p.total;
-				
+
 				var stat = p.pagestat;
-				
+
 				stat = stat.replace(/{from}/,r1);
 				stat = stat.replace(/{to}/,r2);
 				stat = stat.replace(/{total}/,p.total);
-				
+
 				$('.pPageStat',this.pDiv).html(stat);
-			
+
 			},
 
             /**
@@ -872,23 +893,23 @@
 						var gh = p.onSubmit();
 						if (!gh) return false;
 					}
-				
-				if (!p.url) return false; 
-				
+
+				if (!p.url) return false;
+
                 // Make this grid list busy for the user.
                 this.setBusy(true);
-				
+
 				if (!p.newp) p.newp = 1;
-				
+
 				if (p.page>p.pages) p.page = p.pages;
 				var params = [
 					 { name : 'page', value : p.newp }
 					,{ name : 'rp', value : p.rp }
 					,{ name : 'query', value : p.query}
 					,{ name : 'qtype', value : p.qtype}
-				];							 
+				];
 				var data = [];
-				
+
                 // Only add parameters to request data which are not null.
                 for (i in params) {
                     var param = params[i];
@@ -896,43 +917,13 @@
                         data.push(param);
                     }
                 }
-                // If there are some additional parameters and each are not null add it to the request data.
-                if (p.params) {
-				    for (pi in p.params) {
-                        var current = p.params[pi];
-                        if (current && current.name && current.value) {
-                            data.push(current);
-                        }
-                    }
-                }
-                // Call prepareRequest hook.
-                if (p.prepareRequest) {
-                    p.prepareRequest(data);
-                }                
-				/*
-				 * COMMENT-ECHO3: We need to use echo3 calls 
-				 * instead of ajax URL based approach.
-				 */
-				if (p.onPopulateCallback) {
-					var data = p.onPopulateCallback.call(p.owner, data);
-					if (!data) {
-						try { if (p.onError) p.onError(data); } catch (e) {};
-					} else {
-						g.addData(data);
-					}
-				} else {
-		                $.ajax({
-		                   type: p.method,
-		                   url: p.url,
-		                   data: data,
-		                   dataType: p.dataType,
-		                   success: function(data){g.addData(data);},
-		                   error: function(data) { try { if (p.onError) p.onError(data); } catch (e) {} }
-		                 });
-				}
-				
+
+				/* COMMENT-ECHO3: We need to use echo3 calls instead of ajax URL based approach. */
+                data = p.onPopulateCallback.call(p.owner, data);
+                g.addData(data);
+
 				// do sorting
-				if (p.clientsort && p.sortModel && p.sortModel.columns.length > 0) {
+				if (data && p.clientsort && p.sortModel && p.sortModel.columns.length > 0) {
 					this.multiSort(p.sortModel, new exxcellent.model.ColumnModel(p.colModel), new exxcellent.model.TableModel(new Array(data)));
             	}
 			},
@@ -942,20 +933,20 @@
 				p.qtype = $('select[name=qtype]',g.sDiv).val();
 				p.newp = 1;
 
-				this.populate();				
+				this.populate();
 			},
 
 			changePage: function (ctype){ //change page
-			
+
 				if (this.loading) return true;
-			
+
 				switch(ctype)
 				{
 					case 'first': p.newp = 1; break;
 					case 'prev': if (p.page>1) p.newp = parseInt(p.page) - 1; break;
 					case 'next': if (p.page<p.pages) p.newp = parseInt(p.page) + 1; break;
 					case 'last': p.newp = p.pages; break;
-					case 'input': 
+					case 'input':
 							var nv = parseInt($('.pcontrol input',this.pDiv).val());
 							if (isNaN(nv)) nv = 1;
 							if (nv<1) nv = 1;
@@ -964,17 +955,15 @@
 							p.newp =nv;
 							break;
 				}
-			
+
 				if (p.newp==p.page) return false;
-				
-				if (p.onChangePage) { 
-					/* 
-					 * ECHO3 we need the owner of the object as 'this'.
-					 */
+
+				if (p.onChangePage) {
+					/*  ECHO3 we need the owner of the object as 'this'. */
 					p.onChangePage.call(p.owner, p.newp);
 				}
 				this.populate();
-			
+
 			},
 
 			addCellProp: function (cell, prnt, innerHtml, pth) {
@@ -993,14 +982,14 @@
                 }
                 if (!p.nowrap) {
                     qtdDiv.css('white-space', 'normal');
-                }	
+                }
                 if (!innerHtml || innerHtml == '') {
                     innerHtml = '&nbsp;';
                 }
 				tdDiv.innerHTML = innerHtml;
 
 				qcell.empty().append(tdDiv).removeAttr('width');
-            },					 
+            },
 
 			getCellDim: function (obj) // get cell prop for editable event
 			{
@@ -1027,7 +1016,7 @@
                     }
                     g.selectedRow = $(this);
                     e.stopPropagation();
-                    
+
                 }).mousedown(function (e) {
                     if (e.shiftKey) {
                         $(this).toggleClass('trSelected');
@@ -1043,7 +1032,7 @@
                     // process the row selection event
                     var obj = (e.target || e.srcElement);
                     if (p.onSelectRow)  {
-						/* 
+						/*
 						 * ECHO3 we need the p.owner of the object as 'this'.
 						 */
                     	var pid = this.id.substr(3);
@@ -1053,7 +1042,7 @@
                     if (g.multisel) {
                         $(this).toggleClass('trSelected');
                     }
-                }, function () {/*hover-out*/ 
+                }, function () {/*hover-out*/
                 });
                 if ($.browser.msie && $.browser.version < 7.0) {
                     qrow.hover(function () {
@@ -1061,7 +1050,7 @@
                     }, function () {
                         $(this).removeClass('trOver');
                     });
-                }			
+                }
 			},
 			pager: 0
         }; // --- EOF Grid Declaration (g)
@@ -1129,7 +1118,7 @@
 		g.iDiv = document.createElement('div'); //create editable layer
 		g.tDiv = document.createElement('div'); //create toolbar
 		g.sDiv = document.createElement('div');
-		
+
 		if (p.usepager || p.showPageStat) g.pDiv = document.createElement('div'); //create pager container
 		g.hTable = document.createElement('table');
 
@@ -1140,7 +1129,7 @@
 		//add conditional classes
 		if ($.browser.msie)
 			$(g.gDiv).addClass('ie');
-		
+
 		if (p.novstripe)
 			$(g.gDiv).addClass('novstripe');
 
@@ -1148,7 +1137,7 @@
 		$(g.gDiv).append(t);
 
 		//set toolbar
-		if (p.buttons) 
+		if (p.buttons)
 		{
 			g.tDiv.className = 'tDiv';
 			var tDiv2 = document.createElement('div');
@@ -1166,7 +1155,7 @@
 						var btnDiv = document.createElement('div');
 						btnDiv.className = 'fbutton';
 						btnDiv.innerHTML = "<div><span>"+btn.name+"</span></div>";
-						if (btn.bclass) 
+						if (btn.bclass)
 							$('span',btnDiv)
 							.addClass(btn.bclass)
 							.css({paddingLeft:20})
@@ -1176,8 +1165,8 @@
 						if (btn.onpress)
 						{
 							$(btnDiv).click
-							(	
-								function () 
+							(
+								function ()
 								{
 								this.onpress(this.name,g.gDiv);
 								}
@@ -1188,7 +1177,7 @@
 						{
 							$(btnDiv).hover(function(){$(this).addClass('fbOver');},function(){$(this).removeClass('fbOver');});
 						}
-						
+
 					} else {
 						$(tDiv2).append("<div class='btnseparator'></div>");
 					}
@@ -1197,7 +1186,7 @@
 				$(g.tDiv).append("<div style='clear:both'></div>");
 				$(g.gDiv).prepend(g.tDiv);
 		}
-		
+
 		//set hDiv
 		g.hDiv.className = 'hDiv';
 
@@ -1211,13 +1200,13 @@
         var thead = $("thead:first",t).get(0);
         if (thead) $(g.hTable).append(thead);
         thead = null;
-		
+
 		if (!p.colmodel) var ci = 0;
 		if(p.debug && window.console && window.console.log){
 			console.log("Building table header");
 		}
 
-		//setup table header (thead)			
+		//setup table header (thead)
 		$('thead tr:first th',g.hDiv).each
 		(
 		 	function ()
@@ -1232,8 +1221,8 @@
 								function (e) {
 									if (!$(this).hasClass('thOver')) return false;
 									var obj = (e.target || e.srcElement);
-									if (obj.href || obj.type) return true; 
-									
+									if (obj.href || obj.type) return true;
+
 									var thDiv = $('div', this);
 									if (thDiv.hasClass('active')){
 										thDiv.toggleClass('sasc');
@@ -1256,21 +1245,21 @@
 										thdiv.className = 's'+ sortColumn.sortOrder;
 									}
 								}
-							}	
+							}
 						}
 						// setup initial hiding
 						if (this.hide) qth.hide();
-						
+
 						if (!p.colmodel) {
 							qth.attr('axis','col' + ci++);
 						}
-						
-						
+
+
 					 $(thdiv).css({textAlign:this.align, width: this.width + 'px'});
 					 thdiv.innerHTML = this.innerHTML;
-					 
+
 					qth.empty().append(thdiv).removeAttr('width')
-					.mousedown(function (e) 
+					.mousedown(function (e)
 						{
 							g.dragStart('colMove',e,this);
 						})
@@ -1291,46 +1280,46 @@
 								}
 							}
 							// drop the dragged column on another column (hover-in)
-							if (g.colCopy) 
+							if (g.colCopy)
 								{
 								var n = $('th',g.hDiv).index(this);
-								
+
 								if (n==g.dcoln) return false;
-								
-								
-								
+
+
+
 								if (n<g.dcoln) $(this).append(g.cdropleft);
 								else $(this).append(g.cdropright);
-								
+
 								g.dcolt = n;
-								
+
 							} else if (!g.colresize) {
-									
+
 								var nv = $('th:visible',g.hDiv).index(this);
 								var onl = parseInt($('div:eq('+nv+')',g.cDrag).css('left'));
 								var nw = parseInt($(g.nBtn).width()) + parseInt($(g.nBtn).css('borderLeftWidth'));
 								var nl = onl - nw + Math.floor(p.cgwidth/2);
-								
+
 								$(g.nDiv).hide();$(g.nBtn).hide();
-								
+
 								$(g.nBtn).css({'left':nl,top:g.hDiv.offsetTop}).show();
-								
+
 								var ndw = parseInt($(g.nDiv).width());
-								
+
 								$(g.nDiv).css({top:g.bDiv.offsetTop});
-								
+
 								if ((nl+ndw)>$(g.gDiv).width())
 									$(g.nDiv).css('left',onl-ndw+1);
 								else
 									$(g.nDiv).css('left',nl);
-									
-								if ($(this).hasClass('sorted')) 
+
+								if ($(this).hasClass('sorted'))
 									$(g.nBtn).addClass('srtd');
 								else
 									$(g.nBtn).removeClass('srtd');
-									
+
 							}
-								
+
 						},
 						// hover out function
 						function(){
@@ -1338,7 +1327,7 @@
 							var thDiv = $('div', this);
 							if(!$(thDiv).hasClass('active')) {
 								var thDiv = $('div',this);
-								if (!$(this).hasClass('sorted')){ 
+								if (!$(this).hasClass('sorted')){
 									thDiv.removeClass('s' + p.sortorder);
 								} else {
 									thDiv.toggleClass('sasc');
@@ -1347,7 +1336,7 @@
 							} else {
 								$(thDiv).removeClass('active');
 							}
-							if (g.colCopy) {								
+							if (g.colCopy) {
 								$(g.cdropleft).remove();
 								$(g.cdropright).remove();
 								g.dcolt = null;
@@ -1360,7 +1349,7 @@
 		//set bDiv (body div)
 		g.bDiv.className = 'bDiv';
 		$(t).before(g.bDiv);
-		
+
 		$(g.bDiv).css({ height: (p.height=='auto') ? '50 px' : p.height+"px"})
 		.scroll(function (e) {
 			g.scroll();
@@ -1368,39 +1357,39 @@
 		})
 		.append(t)
 		;
-		
-		if (p.height == 'auto') 
+
+		if (p.height == 'auto')
 			{
 			$('table',g.bDiv).addClass('autoht');
 			}
 
 
 		$('tbody', g.bDiv).hide();
-		
+
 		//set cDrag
 		var cdcol = $('thead tr:first th:first',g.hDiv).get(0);
-		
+
 		if (cdcol != null)
-		{		
+		{
 		g.cDrag.className = 'cDrag';
 		g.cdpad = 0;
-		
-		g.cdpad += (isNaN(parseInt($('div',cdcol).css('borderLeftWidth'))) ? 0 : parseInt($('div',cdcol).css('borderLeftWidth'))); 
-		g.cdpad += (isNaN(parseInt($('div',cdcol).css('borderRightWidth'))) ? 0 : parseInt($('div',cdcol).css('borderRightWidth'))); 
-		g.cdpad += (isNaN(parseInt($('div',cdcol).css('paddingLeft'))) ? 0 : parseInt($('div',cdcol).css('paddingLeft'))); 
-		g.cdpad += (isNaN(parseInt($('div',cdcol).css('paddingRight'))) ? 0 : parseInt($('div',cdcol).css('paddingRight'))); 
-		g.cdpad += (isNaN(parseInt($(cdcol).css('borderLeftWidth'))) ? 0 : parseInt($(cdcol).css('borderLeftWidth'))); 
-		g.cdpad += (isNaN(parseInt($(cdcol).css('borderRightWidth'))) ? 0 : parseInt($(cdcol).css('borderRightWidth'))); 
-		g.cdpad += (isNaN(parseInt($(cdcol).css('paddingLeft'))) ? 0 : parseInt($(cdcol).css('paddingLeft'))); 
-		g.cdpad += (isNaN(parseInt($(cdcol).css('paddingRight'))) ? 0 : parseInt($(cdcol).css('paddingRight'))); 
+
+		g.cdpad += (isNaN(parseInt($('div',cdcol).css('borderLeftWidth'))) ? 0 : parseInt($('div',cdcol).css('borderLeftWidth')));
+		g.cdpad += (isNaN(parseInt($('div',cdcol).css('borderRightWidth'))) ? 0 : parseInt($('div',cdcol).css('borderRightWidth')));
+		g.cdpad += (isNaN(parseInt($('div',cdcol).css('paddingLeft'))) ? 0 : parseInt($('div',cdcol).css('paddingLeft')));
+		g.cdpad += (isNaN(parseInt($('div',cdcol).css('paddingRight'))) ? 0 : parseInt($('div',cdcol).css('paddingRight')));
+		g.cdpad += (isNaN(parseInt($(cdcol).css('borderLeftWidth'))) ? 0 : parseInt($(cdcol).css('borderLeftWidth')));
+		g.cdpad += (isNaN(parseInt($(cdcol).css('borderRightWidth'))) ? 0 : parseInt($(cdcol).css('borderRightWidth')));
+		g.cdpad += (isNaN(parseInt($(cdcol).css('paddingLeft'))) ? 0 : parseInt($(cdcol).css('paddingLeft')));
+		g.cdpad += (isNaN(parseInt($(cdcol).css('paddingRight'))) ? 0 : parseInt($(cdcol).css('paddingRight')));
 
 		$(g.bDiv).before(g.cDrag);
-		
+
 		var cdheight = $(g.bDiv).height();
 		var hdheight = $(g.hDiv).height();
 
 		$(g.cDrag).css({top: -hdheight + 'px'});
-		
+
 		$('thead tr:first th',g.hDiv).each
 			(
 			 	function ()
@@ -1415,10 +1404,10 @@
 						{
 							g.fixHeight($(g.gDiv).height());
 							$(cgDiv).hover(
-								function () 
+								function ()
 								{
 								g.fixHeight();
-								$(this).addClass('dragging') 
+								$(this).addClass('dragging')
 								},
 								function () { if (!g.colresize) $(this).removeClass('dragging') }
 							);
@@ -1427,9 +1416,9 @@
 			);
 		//g.rePosDrag()
 		}
-		
 
-		//add strip		
+
+		//add strip
         if (p.striped)
         {
             $('tbody tr:odd', g.bDiv).addClass('erow');
@@ -1458,7 +1447,7 @@
             }
             $(g.gDiv).append(g.rDiv);
         }
-		
+
 		// add pager
 		if (p.usepager || p.showPageStat)
 		{
@@ -1480,7 +1469,7 @@
 				$('.pLast',g.pDiv).click(function(){g.changePage('last')});
 				$('.pcontrol input',g.pDiv).keydown(function(e){if(e.keyCode==13) g.changePage('input')});
 				if ($.browser.msie&&$.browser.version<7) $('.pButton',g.pDiv).hover(function(){$(this).addClass('pBtnOver');},function(){$(this).removeClass('pBtnOver');});
-				
+
 				// add 'rows per page' combobox
 				if (p.useRp)
 				{
@@ -1506,7 +1495,7 @@
 					);
 				}
 			}
-			// add page statistics 
+			// add page statistics
 			if (p.showPageStat) {
 				var pageStatHtml = ' <div class="btnseparator"></div> <div class="pGroup"> <div class="pReload pButton"><span></span></div> </div> <div class="btnseparator"></div> <div class="pGroup"><span class="pPageStat"></span></div>';
 				$('.pDiv2',g.pDiv).append(pageStatHtml);
@@ -1516,12 +1505,12 @@
 			if (p.searchitems)
 			{
 				$('.pDiv2',g.pDiv).prepend("<div class='pGroup'> <div class='pSearch pButton'><span></span></div> </div>  <div class='btnseparator'></div>");
-				$('.pSearch',g.pDiv).click(function(){$(g.sDiv).slideToggle('fast',function(){$('.sDiv:visible input:first',g.gDiv).trigger('focus');});});				
+				$('.pSearch',g.pDiv).click(function(){$(g.sDiv).slideToggle('fast',function(){$('.sDiv:visible input:first',g.gDiv).trigger('focus');});});
 				//add search box
 				g.sDiv.className = 'sDiv';
-				
+
 				var sitems = p.searchitems;
-				
+
 				var sopt = "";
 				for (var s = 0; s < sitems.length; s++)
 				{
@@ -1530,22 +1519,22 @@
 					p.qtype = sitems[s].name;
 					var sel = 'selected="selected"';
 					} else sel = '';
-					sopt += "<option value='" + sitems[s].name + "' " + sel + " >" + sitems[s].display + "&nbsp;&nbsp;</option>";						
+					sopt += "<option value='" + sitems[s].name + "' " + sel + " >" + sitems[s].display + "&nbsp;&nbsp;</option>";
 				}
-				
+
 				if (p.qtype=='') p.qtype = sitems[0].name;
-				
+
 				$(g.sDiv).append("<div class='sDiv2'>Quick Search <input type='text' size='30' name='q' class='qsbox' /> <select name='qtype'>"+sopt+"</select> <input type='button' value='Clear' /></div>");
 
 				$('input[name=q],select[name=qtype]',g.sDiv).keydown(function(e){if(e.keyCode==13) g.doSearch()});
 				$('input[value=Clear]',g.sDiv).click(function(){$('input[name=q]',g.sDiv).val(''); p.query = ''; g.doSearch(); });
-				$(g.bDiv).after(g.sDiv);				
-				
+				$(g.bDiv).after(g.sDiv);
+
 			}
-		
+
 		}
 		$(g.pDiv,g.sDiv).append("<div style='clear:both'></div>");
-	
+
 		// add title
 		if (p.title)
 		{
@@ -1594,7 +1583,7 @@
 		// add column control
 		if ($('th',g.hDiv).length)
 		{
-			
+
 			g.nDiv.className = 'nDiv';
 			g.nDiv.innerHTML = "<table cellpadding='0' cellspacing='0'><tbody></tbody></table>";
 			$(g.nDiv).css(
@@ -1616,19 +1605,19 @@
 						var kcol = $("th[axis='col" + cn + "']",g.hDiv)[0];
 						var chk = 'checked="checked"';
 						if (kcol.style.display=='none') chk = '';
-						
+
 						$('tbody',g.nDiv).append('<tr><td class="ndcol1"><input type="checkbox" '+ chk +' class="togCol" value="'+ cn +'" /></td><td class="ndcol2">'+this.innerHTML+'</td></tr>');
 						cn++;
 					}
 			);
-			
+
 			if ($.browser.msie&&$.browser.version<7.0)
 				$('tr',g.nDiv).hover
 				(
 				 	function () {$(this).addClass('ndcolover');},
 					function () {$(this).removeClass('ndcolover');}
 				);
-			
+
 			$('td.ndcol2',g.nDiv).click
 			(
 			 	function ()
@@ -1637,12 +1626,12 @@
 						return g.toggleCol($(this).prev().find('input').val());
 					}
 			);
-			
+
 			$('input.togCol',g.nDiv).click
 			(
 			 	function ()
 					{
-						
+
 						if ($('input:checked',g.nDiv).length<p.minColToggle&&!this.checked) {
                             return false;
                         }
@@ -1653,7 +1642,7 @@
 
 
 			$(g.gDiv).prepend(g.nDiv);
-			
+
 			$(g.nBtn).addClass('nBtn')
 			.html('<div></div>')
 			.attr('title',p.hidecolmsg)
@@ -1664,36 +1653,36 @@
 			 	$(g.nDiv).slideToggle('fast'); return true;
 				}
 			);
-			
+
 			if (p.showToggleBtn) $(g.gDiv).prepend(g.nBtn);
-			
+
 		}
-		
+
 		// add date edit layer
 		$(g.iDiv)
 		.addClass('iDiv')
 		.css({display:'none'})
 		;
 		$(g.bDiv).append(g.iDiv);
-		
+
 		// add flexigrid events
 		$(g.bDiv)
-		.hover(function(){$(g.nDiv).hide();$(g.nBtn).hide();},function(){if (g.multisel) g.multisel = false;}) 
+		.hover(function(){$(g.nDiv).hide();$(g.nBtn).hide();},function(){if (g.multisel) g.multisel = false;})
 		;
 		$(g.gDiv)
 		.hover(function(){},function(){$(g.nDiv).hide();$(g.nBtn).hide();})
 		;
-		
+
 		// pinkhominid (2008.09.20): ie leak fix start
 		//add document events
-		// we need the document here, otherwise the dragging is restricted 
+		// we need the document here, otherwise the dragging is restricted
 		// to the selected div, e.g $(g.gDiv)
 		$(document)
         .mousemove(mousemove)
         .mouseup(mouseup)
         .mouseenter(hoverover)
         .mouseleave(hoverout);
-        
+
         function mousemove(e) {
             g.dragMove(e);
         }
@@ -1704,7 +1693,7 @@
         function hoverout() {
             g.dragEnd();
         }
-		  
+
         g.cleanup = function () {
             // Unbind events listeners attached outside flexigrid gDiv
             $(document)
@@ -1726,14 +1715,14 @@
             p.onDragCol =  null; // using a custom on column dragdrop callback function
             p.onResizeCol = null; // using a custom on column resizing callback function
             p.onResizeGrid = null; // using a custom on grid resizing callback function
-            p = null;            
+            p = null;
             g = null;
             t.grid = null;
             t.p = null;
             t = null;
         };
-		// pinkhominid (2008.09.20): ie leak fix end 
-        
+		// pinkhominid (2008.09.20): ie leak fix end
+
         /**
          * Method to focus and blur the flexigrid table.
          */
@@ -1757,7 +1746,7 @@
         		}
         	}
         };
-        
+
         /**
          * Method to remote control the flexigrid via keycodes.
          */
@@ -1777,11 +1766,11 @@
 	        		g.selectedRow.toggleClass('trSelected');
 	        		if (p.singleSelect) {
 		                g.selectedRow.siblings().removeClass('trSelected');
-		            }		            
+		            }
 		            var rowsHeight = 0;
 					nextselectedRow.prevAll().each(function () {
 					        rowsHeight += $(this).height();
-					}); 
+					});
 		            if ($(g.bDiv).height()/2.3 < rowsHeight)
 		            	g.bDiv.scrollTop = g.bDiv.scrollTop + nextselectedRow.height();
         		}
@@ -1797,7 +1786,7 @@
 		            var rowsHeight = 0;
 					prevselectedRow.nextAll().each(function () {
 					        rowsHeight += $(this).height();
-					}); 
+					});
 		            if ($(g.bDiv).height()/2.3 < rowsHeight)
 		            	g.bDiv.scrollTop = g.bDiv.scrollTop - prevselectedRow.height();
         		}
@@ -1815,13 +1804,13 @@
         	}
         	return true;
         };
-        
+
         /**
          * Method to multisort the flexigrid on demand.
          */
 		g.multiSort = function (sortModel, columnModel, tableModel) {
 	  		var sortingColumns = sortModel.columns;
-	  		
+
 	  		var columnsToSort = new Array();
 	  		for (idx = 0; idx < sortingColumns.length; idx++) {
 	  			var sortingColumn = sortingColumns[idx];
@@ -1829,10 +1818,10 @@
 		  			if(columnModel.columns[adx].name == sortingColumn.columnId){
 		  				columnsToSort.push(new Object({
 		  					index: adx,
-		  					order: sortingColumn.sortOrder 
+		  					order: sortingColumn.sortOrder
 		  				}));
 		  			}
-		  		}	
+		  		}
 	  		}
 	  		columnsToSort.reverse();
 	  		if (p.debug && window.console && window.console.log) {
@@ -1849,7 +1838,7 @@
 	  		var firstPage = tableModel.pages[0];
             firstPage.rows = allRows;
 	  		return tableModel;
-	  		
+
 	  		/**
 	  		 * A method to sort rows using multiple columns.
 	  		 */
@@ -1867,13 +1856,13 @@
 				}
 		  		if (p.debug && window.console && window.console.log) {
 					var nowTime = new Date();
-					console.log('Duration of multiSort on ' + rows.length 
+					console.log('Duration of multiSort on ' + rows.length
 						+ ' rows :' + (nowTime - startTime) + 'ms');
 				}
 				return rows;
-				
+
 		  		function alphaNumericSorter (row1, row2) {
-		  			var row1Cell = row1.cell[columnIdx]; 
+		  			var row1Cell = row1.cell[columnIdx];
 		  			var row2Cell = row2.cell[columnIdx];
 
 		  			// undefined rows
@@ -1885,7 +1874,7 @@
 	  					return 1;// test for undefined row2
 	  				}
 		  			if (isDigit(row1Cell) && isDigit(row2Cell)) {
-		  				// convert into num value the fastest way, 
+		  				// convert into num value the fastest way,
 		  				// see http://www.jibbering.com/faq/faq_notes/type_convert.html
 		  				if (typeof row1Cell != 'number')
 		  					var row1Num = row1Cell.replace(delimiterRegExp,'');
@@ -1901,7 +1890,7 @@
                            if(typeof(row2Num) != 'undefined') // can happen...
                           {
                              row2Num = row2Num.replace(decimalDelimiterRegExp, '.');
-                          }             
+                          }
 		  				if (p.debug && window.console && window.console.log) {
 		  					console.log('Tested row type = "number" ' + row1Num + ' to ' + row2Num);
 		  				}
@@ -1918,11 +1907,11 @@
 		  				}
 		  				if (sortOrder == 'asc') {
 		  					return (row1Cell < row2Cell) ? -1 : 1;
-		  				} else { 
+		  				} else {
 		  					return (row1Cell > row2Cell) ? -1 : 1;
 		  				}
 		  			}
-		  			
+
 				}
 	  			function isDigit(s) {
 					if (typeof s == 'number') return true;
@@ -1931,7 +1920,7 @@
                     var exp = '(^([-+]?[\\d'+ DECIMAL + DECIMAL_DELIMITER + ']*)$)';
 					return RegExp(exp).test($.trim(s));
 				}
-				
+
 			}
 		};
         /**
@@ -1942,23 +1931,23 @@
             g.loading = false;
             g.populate()
         };
-        
+
 		//browser adjustments
 		if ($.browser.msie&&$.browser.version<7.0)
 		{
 			$('.hDiv,.bDiv,.mDiv,.pDiv,.vGrip,.tDiv, .sDiv',g.gDiv)
 			.css({width: '100%'});
 			$(g.gDiv).addClass('ie6');
-			if (p.width!='auto') $(g.gDiv).addClass('ie6fullwidthbug');			
-		} 
-		
+			if (p.width!='auto') $(g.gDiv).addClass('ie6fullwidthbug');
+		}
+
 		g.rePosDrag();
 		g.fixHeight();
-		
+
 		//make grid functions accessible
 		t.p = p;
 		t.grid = g;
-		
+
         // Load data if possible and enabled.
         if (p.url && p.autoload) {
             g.populate();
@@ -1972,7 +1961,7 @@
 
 	        // ECHO3: call our special autosize columns which assigns max width (by bsc)
 	        // g.autoColumnWidth.call(g);
-            
+
             /**
              * This method is used to finalize the rendering of the data to the body if the grid list.
              * @return (void)
@@ -2127,7 +2116,7 @@
 		}
 
 	}; //end noSelect
-	
+
     $.fn.flexDestroy = function() {
         return this.each( function() {
                 if (this.grid) {
@@ -2140,30 +2129,30 @@
                         console.log('flexDestroy took :' + (new Date() - startTime) + 'ms');
                     }
                 }
-            });        
+            });
     };
-    
+
     $.fn.flexMultiSort = function(sortModel, colModel, tableModel) {
         return this.each( function() {
                 if (this.grid) {
                 	this.grid.multiSort(sortModel, colModel, tableModel)
                 };
-            });        
+            });
     };
-    
+
     $.fn.flexFocus = function(focusState) {
         return this.each( function() {
                 if (this.grid) {
                 	this.grid.focus(focusState)
                 };
-            });        
+            });
     };
-    
+
     $.fn.flexRemoteControl = function(keycode) {
         return this.each( function() {
                 if (this.grid) {
                 	this.grid.remoteControl(keycode)
                 };
-            });        
+            });
     };
 })(jQuery);
