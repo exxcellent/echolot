@@ -103,11 +103,14 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     _div: null,  // Main outer DIV element containing the echo renderId.
     _mDiv: null, // The title section containg the title and arrow thing.
     _showDiv: null, // the first child div content.
+    _showRenderID: null, // holds a reference to the renderID mainly to identify the components during update replacemnt
     _hideDiv: null, // the second child div content.
+    _hideRenderID: null, // holds a reference to the renderID mainly to identify the components during update replacemnt
     _imgSpn: null, // the image span containing the fold/ collapse image.
     _txtDiv: null, // the text span containing the fold/ collapse text.
     _titleDiv: null, // the title div
     _shown: null, // the state of the expander. True if the first child is shown, otherwise false.
+
 
     /** @see Echo.Render.ComponentSync#renderAdd */
     renderAdd: function(update, parentElement) {
@@ -124,7 +127,6 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         Core.Web.Event.add(this._div, "keydown", Core.method(this, this._processKeyPress), false);
         Core.Web.Event.add(this._div, "focus", Core.method(this, this._processFocus), false);
         Core.Web.Event.add(this._div, "blur", Core.method(this, this._processBlur), false);
-
 
         if (!this.component.render(exxcellent.Expander.HEADER_HIDE)) {
             this._renderHeader(update);
@@ -252,10 +254,11 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         var showInit = this.component.render(exxcellent.Expander.SHOW, exxcellent.ExpanderSync.DEFAULTS.showInitially);
         var showChild = this.component.getComponent(0);
         this._renderContent(showChild, this._showDiv, update, this._div);
+        this._showRenderID = showChild.renderId;
         if (this.component.getComponentCount() > 1) {
             var hideChild = this.component.getComponent(1);
             this._renderContent(hideChild, this._hideDiv, update, this._div);
-
+            this._hideRenderID = hideChild.renderId;
             if (!showInit) {
                 $(this._showDiv).hide();
             } else {
@@ -365,6 +368,38 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         parentElement.appendChild(div);
     },
 
+    /**
+     * Renderes a content replacement of some Elements
+     *
+     * @param update
+     */
+    _renderContentReplaced: function(update) {
+        var removedChildList = update.getRemovedChildren();
+        var addedChildList = update.getAddedChildren();
+        if (removedChildList && addedChildList) {
+            // we can only handle one removment one time
+            var newChild = addedChildList[0];
+            var removedChild = removedChildList[0];
+            if (this._hideRenderID == removedChild.renderId) {
+                // dispose old
+                $(this._hideDiv).empty(); // clear div
+                Echo.Render.renderComponentDispose(update, removedChild);
+                $(this._hideDiv).empty(); // clear div
+                // add new
+                this._renderContent(newChild, this._hideDiv, update, this._div);
+                this._hideRenderID = newChild.renderId;
+            } else if (this._showRenderID == removedChild.renderId) {
+                // dispose old
+                $(this._showDiv).empty(); // clear div
+                Echo.Render.renderComponentDispose(update, removedChild);
+                $(this._showDiv).empty(); // clear div
+                // add new
+                this._renderContent(newChild, this._showDiv, update, this._div);
+                this._showRenderID = newChild.renderId;
+            }
+        }
+    },
+
     /** @see Echo.Sync.ArrayContainer#renderChildLayoutData */
     _renderChildLayoutData: function(child, cellElement) {
         var layoutData = child.render("layoutData");
@@ -383,7 +418,9 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     renderDispose: function(update) {
         this._mDiv = null;
         this._showDiv = null;
+        this._showRenderID = null;
         this._hideDiv = null;
+        this._hideRenderID = null;
         this._imgSpn = null;
         this._txtDiv = null;
         this._showState = null;
@@ -403,6 +440,10 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
             this.renderAdd(update, containerElement);
             return true; // Child elements are supported: safe to return true.
         } else {
+            // if it's not yet a full render, check if some childs have been added or removed
+            if (update.hasRemovedChildren || update.hasAddedChildren) {
+                this._renderContentReplaced(update);
+            }
             if (update.hasUpdatedProperties()) {
                 var visibleIdxUpdate = update.getUpdatedProperty(exxcellent.Expander.SHOW);
                 if (visibleIdxUpdate) {
