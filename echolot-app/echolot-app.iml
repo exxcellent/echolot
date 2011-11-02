@@ -10,22 +10,22 @@
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.b8-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.rc1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.b8-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.rc1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.b8-SNAPSHOT.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.rc1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.b8-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.rc1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
