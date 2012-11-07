@@ -42,6 +42,8 @@ import nextapp.echo.app.*;
 import nextapp.echo.app.event.ActionEvent;
 import nextapp.echo.app.event.ActionListener;
 
+import javax.swing.*;
+
 /**
  * This class represents a visual Test-Area for the PieChart and all it's properties
  *
@@ -73,6 +75,7 @@ public class PieChartTest extends SplitPane {
         pieChart.setShowPopUp(true);
         pieChart.setDoAnimation(true);
         pieChart.setSectorAbbrevShow(false);
+        pieChart.setDoClientSorting(false);
 
         pieChart.setFallbackSectorColor0(Color.DARKGRAY);
         pieChart.setFallbackSectorColor1(Color.ORANGE);
@@ -254,6 +257,15 @@ public class PieChartTest extends SplitPane {
                 pieChart.setAnimationType(AnimationType.BACK_OUT);
             }
         });
+
+        // -- sorting --
+        controlsColumn.add(new Label("Client sorting"));
+        controlsColumn.addButton("Toggle clientSorting", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pieChart.setDoClientSorting(!pieChart.isDoClientSorting());
+            }
+        });
+
 
     }
 

@@ -33,6 +33,8 @@ exxcellent.PieChart = Core.extend(Echo.Component, {
         DO_ANIMATION : 'doAnimation',
         ANIMATION_TYPE : 'animationType',
 
+        DO_CLIENT_SORTING : 'doClientSorting',
+
         SECTOR_ABBREV_SHOW : 'sectorAbbrevShow', // wanna have some defined abbreviation in your sectors, toggle this to: true
         SECTOR_ABBREV_FONT : 'sectorAbbrevFont', // the font of the Abbreviation
         SECTOR_ABBREV_FOREGROUND : 'sectorAbbrevForeground', // the foreground-color of the abbreviation, every sector can define it's own if there is a need to do so
@@ -373,6 +375,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
             showLegend : this.component.render(exxcellent.PieChart.SHOW_LEGEND),
             doAnimation : this.component.render(exxcellent.PieChart.DO_ANIMATION),
             animationType : this.component.render(exxcellent.PieChart.ANIMATION_TYPE) || 'bounce',
+            doClientSorting : this.component.render(exxcellent.PieChart.DO_CLIENT_SORTING) || false, // default - no client sorting!
             showPopUp : this.component.render(exxcellent.PieChart.SHOW_POPUP),
             popupBackground : this.component.render(exxcellent.PieChart.POPUP_BACKGROUND) || '#000',
             popupBorderColor : this.component.render(exxcellent.PieChart.POPUP_BORDER_COLOR) || '#666',

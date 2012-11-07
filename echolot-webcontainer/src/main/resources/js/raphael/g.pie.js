@@ -84,9 +84,12 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
                 return this.value;
             }};
         }
-        values.sort(function (a, b) {
-            return b.value - a.value;
-        });
+        if(style.doClientSorting) {
+            // when doing clientSorting we sort from big to small to show the biggest sector at top
+            values.sort(function (a, b) {
+                return b.value - a.value;
+            });
+        }
         for (i = 0; i < len; i++) {
             if (defcut && values[i].value != 0 && values[i].value * 360 / total <= 1.5) {
                 cut = i;
