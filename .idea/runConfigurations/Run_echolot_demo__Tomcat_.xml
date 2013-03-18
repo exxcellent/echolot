@@ -15,6 +15,7 @@
     </server-settings>
     <log_file path="$USER_HOME$/.IntelliJIdea90/system/tomcat/Unnamed_echolot_trunkd5929b60/logs/localhost*" checked="true" skipped="true" show_all="false" alias="Tomcat Log" />
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+    <RunnerSettings RunnerId="Cover" />
     <RunnerSettings RunnerId="Debug">
       <option name="DEBUG_PORT" value="4802" />
       <option name="TRANSPORT" value="0" />
@@ -24,6 +25,21 @@
       <option name="myExternalizedOptions" value="&#13;&#10;additional-options2=onexit\=snapshot&#13;&#10;" />
     </RunnerSettings>
     <RunnerSettings RunnerId="Run" />
+    <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Cover">
+      <option name="USE_ENV_VARIABLES" value="true" />
+      <STARTUP>
+        <option name="USE_DEFAULT" value="true" />
+        <option name="SCRIPT" value="" />
+        <option name="VM_PARAMETERS" value="" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+      </STARTUP>
+      <SHUTDOWN>
+        <option name="USE_DEFAULT" value="true" />
+        <option name="SCRIPT" value="" />
+        <option name="VM_PARAMETERS" value="" />
+        <option name="PROGRAM_PARAMETERS" value="" />
+      </SHUTDOWN>
+    </ConfigurationWrapper>
     <ConfigurationWrapper VM_VAR="JAVA_OPTS" RunnerId="Debug">
       <option name="USE_ENV_VARIABLES" value="true" />
       <STARTUP>
