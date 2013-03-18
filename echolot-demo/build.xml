@@ -2,8 +2,7 @@
 
 <!-- includes -->
 <project name="echolot-demo" basedir="." default="build">
-	<property name="dir.tools" value="../build-tools"/>
-	<property name="build.debug" value="true"/>
+	<property name="dir.tools" value="${basedir}/../build-tools"/>
 
 	<property name="app.path" value="../echolot-app"/>
     <property name="webcontainer.path" value="../echolot-webcontainer"/>

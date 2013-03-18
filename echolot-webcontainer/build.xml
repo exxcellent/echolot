@@ -31,8 +31,7 @@
 
 <!-- includes -->
 <project name="echolot-webcontainer" basedir="." default="build">
-	<property name="dir.tools" value="../build-tools"/>
-	<property name="build.debug" value="true"/>
+	<property name="dir.tools" value="${basedir}/../build-tools"/>
 
     <import file="../build-tools/build-master.xml"/>
 	

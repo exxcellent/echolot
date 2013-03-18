@@ -52,6 +52,10 @@
         <ant antfile="${demo.path}/build.xml" target="test" inheritall="false" inheritrefs="false"/>
     </target>
 
+    <target name="run" description="Builds the Echolot demo application and runs it inline">
+        <ant antfile="${demo.path}/build.xml" target="run" inheritall="false" inheritrefs="false" />
+    </target>
+
     <target name="deploy" description="Deploys the demo instance of this application">
         <ant antfile="echolot-demo/build.xml" target="war" inheritall="false" inheritrefs="false"/>
         <ant antfile="echolot-demo/build.xml" target="remote.deploy" inheritall="false" inheritrefs="false"/>
