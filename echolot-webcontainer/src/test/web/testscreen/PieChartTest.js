@@ -80,7 +80,12 @@ exxcellent.test.PieChartTest = Core.extend({
                         function() {
                             this._pieChart.set(exxcellent.PieChart.SECTOR_ABBREV_SHOW, !this._pieChart.get(exxcellent.PieChart.SECTOR_ABBREV_SHOW));
                         }
-                        )
+                        ),
+                this._createButton("toggle clientSorting ON/OFF ",
+                        function() {
+                            this._pieChart.set(exxcellent.PieChart.DO_CLIENT_SORTING, !this._pieChart.get(exxcellent.PieChart.DO_CLIENT_SORTING));
+                        }
+                )
             ]
         });
 

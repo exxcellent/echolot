@@ -88,6 +88,11 @@ public class PieChart extends Component {
     public static final String PROPERTY_ANIMATION_TYPE = "animationType";
 
     /**
+     * If you want the client to sort all sectors set this true
+     */
+    public static final String PROPERTY_DO_CLIENT_SORTING = "doClientSorting";
+
+    /**
      * wanna have some defined abbreviation in your sectors, toggle this to: true
      */
     public static final String PROPERTY_SECTOR_ABBREV_SHOW = "sectorAbbrevShow";
@@ -281,18 +286,56 @@ public class PieChart extends Component {
         set(PROPERTY_POPUP_FONT, font);
     }
 
+    /**
+     * Returns the client sorting property
+     *
+     * @return true, if the client will sort the sectors, false if there is no client sorting
+     */
+    public Boolean isDoClientSorting() {
+        return (Boolean) get(PROPERTY_DO_CLIENT_SORTING);
+    }
+
+    /**
+     * Specify, whether the client should sort the sectors from big to small beginning on top corner
+     *
+     * @param doClientSorting
+     */
+    public void setDoClientSorting(final boolean doClientSorting) {
+        set(PROPERTY_DO_CLIENT_SORTING, doClientSorting);
+    }
+
+    /**
+     * Returns the doAnimation property
+     *
+     * @return true, if the sectors of the pie will be animated, false if not
+     */
     public Boolean isDoAnimation() {
         return (Boolean) get(PROPERTY_DO_ANIMATION);
     }
 
+    /**
+     * Specify whether the sectors of the pie should be animated when a hover event occurs
+     *
+     * @param doAnimation
+     */
     public void setDoAnimation(final boolean doAnimation) {
         set(PROPERTY_DO_ANIMATION, doAnimation);
     }
 
+    /**
+     * Returns the animation type
+     *
+     * @return
+     */
     public AnimationType getAnimationType() {
         return AnimationType.toAnimationType((String) get(PROPERTY_ANIMATION_TYPE));
     }
 
+    /**
+     * Set's the animation type - this will only be visible if the doAnimation property is set to true
+     *
+     * @param animationType
+     */
     public void setAnimationType(AnimationType animationType) {
         set(PROPERTY_ANIMATION_TYPE, animationType.getAnimationTypeValue());
     }

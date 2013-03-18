@@ -165,11 +165,6 @@
             };
         }
 
-        // self.clickDot(event) {
-        //     alert(event);
-        // }
-
-
         /**
          * Whole window with a chart and one Point
          * |----------------------------|
@@ -185,21 +180,13 @@
          * Maybe this little picture helps to understand
          */
 
-        // local path-Object - just a little styling now
-        // this object is used to paint the later defind array with the values from the pointArray
+            // local path-Object - just a little styling now
+            // this object is used to paint the later defind array with the values from the pointArray
         var path = self.path().attr({stroke: color, "stroke-width": 4, "stroke-linejoin": "round"});
         var backGroundPanelPath = self.path().attr({stroke: "none", opacity: .3, fill: color});
 
         // Text-Styling for PopUpLabel
         var popupTextFill = {fill: popUpForeground};
-        // the two labels that are shown on the popup
-        var label = self.set();
-        // we have to initialize the labels with some dummy-Text that has same length as the data later on
-        label.push(self.text(20, 20, "Dummy-Value").attr(popupTextFill).attr(popUpFont));
-        label.hide;
-
-        // the frame holding the popUp
-        var frame = self.popup(100, 100, label, "right").attr({fill: popUpBackground, stroke: popUpBorderColor, "stroke-width": 2, "fill-opacity": .7}).hide();
 
         var leave_timer;
         var is_label_visible = false;
@@ -245,7 +232,6 @@
                 // ... so that we can draw a smooth line between 'PointBefore'(a.x1/a.y1)...'ActualPoint'(x/y)...'PointAfter'(a.x2/a.y2)
                 var tmp_offset = 0;
 
-
                 if (interpolation == 'bezier') {
                     pathArray = pathArray.concat([a.x1, a.y1, x + tmp_offset, y, a.x2, a.y2]);
                     backGroundPathArray = backGroundPathArray.concat([a.x1, a.y1, x + tmp_offset, y, a.x2, a.y2]);
@@ -281,51 +267,48 @@
             // show the popUp if the layout says yes
             if (showPopup) {
                 (function (x, y, data, dot) {
-                    var timer, i = 0;
-                    /*
-                     rect.click(function (event) {
-                     dot.attr({fill: "red"});
+                    var wholeWidth = chartWidth;
+                    rect.hover(
+                            // callback for hover-in
+                            function () {
+                                var direction = 'top'; // default
+                                if (y < 40) {
+                                    // if we are at the very top, we open the popup to bottom
+                                    direction = 'bottom';
+                                }
+                                if (x < 40) {
+                                    // if we are on the left side of the canvas, we open the popup to the right (this means setting direction to start to 'left')
+                                    direction = direction + '-left';
+                                } else if (x > (wholeWidth - 40)) {
+                                    // if we are on the right side of the canvas, we open the popup to the right (this means setting direction to start to 'right')
+                                    direction = direction + '-right';
+                                }
+                                this.popUpLabel = self.text(0, 0, data.label).attr(popupTextFill).attr(popUpFont);
+                                this.popUp = self.popup(x, y, this.popUpLabel, direction).attr({fill: popUpBackground, stroke: popUpBorderColor, "stroke-width": 2, "fill-opacity": .7});
+                                // set the dot's to a higher radius to blow them up
+                                dot.attr("r", 6);
+                                is_label_visible = true;
+                            }
+                            ,
+                            // callback for hover-out
+                            function () {
+                                // hide Label and PopUp
+                                this.popUpLabel.hide();
+                                this.popUp.hide();
+                                // reset the radius
+                                dot.attr("r", 4);
+                            }
 
-                     });
-                     */
-                    rect.hover(function () {
-                        clearTimeout(leave_timer);
-                        var side = "right";
-                        if (x + frame.getBBox().width > chartWidth) {
-                            side = "left";
-                        }
-                        var hoverPopup = self.popup(x, y, label, side, 1);
-                        frame.show().stop().animate({path: hoverPopup.path}, 200 * is_label_visible);
-                        label[0].attr({text: data.label}).show().stop().animateWith(frame, {translation: [hoverPopup.dx, hoverPopup.dy]}, 200 * is_label_visible);
-                        //label[1].attr({text: data.y + " y-Axis with more text"}).show().stop().animateWith(frame, {translation: [hoverPopup.dx, hoverPopup.dy]}, 200 * is_label_visible);
-                        dot.attr("r", 6);
-                        is_label_visible = true;
-                    }, function () {
-                        dot.attr("r", 4);
-                        leave_timer = setTimeout(function () {
-                            frame.hide();
-                            label[0].hide();
-                            //label[1].hide();
-                            is_label_visible = false;
-                        }, 1);
-                    });
+                    );
                 })(x, y, pointArray[i], dot);
             } // Eon of popUp-Section
 
             // call callback for click-Events
             (function(data, dot) {
                 rect.click(function () {
-                    //self.clickDot("Blub");
                     callback.call(data);
                 });
             })(pointArray[i], dot);
-
-
-            // ---
-
-
-            // ---
-
         }
         // After all we draw a path from the lastpoint to the lastpoint - sounds silly but we have to do this :-)
         // The last Point in the Array isn't processed in the iteration above - we don't have a point after this, so
@@ -338,17 +321,6 @@
         if (fillChart) {
             backGroundPanelPath.attr({path: backGroundPathArray});
         }
-        // bring some elements to front - we want to display the popup on top
-        frame.toFront();
-        label[0].toFront();
-        //label[1].toFront();
-        blanket.toFront();
-        label.hide();
-
-        // at then end we hide a few things - we don´t want to display them yet
-        frame.hide();
-        label[0].hide();
-        //label[1].hide();
         blanket.toFront();
 
         return self;
@@ -382,7 +354,6 @@
         }
         return returnArray;
     }; // End of getSpecifiedBarValues
-
 
 
 })
