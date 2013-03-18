@@ -11,7 +11,6 @@
       </artifact>
     </deployment>
     <server-settings>
-      <option name="DEPLOY_TOMCAT_APPS" value="false" />
       <option name="BASE_DIRECTORY_NAME" value="Unnamed_echolot_trunkd5929b60" />
     </server-settings>
     <log_file path="$USER_HOME$/.IntelliJIdea90/system/tomcat/Unnamed_echolot_trunkd5929b60/logs/localhost*" checked="true" skipped="true" show_all="false" alias="Tomcat Log" />
