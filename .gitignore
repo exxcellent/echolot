@@ -10,3 +10,7 @@ ehthumbs.db
 Thumbs.db
 .idea/workspace.xml
 .idea/uiDesigner.xml
+
+# Custom ant properties
+#######################
+etc/custom-build.properties
