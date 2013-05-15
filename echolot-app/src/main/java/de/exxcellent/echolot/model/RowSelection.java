@@ -29,8 +29,6 @@
 
 package de.exxcellent.echolot.model;
 
-import java.io.Serializable;
-
 /**
  * JSON Message:
  * 
@@ -42,10 +40,7 @@ import java.io.Serializable;
  * 
  * @author oliver
  */
-public class RowSelection implements Serializable {
-    // Class implements Serializable interface, hence declare a version id.
-    private static final long serialVersionUID = 42L;
-
+public class RowSelection {
     private int rowId;
 
     /**
