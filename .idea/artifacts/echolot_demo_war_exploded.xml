@@ -10,12 +10,12 @@
         </element>
         <element id="directory" name="lib">
           <element id="file-copy" path="$PROJECT_DIR$/echolot-webcontainer/lib/jettison-1.1.jar" />
-          <element id="file-copy" path="$PROJECT_DIR$/echolot-webcontainer/lib/xstream-1.3.1.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-demo/lib/runtime/rhino-1.6R7-strippedforyui.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-demo/lib/runtime/yuicompressor-2.4.2.jar" />
           <element id="file-copy" path="$PROJECT_DIR$/echolot-webcontainer/lib/jdk15/stax-api-1.0-2.jar" />
           <element id="library" level="module" name="echo3-app-3.0" module-name="echolot-app" />
           <element id="library" level="module" name="echo3-webcontainer-3.0" module-name="echolot-app" />
+          <element id="library" level="module" name="xstream-1.4.4" module-name="echolot-webcontainer" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="echolot-demo/web/echlot-demo" />
