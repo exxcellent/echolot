@@ -8,47 +8,46 @@
 /**
  * A test class for the Sync.Block.js
  *
- * @author Oliver Pehnke 
+ * @author Oliver Pehnke
  * @version $Id: BlockTest.js
  */
 exxcellent.test.BlockTest = Core.extend(
-{
-  $construct: function( testArea )
-  {
-  	var block = new exxcellent.Block({
-      renderId: "exxcellentUnitTestBlock",
-      styleName: "Default"	  
+    {
+        $construct: function (testArea) {
+            var block = new exxcellent.Block({
+                renderId: "exxcellentUnitTestBlock",
+                styleName: "Default"
+            });
+            for (var i = 0; i < 200; i++) {
+                block.add(new Echo.Label({
+                    text: "Test Label " + i,
+                    layoutData: {
+                        background: "#AAAABB",
+                        floating: 'right',
+                        width: "10em"
+                    }
+                }));
+                block.add(new Echo.Label({
+                    text: "Test Value " + i,
+                    layoutData: {
+                        background: "#FFAAAA",
+                        marginRight: "10em"
+                    }
+                }));
+            }
+            var controlColumn = new Echo.Column({
+                styleName: "TestControl",
+                children: [
+                    new Echo.Label({
+                        text: "Block", styleName: "Title"
+                    })
+                ]
+            });
+            testArea.add(new Echo.SplitPane({
+                styleName: "TestControl",
+                children: [
+                    controlColumn,
+                    block]
+            }));
+        }
     });
-    for (var i=0; i<200; i++) {
-	    block.add(new Echo.Label({
-	  		text: "Test Label " + i,
-	  		layoutData: {
-	            background: "#AAAABB",
-	            floating: 'right',
-	            width: "10em"
-	        }
-	  	}));
-	  	block.add(new Echo.Label({
-	  		text: "Test Value " + i,
-	  		layoutData: {
-	            background: "#FFAAAA",
-	            marginRight: "10em"
-	        }
-	  	}));
-    }
-    var controlColumn = new Echo.Column({
-        styleName: "TestControl",
-        children: [
-            new Echo.Label({
-                text: "Block", styleName: "Title"
-            })
-        ]
-    });
-    testArea.add(new Echo.SplitPane({
-        styleName: "TestControl",
-        children: [
-            controlColumn,
-            block]
-    }));
-  }
-});

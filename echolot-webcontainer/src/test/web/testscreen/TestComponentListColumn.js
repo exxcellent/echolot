@@ -14,58 +14,57 @@
  * @author Rakesh 2008-06-26
  */
 exxcellent.test.TestComponentListColumn = Core.extend(Echo.Column,
-{
-    $static:
     {
-        COMPONENTS: [
-            "FlexiGrid",
-            "ScrollPane",
-            "SpinButton",
-            "KeystrokeListener",
-            "Block",
-            "LazyBlock",
-            "DatePicker",
-            "ButtonToggle",
-            "Notifier",
-            "Expander",
-            "PieChart",
-            "BarChart",
-            "LineChart",
-            "SuggestField",
-            "PlainHtml"
-        ]
-    },
-    _buttonColumn: null,
+        $static: {
+            COMPONENTS: [
+                "FlexiGrid",
+                "ScrollPane",
+                "SpinButton",
+                "KeystrokeListener",
+                "Block",
+                "LazyBlock",
+                "DatePicker",
+                "ButtonToggle",
+                "Notifier",
+                "Expander",
+                "PieChart",
+                "BarChart",
+                "LineChart",
+                "SuggestField",
+                "PlainHtml"
+            ]
+        },
+        _buttonColumn: null,
 
-    $construct: function() {
+        $construct: function () {
 
-        Echo.Column.call(this);
+            Echo.Column.call(this);
 
-        this._buttonColumn = new Echo.Column({
-            styleName: "TestControlList",
-            renderId: "C.testControlListColumn"
-        });
-        for (var i = 0; i < exxcellent.test.TestComponentListColumn.COMPONENTS.length; ++i) {
-            this._buttonColumn.add(new exxcellent.test.TestButton(
+            this._buttonColumn = new Echo.Column({
+                styleName: "TestControlList",
+                renderId: "C.testControlListColumn"
+            });
+            for (var i = 0; i < exxcellent.test.TestComponentListColumn.COMPONENTS.length; ++i) {
+                this._buttonColumn.add(new exxcellent.test.TestButton(
                     exxcellent.test.TestComponentListColumn.COMPONENTS[i]));
-        }
-        this.add(new Echo.Button({
-            styleName: "TestControlList",
-            renderId: "C.testControlLogo",
-            events: {
-                action: Core.method( this, this._actionPerformed )
             }
-        }));
-        this.add(this._buttonColumn);
+            this.add(new Echo.Button({
+                styleName: "TestControlList",
+                renderId: "C.testControlLogo",
+                events: {
+                    action: Core.method(this, this._actionPerformed)
+                }
+            }));
+            this.add(this._buttonColumn);
 
-        this.renderId = "C.flux";
-        this.styleName = "TestControlBackground";
-    },
+            this.renderId = "C.flux";
+            this.styleName = "TestControlBackground";
+        },
 
-    _actionPerformed: function () {
-        var mainContent = testApp.getMainContent();
-        var testArea = mainContent.getTestArea();
-        testArea.removeAll();
-        new exxcellent.test.OverviewContent(testArea);
-    }
-});
+        _actionPerformed: function () {
+            var mainContent = testApp.getMainContent();
+            var testArea = mainContent.getTestArea();
+            testArea.removeAll();
+            new exxcellent.test.OverviewContent(testArea);
+        }
+    });

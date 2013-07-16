@@ -14,7 +14,7 @@ exxcellent.test.ExpanderTest = Core.extend({
     _mainContent: null,
     _expander1: null,
 
-    $construct: function(testArea, mainContent) {
+    $construct: function (testArea, mainContent) {
         this._mainContent = mainContent;
         this._expander1 = new exxcellent.Expander({
             title: "This is a Test",
@@ -57,42 +57,42 @@ exxcellent.test.ExpanderTest = Core.extend({
                     text: "First Expander", styleName: "Default"
                 }),
                 this._createButton('btn.exp1inchheight', "height + 10",
-                        function() {
-                            var pixelHeight = Echo.Sync.Extent.toPixels(
-                                            this._expander1.render(exxcellent.Expander.HEADER_HEIGHT), false);
-                            this._expander1.set(exxcellent.Expander.HEADER_HEIGHT, (pixelHeight + 10) + "px");
-                        }),
+                    function () {
+                        var pixelHeight = Echo.Sync.Extent.toPixels(
+                            this._expander1.render(exxcellent.Expander.HEADER_HEIGHT), false);
+                        this._expander1.set(exxcellent.Expander.HEADER_HEIGHT, (pixelHeight + 10) + "px");
+                    }),
                 this._createButton('btn.exp1dechheight', "height - 10",
-                        function() {
-                            var pixelHeight = Echo.Sync.Extent.toPixels(
-                                            this._expander1.render(exxcellent.Expander.HEADER_HEIGHT), false);
-                            this._expander1.set(exxcellent.Expander.HEADER_HEIGHT, (pixelHeight - 10) + "px");
-                        }),
+                    function () {
+                        var pixelHeight = Echo.Sync.Extent.toPixels(
+                            this._expander1.render(exxcellent.Expander.HEADER_HEIGHT), false);
+                        this._expander1.set(exxcellent.Expander.HEADER_HEIGHT, (pixelHeight - 10) + "px");
+                    }),
                 this._createButton('btn.exp1set0Child', "Show",
-                        function() {
-                            this._expander1.set(exxcellent.Expander.SHOW, true);
-                        }),
+                    function () {
+                        this._expander1.set(exxcellent.Expander.SHOW, true);
+                    }),
                 this._createButton('btn.exp1set1Child', "Hide",
-                        function() {
-                            this._expander1.set(exxcellent.Expander.SHOW, false);
-                        }),
+                    function () {
+                        this._expander1.set(exxcellent.Expander.SHOW, false);
+                    }),
                 this._createButton('btn.exp1togChild', "Toggle",
-                        function() {
-                            this._expander1.set(exxcellent.Expander.SHOW,
-                                    !this._expander1.get(exxcellent.Expander.SHOW));
-                        }),
+                    function () {
+                        this._expander1.set(exxcellent.Expander.SHOW,
+                            !this._expander1.get(exxcellent.Expander.SHOW));
+                    }),
                 this._createButton('btn.exp1hinsetsChild', "Header Insets",
-                        function() {
-                            this._expander1.set(exxcellent.Expander.HEADER_INSETS,
-                                    "20px 0 20px 0");
-                        }),
+                    function () {
+                        this._expander1.set(exxcellent.Expander.HEADER_INSETS,
+                            "20px 0 20px 0");
+                    }),
                 new Echo.Label({
                     text: "Misc", styleName: "Default"
                 }),
                 this._createButton('btn.win', "Open Window",
-                        function() {
-                            testArea.add(new exxcellent.test.ExpanderTestDialog());
-                        })
+                    function () {
+                        testArea.add(new exxcellent.test.ExpanderTestDialog());
+                    })
             ]
         });
         var testColumn = new Echo.Column({styleName: "Default"});
@@ -121,8 +121,8 @@ exxcellent.test.ExpanderTest = Core.extend({
                 size: 2,
                 children: [
                     new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
-                    new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default",text: "Oliver"}),
-                    new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default",text: "Germany"}),
+                    new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default", text: "Oliver"}),
+                    new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default", text: "Germany"}),
                     new Echo.Label({text: "Status"}), new Echo.CheckBox({selected: true})
                 ]})
 
@@ -137,8 +137,8 @@ exxcellent.test.ExpanderTest = Core.extend({
                 size: 2,
                 children: [
                     new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
-                    new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default",text: "Oliver"}),
-                    new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default",text: "Germany"}),
+                    new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default", text: "Oliver"}),
+                    new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default", text: "Germany"}),
                     new Echo.Label({text: "Status"}), new Echo.CheckBox({selected: true})
                 ]}),
                 // optional hide content
@@ -162,32 +162,32 @@ exxcellent.test.ExpanderTest = Core.extend({
             ]
         }));
         var hideExpander = new exxcellent.Expander({
-                                styleName: "ExpanderTest",
-                                headerHide: true,
-                                show: false,
-                                // the content
-                                children: [new Echo.Grid({
-                                    styleName: "Default",
-                                    size: 2,
-                                    children: [
-                                        new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
-                                        new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default",text: "Oliver"}),
-                                        new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default",text: "Germany"}),
-                                        new Echo.Label({text: "Status"}), new Echo.CheckBox({selected: true})
-                                    ]})
-                                ]});
+            styleName: "ExpanderTest",
+            headerHide: true,
+            show: false,
+            // the content
+            children: [new Echo.Grid({
+                styleName: "Default",
+                size: 2,
+                children: [
+                    new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
+                    new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default", text: "Oliver"}),
+                    new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default", text: "Germany"}),
+                    new Echo.Label({text: "Status"}), new Echo.CheckBox({selected: true})
+                ]})
+            ]});
         // a button with a hidden expander component
         testColumn.add(new Echo.Grid({
-                        styleName: "Default",
-                        size: 2,
-                        children: [
-                            new Echo.Label({icon: "image/magnifier.png"}),
-                            this._createButton('btn.hideexp', "Click me!",
-                                function() {
-                                    hideExpander.set(exxcellent.Expander.SHOW, !hideExpander.get(exxcellent.Expander.SHOW));
-                                }),
-                            hideExpander
-                        ]})
+            styleName: "Default",
+            size: 2,
+            children: [
+                new Echo.Label({icon: "image/magnifier.png"}),
+                this._createButton('btn.hideexp', "Click me!",
+                    function () {
+                        hideExpander.set(exxcellent.Expander.SHOW, !hideExpander.get(exxcellent.Expander.SHOW));
+                    }),
+                hideExpander
+            ]})
         );
 
         var contentPane = new Echo.ContentPane({
@@ -202,7 +202,7 @@ exxcellent.test.ExpanderTest = Core.extend({
         }));
     },
 
-    _createButton: function(renderId, label, action) {
+    _createButton: function (renderId, label, action) {
         return new Echo.Button({
             renderId: renderId,
             text: label,
@@ -210,15 +210,15 @@ exxcellent.test.ExpanderTest = Core.extend({
             events: {
                 action: Core.method(this, action)
             }
-        })
+        });
     },
 
-    _dummyAction: function(event) {
+    _dummyAction: function (event) {
         if (event && window.console) {
             console.log("Action triggered event: " + event.type + " data: " + event.data);
         }
         this._mainContent.showMsg(
-                "Action triggered!", event.type
+            "Action triggered!", event.type
                 + " data: " + event.data
                 + " show: " + event.source.get(exxcellent.Expander.SHOW));
         return false;
@@ -227,7 +227,7 @@ exxcellent.test.ExpanderTest = Core.extend({
 
 exxcellent.test.ExpanderTestDialog = Core.extend(Echo.WindowPane, {
 
-    $construct: function() {
+    $construct: function () {
         Echo.WindowPane.call(this, {
             styleName: "Default",
             width: "40em",
@@ -238,7 +238,7 @@ exxcellent.test.ExpanderTestDialog = Core.extend(Echo.WindowPane, {
             modal: false,
             closable: true,
             events: {
-                close: function(e) {
+                close: function (e) {
                     e.source.parent.remove(e.source);
                 }
             },
@@ -266,8 +266,8 @@ exxcellent.test.ExpanderTestDialog = Core.extend(Echo.WindowPane, {
                                     size: 2,
                                     children: [
                                         new Echo.Label({text: "Photo"}), new Echo.Label({icon: "image/oliver.jpg"}),
-                                        new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default",text: "Oliver"}),
-                                        new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default",text: "Germany"}),
+                                        new Echo.Label({text: "Name"}), new Echo.TextField({styleName: "Default", text: "Oliver"}),
+                                        new Echo.Label({text: "Country"}), new Echo.TextField({styleName: "Default", text: "Germany"}),
                                         new Echo.Label({text: "Online"}), new Echo.CheckBox({selected: true}),
                                         new Echo.Label({text: "JavaScript"}), new Echo.CheckBox({selected: true}),
                                         new Echo.Label({text: "Java"}), new Echo.CheckBox({selected: true})

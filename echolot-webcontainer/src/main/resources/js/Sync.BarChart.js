@@ -9,7 +9,7 @@
  * @version 1.0
  */
 exxcellent.BarChart = Core.extend(Echo.Component, {
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType('exxcellent.BarChart', this);
     },
     $static: {
@@ -42,12 +42,12 @@ exxcellent.BarChart = Core.extend(Echo.Component, {
         BAR_SELECTION: 'barSelection'
     },
     componentType: 'exxcellent.BarChart',
-    doSelectBar : function(barIdentifier) {
-        // 	Notify table row select listeners.
+    doSelectBar: function (barIdentifier) {
+        // Notify table row select listeners.
         this.fireEvent({
-            type : exxcellent.BarChart.BAR_SELECTION,
-            source : this,
-            data : barIdentifier
+            type: exxcellent.BarChart.BAR_SELECTION,
+            source: this,
+            data: barIdentifier
         });
     }
 
@@ -67,12 +67,12 @@ exxcellent.model.BarChartModel = Core.extend({
     // e.g. [[bar1, bar2],[bar3, bar4]]
     barValues: null,
 
-    $construct : function(barValues) {
+    $construct: function (barValues) {
         this.barValues = barValues;
     },
 
     /** Return the string representation of this PieModel. */
-    toString : function() {
+    toString: function () {
         return 'I am a BAR-Chart';
     }
 });
@@ -86,7 +86,7 @@ exxcellent.model.Bar = Core.extend({
     label: '',
     color: null,
 
-    $construct : function(value, label, identifier, color) {
+    $construct: function (value, label, identifier, color) {
         this.value = value;
         this.label = label;
         this.identifier = identifier;
@@ -94,7 +94,7 @@ exxcellent.model.Bar = Core.extend({
     },
 
     /** Return the string representation of this Bar */
-    toString : function() {
+    toString: function () {
         return 'Label:' + this.label + ' value:' + this.value + ' color:' + this.color + ' identifier:' + this.identifier;
     }
 });
@@ -147,7 +147,7 @@ exxcellent.model.BarChartLayout = Core.extend({
  * @version 1.0
  */
 exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.BarChart", this);
     },
 
@@ -162,7 +162,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param update
      * @param parentElement
      */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         // we only need to create the holder' div for raphael - the rest will be done in renderDisplay
         this._div = document.createElement("div");
 
@@ -177,7 +177,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Render the bar itself to the containerDiv
      */
-    renderDisplay: function() {
+    renderDisplay: function () {
         var self = this; // it's always good to know who you are in JS :-)
         if (this._raphael) {
             // if we have already a raphael, we do nothing att all - it's just a simple refresh
@@ -203,49 +203,45 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
         // Maybe we could use some JS-Voodoo to have just on call with +-h :-) - but it seems to work
         if (barChartLayout.barAlignment == 'horizontal') {
             this._raphael.g.hbarchart(
-                    barChartLayout.xgap, // x-gap
-                    barChartLayout.ygap, // y-gap
-                    barChartLayout.width, // width
-                    barChartLayout.height, // height
-                    null, // original 'values' : Changed the behavior tu use this in Echo3 - the model is transported to simile via the attribute 'barChartModel'
+                barChartLayout.xgap, // x-gap
+                barChartLayout.ygap, // y-gap
+                barChartLayout.width, // width
+                barChartLayout.height, // height
+                null, // original 'values' : Changed the behavior tu use this in Echo3 - the model is transported to simile via the attribute 'barChartModel'
                 /*options*/
                 /**/{
-                /*->*/stacked: barChartLayout.stacked, // isStacked
-                /*->*/type: barChartLayout.headType, // headType
-                /*->*/vgutter: 0, // the empty-spacing vertically
-                /*->*/showTooltip: barChartLayout.showTooltip
-                /**/},
-                    barChartModel // the barModel (array of array of exxcellent.model.Bar
-                    ).// callbacks
-                    hover(// MouseHovering:
+                    /*->*/stacked: barChartLayout.stacked, // isStacked
+                    /*->*/type: barChartLayout.headType, // headType
+                    /*->*/vgutter: 0, // the empty-spacing vertically
+                    /*->*/showTooltip: barChartLayout.showTooltip
+                    /**/},
+                barChartModel // the barModel (array of array of exxcellent.model.Bar
+            ).hover(// MouseHovering:
                     this._fin(barChartLayout, raphael_self), // MouseIn
                     this._fout(barChartLayout, raphael_self) // MouseOut
-                    ).// end of MouseHovering
-                    click(this._click(this, raphael_self))// Click-Handler
-                    ; // -> that's it :-)
+                ).click(this._click(this, raphael_self))// Click-Handler
+            ; // -> that's it :-)
         } else if (barChartLayout.barAlignment == 'vertical') {
             // just some little difference, we call barchart instead of hbarchart
             this._raphael.g.barchart(
-                    barChartLayout.xgap, // x-gap
-                    barChartLayout.ygap, // y-gap
-                    barChartLayout.width, // width
-                    barChartLayout.height, // height
-                    null, // original 'values' : Changed the behavior tu use this in Echo3 - the model is transported to simile via the attribute 'barChartModel'
+                barChartLayout.xgap, // x-gap
+                barChartLayout.ygap, // y-gap
+                barChartLayout.width, // width
+                barChartLayout.height, // height
+                null, // original 'values' : Changed the behavior tu use this in Echo3 - the model is transported to simile via the attribute 'barChartModel'
                 /*options*/
                 /**/{
-                /*->*/stacked: barChartLayout.stacked, // isStacked
-                /*->*/type: barChartLayout.headType, // headType
-                /*->*/vgutter: 0, // the empty-spacing vertically
-                /*->*/showTooltip: barChartLayout.showTooltip
-                /**/},
-                    barChartModel // the barModel (array of array of exxcellent.model.Bar
-                    ).// callbacks
-                    hover(// MouseHovering:
+                    /*->*/stacked: barChartLayout.stacked, // isStacked
+                    /*->*/type: barChartLayout.headType, // headType
+                    /*->*/vgutter: 0, // the empty-spacing vertically
+                    /*->*/showTooltip: barChartLayout.showTooltip
+                    /**/},
+                barChartModel // the barModel (array of array of exxcellent.model.Bar
+            ).hover(// MouseHovering:
                     this._fin(barChartLayout, raphael_self), // MouseIn
                     this._fout(barChartLayout, raphael_self) // MouseOut
-                    ).// end of MouseHovering
-                    click(this._click(this, raphael_self))// Click-Handler
-                    ; // -> that's it :-)
+                ).click(this._click(this, raphael_self))// Click-Handler
+            ; // -> that's it :-)
 
         }
     },
@@ -255,7 +251,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * We clean all allocated data
      * @param update
      */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         // setting all globals to null - we don't want them to live forever ;-)
         this._div = null;
         this._raphael = null;
@@ -265,7 +261,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param update
      */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         // Brut-force - just create everything new
         // we could think about of some ajax-feature, but there is no need so far
         var element = this._div;
@@ -284,14 +280,14 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Callback for MouseIn
      * @param raphael
      */
-    _fin : function (barChartLayout, raphael) {
-        return function() {
+    _fin: function (barChartLayout, raphael) {
+        return function () {
             if (barChartLayout.showPopup) {
                 var direction = 'top';
                 if (barChartLayout.autoAdjustPopup) {
                     // damn IE vs. FF... IE defines canvas.clientWidth and FF paper.width... :-(
-                    var widthToTest = (this.paper.canvas.clientWidth && this.paper.canvas.clientWidth != 0) ? this.paper.canvas.clientWidth : this.paper.width;
-                    var heightToTest = (this.paper.canvas.clientHeight && this.paper.canvas.clientHeight != 0) ? this.paper.canvas.clientHeight : this.paper.height;
+                    var widthToTest = (this.paper.canvas.clientWidth && this.paper.canvas.clientWidth !== 0) ? this.paper.canvas.clientWidth : this.paper.width;
+                    var heightToTest = (this.paper.canvas.clientHeight && this.paper.canvas.clientHeight !== 0) ? this.paper.canvas.clientHeight : this.paper.height;
                     // we try to adjust the PopUp
                     if (this.bar.x > widthToTest - 50 && this.bar.y > heightToTest - 50) {
                         direction = 'top-right';
@@ -308,9 +304,9 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
                 var popupTextFill = {fill: barChartLayout.popupForeground};
                 var popUpFont = barChartLayout.popupFont;
                 this.popUpLabel = raphael.text(0, 0, this.bar.Bar.label || "0").attr(popupTextFill).attr(popUpFont);
-                this.popUpBubble = raphael.popup(this.bar.x, this.bar.y, this.popUpLabel, direction).attr({fill: barChartLayout.popupBackground, stroke: barChartLayout.popupBorderColor, "stroke-width": 2, "fill-opacity": .7});
+                this.popUpBubble = raphael.popup(this.bar.x, this.bar.y, this.popUpLabel, direction).attr({fill: barChartLayout.popupBackground, stroke: barChartLayout.popupBorderColor, "stroke-width": 2, "fill-opacity": 0.7});
             }
-        }
+        };
 
     },
 
@@ -318,9 +314,9 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Callback for MouseOut
      * @param raphael
      */
-    _fout : function (barChartLayout, raphael) {
+    _fout: function (barChartLayout, raphael) {
         // we certainly don't need the variable raphael... bu who knows what's later on
-        return function() {
+        return function () {
             if (barChartLayout.showPopup) {
                 this.popUpLabel.animate({opacity: 0}, 300, function () {
                     this.remove();
@@ -329,7 +325,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
                     this.remove();
                 });
             }
-        }
+        };
     },
 
     /**
@@ -337,12 +333,12 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param self
      * @param raphael
      */
-    _click : function (self, raphael) {
+    _click: function (self, raphael) {
         // we certainly don't need the variable raphael... bu who knows what's later on
-        return function() {
+        return function () {
             // throw the action 'doSelectBar' with the identifier
             self.component.doSelectBar(this.bar.Bar.identifier);
-        }
+        };
 
     },
 
@@ -350,7 +346,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Returns the BarChartLayout - this Objects helps to deal with Layout
      * @see exxcellent.model.BarChartLayout for further details
      */
-    _getBarChartLayout : function() {
+    _getBarChartLayout: function () {
         // We try to get all values defined by the user. For Fallback there are defaults defined where suitable
         var barChartLayout = new exxcellent.model.BarChartLayout();
         barChartLayout.width = this.component.render(exxcellent.BarChart.WIDTH) || 100;
@@ -374,7 +370,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Get the BarChart-Model.
      * In case of a JSON-Object we parse it to create the exxcellent.model.BarChartModel
      */
-    _getBarChartModel : function () {
+    _getBarChartModel: function () {
         var value = this.component.render(exxcellent.BarChart.BAR_CHART_MODEL);
         if (value instanceof exxcellent.model.BarChartModel) {
             return value;
@@ -389,7 +385,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} json the string to be transformed into an object
      * @return {} the object
      */
-    _fromJsonString : function(jsonStr) {
+    _fromJsonString: function (jsonStr) {
         return JSON.parse(jsonStr);
     },
 
@@ -399,7 +395,7 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} object the object to be transformed into string
      * @return {} the json string
      */
-    _toJsonString : function(object) {
+    _toJsonString: function (object) {
         return JSON.stringify(object);
     },
 
@@ -408,20 +404,22 @@ exxcellent.BarChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param font {Echo.Sync.Font} the font to render as notifier compatible font
      * @return the raphael compatible font
      */
-    _renderFont: function(font) {
-        if (font == null) return null;
-        var fontByEcho = {
-            style: new Object()
+    _renderFont: function (font) {
+        if (font === null) {
+            return null;
         }
+        var fontByEcho = {
+            style: {}
+        };
         Echo.Sync.Font.render(font, fontByEcho);
         var echoStyle = fontByEcho.style;
 
         return {
-            'font' : echoStyle.fontSize + ' ' + echoStyle.fontFamily,
-            'font-family' : echoStyle.fontFamily,
-            'font-size' : echoStyle.fontSize,
-            'font-style' : echoStyle.fontStyle
-        }
+            'font': echoStyle.fontSize + ' ' + echoStyle.fontFamily,
+            'font-family': echoStyle.fontFamily,
+            'font-size': echoStyle.fontSize,
+            'font-style': echoStyle.fontStyle
+        };
 
     }
 });

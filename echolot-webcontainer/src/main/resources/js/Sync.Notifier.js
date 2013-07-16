@@ -4,13 +4,13 @@
  */
 exxcellent.Notifier = Core.extend(Echo.Component, {
 
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("exxcellent.Notifier", this);
     },
 
     /** Properties defined for this component. */
-	$static : {
-		ID: "id", // identifies a message
+    $static: {
+        ID: "id", // identifies a message
         TITLE: "title",
         TEXT: "text",
         ICON: "icon",
@@ -49,13 +49,13 @@ exxcellent.Notifier = Core.extend(Echo.Component, {
      * Performed after the (optional) button on a message is clicked.
      * @param id the id of the notification message that was clicked.
      */
-  	doClickButton : function(id) {
-		this.fireEvent({
-				type : exxcellent.Notifier.ACTION,
-				source : this,
-				data : id
-		});
-	}
+    doClickButton: function (id) {
+        this.fireEvent({
+            type: exxcellent.Notifier.ACTION,
+            source: this,
+            data: id
+        });
+    }
 });
 
 /**
@@ -66,27 +66,30 @@ exxcellent.Notifier = Core.extend(Echo.Component, {
  */
 exxcellent.NotifierSync = Core.extend(Echo.Render.ComponentSync, {
 
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.Notifier", this);
     },
 
     /** The notifier doesn't need to be initially built.*/
-    renderAdd: function(update, parentElement) {},
+    renderAdd: function (update, parentElement) {
+    },
 
     /** The notifier destroys itself. */
-    renderDispose: function() {},
+    renderDispose: function () {
+    },
 
     /**
      * The notifier shall not show up on the creation - only on setting the properties.
      * This method is also triggered if the renderUpdate() is executed.
      */
-    renderDisplay: function() {},
+    renderDisplay: function () {
+    },
 
     /**
      * Renders the notification if the properties like text etc are set. Using
      * renderUpdate instead of renderDisplay avoids the execution on "creation".
      */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         // the width & height arrive as Extent e.g. '5px' or '50em' this has to be mapped to '5' (pixels)
         var width = Echo.Sync.Extent.toPixels(this.component.render(exxcellent.Notifier.WIDTH), true, true);
         var height = Echo.Sync.Extent.toPixels(this.component.render(exxcellent.Notifier.HEIGHT), false, true);
@@ -100,37 +103,37 @@ exxcellent.NotifierSync = Core.extend(Echo.Render.ComponentSync, {
         var self = this;
         $('body').notifier(
             { title: this.component.render(exxcellent.Notifier.TITLE),
-              text: text ? this._formatWhitespace(text) : "",
-              icon: icon,
-              position: this.component.render(exxcellent.Notifier.POSITION),
-              width: width,
-              height: height,
-              padding: this.component.render("insets"),
-              pFont: this._renderFont(font, foreground),
-              hFont: this._renderFont(headerFont, headerForeground),
-              duration: this.component.render(exxcellent.Notifier.DURATION),
-              sticky: this.component.render(exxcellent.Notifier.STICKY),
-              humanized: this.component.render(exxcellent.Notifier.HUMANIZED),
-              hoverInterrupt: this.component.render(exxcellent.Notifier.HOVER_INTERRUPT),
-              overlayed: this.component.render(exxcellent.Notifier.OVERLAYED),
-              fade: this.component.render(exxcellent.Notifier.FADE),
-              borderRadius: this.component.render(exxcellent.Notifier.BORDER_RADIUS),
-              opacity: this.component.render(exxcellent.Notifier.OPACITY),
-              background: this.component.render('background'),
-              border: this.component.render('border'),
-              msgId: this.component.render('id', "unknown id"),
-              btnShow: this.component.render(exxcellent.Notifier.BTN_SHOW, false),
-              btnText: this.component.render(exxcellent.Notifier.BTN_TEXT, "Details"),
-              onBtnClick: function(id){
-                  self._onButtonClick(id);
-              }
+                text: text ? this._formatWhitespace(text) : "",
+                icon: icon,
+                position: this.component.render(exxcellent.Notifier.POSITION),
+                width: width,
+                height: height,
+                padding: this.component.render("insets"),
+                pFont: this._renderFont(font, foreground),
+                hFont: this._renderFont(headerFont, headerForeground),
+                duration: this.component.render(exxcellent.Notifier.DURATION),
+                sticky: this.component.render(exxcellent.Notifier.STICKY),
+                humanized: this.component.render(exxcellent.Notifier.HUMANIZED),
+                hoverInterrupt: this.component.render(exxcellent.Notifier.HOVER_INTERRUPT),
+                overlayed: this.component.render(exxcellent.Notifier.OVERLAYED),
+                fade: this.component.render(exxcellent.Notifier.FADE),
+                borderRadius: this.component.render(exxcellent.Notifier.BORDER_RADIUS),
+                opacity: this.component.render(exxcellent.Notifier.OPACITY),
+                background: this.component.render('background'),
+                border: this.component.render('border'),
+                msgId: this.component.render('id', "unknown id"),
+                btnShow: this.component.render(exxcellent.Notifier.BTN_SHOW, false),
+                btnText: this.component.render(exxcellent.Notifier.BTN_TEXT, "Details"),
+                onBtnClick: function (id) {
+                    self._onButtonClick(id);
+                }
             });
     },
     /**
      * A callback if the optional button (btnShow = true) in the message is clicked.
      * @param id the message id to identify the message, whos button was clicked
      */
-    _onButtonClick: function(id) {
+    _onButtonClick: function (id) {
         this.component.doClickButton(id);
     },
 
@@ -140,7 +143,7 @@ exxcellent.NotifierSync = Core.extend(Echo.Render.ComponentSync, {
      * @param text {String} the (java) text to format
      * @return the html formatted string
      */
-    _formatWhitespace: function(text) {
+    _formatWhitespace: function (text) {
         // switch between spaces and non-breaking spaces to preserve line wrapping
         var textStr = text.replace(/\t/g, " \u00a0 \u00a0");
         textStr = textStr.replace(/ {2}/g, " \u00a0");
@@ -154,7 +157,7 @@ exxcellent.NotifierSync = Core.extend(Echo.Render.ComponentSync, {
      * @param color {Echo.Sync.Color} the foreground color of the text used with this font
      * @return the notifier compatible font
      */
-    _renderFont: function(font, color) {
+    _renderFont: function (font, color) {
         var nFont = {};
         if (font) {
             if (font.typeface) {
@@ -165,10 +168,16 @@ exxcellent.NotifierSync = Core.extend(Echo.Render.ComponentSync, {
                 }
             }
 
-            if (font.size) { nFont.sizePx = Echo.Sync.Extent.toPixels(font.size, true, true);}
-            if (font.bold) { nFont.weight = 'bold';}
+            if (font.size) {
+                nFont.sizePx = Echo.Sync.Extent.toPixels(font.size, true, true);
+            }
+            if (font.bold) {
+                nFont.weight = 'bold';
+            }
         }
-        if (color) {nFont.color = color;}
+        if (color) {
+            nFont.color = color;
+        }
         return nFont;
     }
 });
