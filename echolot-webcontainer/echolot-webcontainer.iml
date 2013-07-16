@@ -13,7 +13,7 @@
     <orderEntry type="module-library" scope="PROVIDED">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/compile/servlet-api-2.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/servlet-api-2.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -22,12 +22,10 @@
     <orderEntry type="module-library" exported="" scope="RUNTIME">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jdk15/stax-api-1.0-2.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/stax-api-1.0.1.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/jdk15/stax-api-1.0-2-sources.jar!/src" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">

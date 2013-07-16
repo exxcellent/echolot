@@ -11,22 +11,22 @@
     <orderEntry type="module-library" exported="">
       <library name="echo3-app-3.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-app-3.0.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="echo3-webcontainer-3.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0-sources.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/echo3-webcontainer-3.0.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
