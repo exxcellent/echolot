@@ -14,3 +14,7 @@ Thumbs.db
 # Custom ant properties
 #######################
 etc/custom-build.properties
+
+# Dependencies fetched by Maven
+echolot-app/lib
+echolot-webcontainer/lib

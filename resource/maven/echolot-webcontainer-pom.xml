@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.exxcellent</groupId>
+    <artifactId>echolot-webcontainer</artifactId>
+    <packaging>jar</packaging>
+    <name>Echolot Widget Library</name>
+    <version>${version}</version>
+    <description>Advanced widget library for the hybrid Java/JavaScript RIA Framework Echo 3 by nextapp</description>
+    <url>http://exxcellent.github.io/echolot/</url>
+
+    <developers>
+        <developer>
+            <id>bschmid</id>
+            <name>Benjamin Schmid</name>
+            <organization>eXXcellent solutions GmbH</organization>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>MPL 1.1</name>
+            <url>http://www.mozilla.org/MPL/MPL-1.1.html</url>
+        </license>
+        <license>
+            <name>LGPL 2.1</name>
+            <url>http://www.gnu.org/licenses/lgpl-2.1.html</url>
+        </license>
+        <license>
+            <name>GPL 2.0</name>
+            <url>http://www.gnu.org/licenses/gpl-2.0.html</url>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <url>https://github.com/exxcellent/echolot/issues</url>
+    </issueManagement>
+
+    <scm>
+        <connection>scm:git:http://github.com/exxcellent/echolot.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/exxcellent/echolot.git</developerConnection>
+        <url>http://github.com/exxcellent/echolot</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>de.exxcellent</groupId>
+            <artifactId>echolot-app</artifactId>
+            <version>${version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nextapp</groupId>
+            <artifactId>echo3-app</artifactId>
+            <version>${echo.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.nextapp</groupId>
+            <artifactId>echo3-webcontainer</artifactId>
+            <version>${echo.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jettison</groupId>
+            <artifactId>jettison</artifactId>
+            <version>[1.1,)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>[1.4.4,)</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.jslint4java</groupId>
+            <artifactId>jslint4java</artifactId>
+            <version>[1.4.2,)</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>[2.4,)</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+</project>
