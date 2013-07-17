@@ -13,12 +13,12 @@
  */
 exxcellent.Expander = Core.extend(Echo.Component, {
 
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("exxcellent.Expander", this);
     },
 
     /** Properties defined for this component. */
-    $static : {
+    $static: {
         HIDE_TEXT: "hideText",
         HIDE_IMAGE: "hideImage",
 
@@ -68,11 +68,11 @@ exxcellent.Expander = Core.extend(Echo.Component, {
      * Performed after the expander toggled the content.
      * @param shown true if the the visible child is shown. Otherwise false if no or the second child is shown.
      */
-    doContentToggled : function(shown) {
+    doContentToggled: function (shown) {
         this.fireEvent({
-            type : exxcellent.Expander.CONTENT_TOGGLED,
-            source : this,
-            data : shown
+            type: exxcellent.Expander.CONTENT_TOGGLED,
+            source: this,
+            data: shown
         });
     }
 });
@@ -96,7 +96,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
             exxcellent.Expander.SHOW]
     },
 
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.Expander", this);
     },
 
@@ -113,7 +113,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
 
 
     /** @see Echo.Render.ComponentSync#renderAdd */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         this._div = document.createElement("div");
         this._div.id = this.component.renderId;
         this._div.tabIndex = "0";// because of "0" it will take part in the focus cycle, otherwise "-1"
@@ -140,15 +140,15 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * Renders the interactive header and registers the events used for rollover and click events.
      * @param update used for incremental renderUpdate
      */
-    _renderHeader: function(update) {
+    _renderHeader: function (update) {
         this._mDiv = document.createElement("div");
         this._mDiv.style.cursor = "pointer";
 
-        var headerHeight = this.component.render(exxcellent.Expander.HEADER_HEIGHT)
+        var headerHeight = this.component.render(exxcellent.Expander.HEADER_HEIGHT);
         Echo.Sync.Extent.render(headerHeight, this._mDiv, "height", false, false);
         Echo.Sync.Border.render(this.component.render(exxcellent.Expander.HEADER_BORDER), this._mDiv);
         Echo.Sync.Insets.render(this.component.render(exxcellent.Expander.HEADER_INSETS,
-                exxcellent.ExpanderSync.DEFAULTS.headerInsets), this._mDiv, "padding");
+            exxcellent.ExpanderSync.DEFAULTS.headerInsets), this._mDiv, "padding");
 
         this._titleDiv = document.createElement("div");
         this._renderTitle(update);
@@ -156,10 +156,6 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         var titlePos = this.component.render(exxcellent.Expander.TITLE_POSITION);
         this._titleDiv.style.cssFloat = titlePos === "left" ? "left" : "right";
         this._titleDiv.style.styleFloat = titlePos === "left" ? "left" : "right";
-
-        Core.Web.Event.add(this._mDiv, "click", Core.method(this, this._toggleContent), false);
-        Core.Web.Event.add(this._mDiv, "mouseover", Core.method(this, mouseOverHeader), false);
-        Core.Web.Event.add(this._mDiv, "mouseout", Core.method(this, mouseOutHeader), false);
 
         function mouseOverHeader() {
             this._rolloverHeader(true);
@@ -169,20 +165,24 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
             this._rolloverHeader(false);
         }
 
+        Core.Web.Event.add(this._mDiv, "click", Core.method(this, this._toggleContent), false);
+        Core.Web.Event.add(this._mDiv, "mouseover", Core.method(this, mouseOverHeader), false);
+        Core.Web.Event.add(this._mDiv, "mouseout", Core.method(this, mouseOutHeader), false);
+
         var isLeft = titlePos === "left";
         this._txtDiv = document.createElement("div");
         this._txtDiv.style.cssFloat = isLeft ? "right" : "left";
         this._txtDiv.style.styleFloat = isLeft ? "right" : "left";
         // img span spacing depending on postion (left right)
         var iconTextMarginTop = Echo.Sync.Extent.toCssValue(
-                this.component.render(exxcellent.Expander.ICON_TEXT_MARGIN_TOP,
-                        exxcellent.ExpanderSync.DEFAULTS.iconTextMarginTop), false, false);
+            this.component.render(exxcellent.Expander.ICON_TEXT_MARGIN_TOP,
+                exxcellent.ExpanderSync.DEFAULTS.iconTextMarginTop), false, false);
         var iconTextMarginRL = Echo.Sync.Extent.toCssValue(
-                this.component.render(exxcellent.Expander.ICON_TEXT_MARGIN,
-                        exxcellent.ExpanderSync.DEFAULTS.iconTextMarginRL), true, false);
+            this.component.render(exxcellent.Expander.ICON_TEXT_MARGIN,
+                exxcellent.ExpanderSync.DEFAULTS.iconTextMarginRL), true, false);
         this._txtDiv.style.margin = isLeft
-                ? iconTextMarginTop + " " + iconTextMarginRL + " 0 0"
-                : iconTextMarginTop + " 0 0 " + iconTextMarginRL;
+            ? iconTextMarginTop + " " + iconTextMarginRL + " 0 0"
+            : iconTextMarginTop + " 0 0 " + iconTextMarginRL;
 
         Echo.Sync.Font.render(this.component.render(exxcellent.Expander.ICON_TEXT_FONT), this._txtDiv);
         Echo.Sync.Color.render(this.component.render(exxcellent.Expander.ICON_TEXT_FOREGROUND), this._txtDiv, "color");
@@ -217,7 +217,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * Renders the title from the 3rd component in the components array.
      * @param update
      */
-    _renderTitle: function(update) {
+    _renderTitle: function (update) {
         var titleChild = this.component.getComponent(2);
 
         // Either render a simple text node including font and color style
@@ -225,7 +225,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
             var titleTxt = this.component.render(exxcellent.Expander.TITLE);
             this._titleDiv.appendChild(document.createTextNode(titleTxt));
             Echo.Sync.Insets.render(this.component.render(exxcellent.Expander.TITLE_INSETS,
-                    exxcellent.ExpanderSync.DEFAULTS.titleInsets), this._titleDiv, "padding");
+                exxcellent.ExpanderSync.DEFAULTS.titleInsets), this._titleDiv, "padding");
             Echo.Sync.Font.render(this.component.render(exxcellent.Expander.TITLE_FONT), this._titleDiv);
             Echo.Sync.Color.render(this.component.render(exxcellent.Expander.TITLE_FOREGROUND), this._titleDiv, "color");
         } else {
@@ -247,7 +247,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * </ul>
      * @param update the update from the renderUpdate and renderAdd method.
      */
-    _renderChildren: function(update) {
+    _renderChildren: function (update) {
         this._showDiv = document.createElement("div"); // mandatory - shown child
         this._hideDiv = document.createElement("div"); // optional - hide child - may be empty
 
@@ -278,16 +278,16 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * feedback that the header is interactive, e.g. can be clicked.
      * @param rolloverState if true the rollover effect is applied otherwise its removed
      */
-    _rolloverHeader: function(rolloverState) {
+    _rolloverHeader: function (rolloverState) {
         var foreground = Echo.Sync.getEffectProperty(this.component,
-                exxcellent.Expander.TITLE_FOREGROUND, exxcellent.Expander.ROLLOVER_FOREGROUND, rolloverState);
+            exxcellent.Expander.TITLE_FOREGROUND, exxcellent.Expander.ROLLOVER_FOREGROUND, rolloverState);
         var background = Echo.Sync.getEffectProperty(this.component,
-                exxcellent.Expander.HEADER_BACKGROUND, exxcellent.Expander.ROLLOVER_BACKGROUND, rolloverState);
+            exxcellent.Expander.HEADER_BACKGROUND, exxcellent.Expander.ROLLOVER_BACKGROUND, rolloverState);
         var backgroundImage = Echo.Sync.getEffectProperty(
-                this.component, exxcellent.Expander.HEADER_BACKGROUND_IMAGE,
-                exxcellent.Expander.ROLLOVER_BACKGROUND_IMAGE, rolloverState);
+            this.component, exxcellent.Expander.HEADER_BACKGROUND_IMAGE,
+            exxcellent.Expander.ROLLOVER_BACKGROUND_IMAGE, rolloverState);
         var border = Echo.Sync.getEffectProperty(this.component,
-                exxcellent.Expander.HEADER_BORDER, exxcellent.Expander.ROLLOVER_BORDER, rolloverState);
+            exxcellent.Expander.HEADER_BORDER, exxcellent.Expander.ROLLOVER_BORDER, rolloverState);
 
         Echo.Sync.Color.renderClear(foreground, this._titleDiv, "color");
         Echo.Sync.Color.renderClear(foreground, this._mDiv, "color");
@@ -303,7 +303,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * according the current visible child.
      * @param hide if true the hide text and image is shown
      */
-    _toggleHeader: function(hide) {
+    _toggleHeader: function (hide) {
         if (this.component.render(exxcellent.Expander.HEADER_HIDE)) {
             return;
         }
@@ -320,7 +320,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Toggles the content from the showDiv to the hideDiv and vice versa.
      */
-    _toggleContent: function() {
+    _toggleContent: function () {
         var self = this;
         var speed = this.component.render(exxcellent.Expander.SPEED);
         // determine the visible and invisible div
@@ -360,7 +360,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {Echo.Update.ComponentUpdate} update the update
      * @param {Element} parentElement the element to which the content should be appended
      */
-    _renderContent: function(child, div, update, parentElement) {
+    _renderContent: function (child, div, update, parentElement) {
 
         this._renderChildLayoutData(child, div);
         Echo.Render.renderComponentAdd(update, child, div);
@@ -373,7 +373,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param update
      */
-    _renderContentReplaced: function(update) {
+    _renderContentReplaced: function (update) {
         var removedChildList = update.getRemovedChildren();
         var addedChildList = update.getAddedChildren();
         if (removedChildList && addedChildList) {
@@ -401,7 +401,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** @see Echo.Sync.ArrayContainer#renderChildLayoutData */
-    _renderChildLayoutData: function(child, cellElement) {
+    _renderChildLayoutData: function (child, cellElement) {
         var layoutData = child.render("layoutData");
         if (layoutData) {
             Echo.Sync.Color.render(layoutData.background, cellElement, "backgroundColor");
@@ -415,7 +415,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** @see Echo.Render.ComponentSync#renderDispose */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         this._mDiv = null;
         this._showDiv = null;
         this._showRenderID = null;
@@ -428,9 +428,9 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** @see Echo.Render.ComponentSync#renderUpdate */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         var fullRender = !Core.Arrays.containsAll(exxcellent.ExpanderSync._supportedPartialProperties,
-                update.getUpdatedPropertyNames(), true);
+            update.getUpdatedPropertyNames(), true);
 
         if (fullRender) {
             var element = this._div;
@@ -458,24 +458,24 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** Event triggered after the expander toggled the content.*/
-    _onContentToggled: function(shown) {
+    _onContentToggled: function (shown) {
         this.component.doContentToggled(shown);
         return false;
     },
 
     /** @see Echo.Render.ComponentSync#getFocusFlags */
-    getFocusFlags: function() {
+    getFocusFlags: function () {
         return Echo.Render.ComponentSync.FOCUS_PERMIT_ARROW_ALL;
     },
 
     /** @see Echo.Render.ComponentSync#renderFocus */
-    renderFocus: function() {
+    renderFocus: function () {
         this._renderFocusStyle(true);
         Core.Web.DOM.focusElement(this._div);
         //this.client.application.setFocusedComponent(this.component);
     },
 
-    _processFocus: function(e) {
+    _processFocus: function (e) {
         if (!this.client || !this.client.verifyInput(this.component)) {
             return true;
         }
@@ -483,19 +483,19 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** Processes a focus blur event. */
-    _processBlur: function(e) {
+    _processBlur: function (e) {
         this._renderFocusStyle(false);
     },
 
-    _renderFocusStyle: function(focusState) {
+    _renderFocusStyle: function (focusState) {
         // Render default focus aesthetic.
         this._rolloverHeader(focusState);
 
         // render focus stuff (iv available)
         var background = Echo.Sync.getEffectProperty(this.component, exxcellent.Expander.HEADER_BACKGROUND, exxcellent.Expander.FOCUSED_BACKGROUND, focusState);
         var backgroundImage = Echo.Sync.getEffectProperty(
-                this.component, exxcellent.Expander.HEADER_BACKGROUND_IMAGE,
-                exxcellent.Expander.FOCUSED_BACKGROUND_IMAGE, focusState);
+            this.component, exxcellent.Expander.HEADER_BACKGROUND_IMAGE,
+            exxcellent.Expander.FOCUSED_BACKGROUND_IMAGE, focusState);
         var border = Echo.Sync.getEffectProperty(this.component, exxcellent.Expander.HEADER_BORDER, exxcellent.Expander.FOCUSED_BORDER, focusState);
 
         Echo.Sync.Color.renderClear(background, this._mDiv, "backgroundColor");
@@ -504,13 +504,13 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** Processes a key press event. */
-    _processKeyPress: function(e) {
+    _processKeyPress: function (e) {
         // only toggle content, when a keyPress is triggered by a BOX-DIV
         if (!this.client || !this.client.verifyInput(this.component) || e.target.nodeName != 'DIV') {
             return true;
         }
         if (e.keyCode === 13 || e.keyCode === 40 || e.keyCode === 38
-                || e.keyCode === 37 || e.keyCode === 39) {
+            || e.keyCode === 37 || e.keyCode === 39) {
             this._toggleContent();
             return true;
         } else {

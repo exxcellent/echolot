@@ -11,33 +11,33 @@
  * @version 1.0
  */
 exxcellent.PieChart = Core.extend(Echo.Component, {
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType('exxcellent.PieChart', this);
     },
 
     $static: {
         PIE_MODEL: 'pieModel',
 
-        LEGEND_FONT : 'font', // <- it is the property of 'Echo.Component'
-        LEGEND_FOREGROUND : 'foreground', // <- it is the property of 'Echo.Component'
-        LEGEND_POSITION : 'legendPosition',
-        LEGEND_GAP_FACTOR : 'legendGapFactor',
+        LEGEND_FONT: 'font', // <- it is the property of 'Echo.Component'
+        LEGEND_FOREGROUND: 'foreground', // <- it is the property of 'Echo.Component'
+        LEGEND_POSITION: 'legendPosition',
+        LEGEND_GAP_FACTOR: 'legendGapFactor',
         SHOW_LEGEND: 'showLegend',
 
-        SHOW_POPUP : 'showPopUp',
+        SHOW_POPUP: 'showPopUp',
         POPUP_BACKGROUND: 'popupBackground',
         POPUP_BORDER_COLOR: 'popupBorderColor',
         POPUP_FOREGROUND: 'popupForeground',
         POPUP_FONT: 'popupFont',
 
-        DO_ANIMATION : 'doAnimation',
-        ANIMATION_TYPE : 'animationType',
+        DO_ANIMATION: 'doAnimation',
+        ANIMATION_TYPE: 'animationType',
 
-        DO_CLIENT_SORTING : 'doClientSorting',
+        DO_CLIENT_SORTING: 'doClientSorting',
 
-        SECTOR_ABBREV_SHOW : 'sectorAbbrevShow', // wanna have some defined abbreviation in your sectors, toggle this to: true
-        SECTOR_ABBREV_FONT : 'sectorAbbrevFont', // the font of the Abbreviation
-        SECTOR_ABBREV_FOREGROUND : 'sectorAbbrevForeground', // the foreground-color of the abbreviation, every sector can define it's own if there is a need to do so
+        SECTOR_ABBREV_SHOW: 'sectorAbbrevShow', // wanna have some defined abbreviation in your sectors, toggle this to: true
+        SECTOR_ABBREV_FONT: 'sectorAbbrevFont', // the font of the Abbreviation
+        SECTOR_ABBREV_FOREGROUND: 'sectorAbbrevForeground', // the foreground-color of the abbreviation, every sector can define it's own if there is a need to do so
 
         WIDTH: 'width',
         HEIGHT: 'height',
@@ -59,11 +59,11 @@ exxcellent.PieChart = Core.extend(Echo.Component, {
     },
     componentType: 'exxcellent.PieChart',
     /** Perform when an select sector action is triggered in the PieChart. */
-    doSelectPieSector : function(pieSectorSelection) {
+    doSelectPieSector: function (pieSectorSelection) {
         this.fireEvent({
-            type : exxcellent.PieChart.PIE_SECTOR_SELECT,
-            source : this,
-            data : pieSectorSelection
+            type: exxcellent.PieChart.PIE_SECTOR_SELECT,
+            source: this,
+            data: pieSectorSelection
         });
     }
 });
@@ -81,12 +81,12 @@ exxcellent.model.PieModel = Core.extend({
     /** The sectors in this pie */
     sectors: null,
 
-    $construct : function(sectors) {
+    $construct: function (sectors) {
         this.sectors = sectors;
     },
 
     /** Return the string representation of this PieModel. */
-    toString : function() {
+    toString: function () {
         return 'I am a PIE';
     }
 });
@@ -98,26 +98,26 @@ exxcellent.model.PieSector = Core.extend({
     name: null,
 
     // The data-value for this PieSector
-    value : null,
+    value: null,
 
     // The label shown on popUp
-    popUpLabel : null,
+    popUpLabel: null,
 
     // the abbreviation
-    abbreviation : null,
+    abbreviation: null,
 
     // the foreground of the abbreviation
-    abbreviationForeground : null,
+    abbreviationForeground: null,
 
     // Should we show the percent-Value of the sector in the legend...?
     showPercentage: false,
 
     // the color of this sector
-    color : null,
+    color: null,
 
-    identifier : null,
+    identifier: null,
 
-    $construct : function(name, value, popUpLabel, showPercentage, color, abbreviation, abbreviationForeground, identifier) {
+    $construct: function (name, value, popUpLabel, showPercentage, color, abbreviation, abbreviationForeground, identifier) {
         this.name = name;
         this.value = value;
         this.popUpLabel = popUpLabel;
@@ -131,7 +131,7 @@ exxcellent.model.PieSector = Core.extend({
     },
 
     /** Return the string representation of this sector. */
-    toString : function() {
+    toString: function () {
         return this.name;
     }
 });
@@ -144,7 +144,7 @@ exxcellent.model.PieSector = Core.extend({
  * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
 exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.PieChart", this);
     },
 
@@ -152,7 +152,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
         _offsetValue: 16, // static offset to calculate spacing
         _scaleFactor: 1.1, // the scaling of the animation
         _percentageDelimiter: '-', // delimiter for percentage maybe we want to configure this via styling properties
-        _minHorizontalSpaceForLegend : 100
+        _minHorizontalSpaceForLegend: 100
     },
 
     _div: null,
@@ -163,7 +163,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param update
      * @param parentElement
      */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         this._div = document.createElement("div");
 
         // if there is a background defined
@@ -180,7 +180,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Render the pie itself to the containerDiv
      */
-    renderDisplay: function() {
+    renderDisplay: function () {
         var self = this;
         if (this._raphael) {
             // if we have already a raphael, we do nothing att all - it's just a simple refresh
@@ -193,25 +193,25 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
             return;
         }
         var style = this._getStyle();
-        style.nextFallbackColor = function() {
+        style.nextFallbackColor = function () {
             // closure for fallback-colors
             var currentCount = -1; // start at -1, we will do a ++ first in closure
             var fallbackColorArrayInner = style.fallbackColorArray;
-            return function() {
+            return function () {
                 currentCount++;
                 // if the next defined color in the is null, we start looping
-                while (fallbackColorArrayInner[currentCount % 10] == null) {
+                while (fallbackColorArrayInner[currentCount % 10] === null) {
                     currentCount++;
                     // we stop at 0 - makes no sensee to search any more
-                    if (currentCount % 10 == 0) {
+                    if (currentCount % 10 === 0) {
                         // if we are at position 0 and have no color, then return some kind of black
                         return fallbackColorArrayInner[currentCount % 10] || '#000';
                     }
                 }
                 // normally we just return the color in the array
                 return fallbackColorArrayInner[currentCount % 10];
-            }
-        }
+            };
+        };
 
         var height = this.component.render(exxcellent.PieChart.HEIGHT) || 100; // <- we have some default
         var width = this.component.render(exxcellent.PieChart.WIDTH) || 100; // we have some default
@@ -233,8 +233,8 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
         // we step through all sectors and put those with ZERO in sectorsNotToPaint
         var count;
         for (count in sectors) {
-            if (sectors[count].value != 0) {
-                sectorsToPaint.push(sectors[count])
+            if (sectors[count].value !== 0) {
+                sectorsToPaint.push(sectors[count]);
             } else {
                 sectorsNotToPaint.push(sectors[count]);
             }
@@ -271,48 +271,48 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
             // Let's do some animation
             pie.hover(
                 // on 'mouseover'-callback
-                    function () {
-                        this.sector.stop();
-                        this.sector.scale(exxcellent.PieChartSync._scaleFactor, exxcellent.PieChartSync._scaleFactor, this.cx, this.cy);
-                        // - popUp section
-                        if (style.showPopUp) {
-                            var popupTextFill = {fill: style.popupForeground};
-                            var popUpFont = style.popupFont;
-                            this.popUpLabel = raphael_self.text(0, 0, this.sector.value.popUpLabel).attr(popupTextFill).attr(popUpFont);
-                            // if the sector is over middle, we open the PopUp zto bottom, if the sector is under the middle, we open the PopUp to top
-                            var direction = 'top'; // default
-                            if (this.cy > this.my) {
-                                // if we are over middle, we open to bottom
-                                direction = 'bottom';
-                            }
-                            this.popUp = raphael_self.popup(this.mx, this.my, this.popUpLabel, direction).attr({fill: style.popupBackground, stroke: style.popupBorderColor, "stroke-width": 2, "fill-opacity": .7});
+                function () {
+                    this.sector.stop();
+                    this.sector.scale(exxcellent.PieChartSync._scaleFactor, exxcellent.PieChartSync._scaleFactor, this.cx, this.cy);
+                    // - popUp section
+                    if (style.showPopUp) {
+                        var popupTextFill = {fill: style.popupForeground};
+                        var popUpFont = style.popupFont;
+                        this.popUpLabel = raphael_self.text(0, 0, this.sector.value.popUpLabel).attr(popupTextFill).attr(popUpFont);
+                        // if the sector is over middle, we open the PopUp zto bottom, if the sector is under the middle, we open the PopUp to top
+                        var direction = 'top'; // default
+                        if (this.cy > this.my) {
+                            // if we are over middle, we open to bottom
+                            direction = 'bottom';
                         }
-                        // - label section, animate, if we have one
-                        if (this.label) {
-                            this.label[0].stop();
-                            this.label[0].scale(1.5);
-                            this.label[1].attr({"font-weight": 800});
-                        }
-                    },
+                        this.popUp = raphael_self.popup(this.mx, this.my, this.popUpLabel, direction).attr({fill: style.popupBackground, stroke: style.popupBorderColor, "stroke-width": 2, "fill-opacity": 0.7});
+                    }
+                    // - label section, animate, if we have one
+                    if (this.label) {
+                        this.label[0].stop();
+                        this.label[0].scale(1.5);
+                        this.label[1].attr({"font-weight": 800});
+                    }
+                },
                 // on 'mouseout'-callback
-                    function () {
-                        // hide popUp
-                        if (style.showPopUp) {
-                            this.popUpLabel.hide();
-                            this.popUp.hide();
-                        }
-                        // animate sector to default
-                        this.sector.animate({scale: [1, 1, this.cx, this.cy]}, 900, style.animationType);
-                        // if we have a legend, set do default
-                        if (this.label) {
-                            this.label[0].animate({scale: 1}, 900, style.animationType);
-                            this.label[1].attr({"font-weight": 400});
-                        }
-                    });
+                function () {
+                    // hide popUp
+                    if (style.showPopUp) {
+                        this.popUpLabel.hide();
+                        this.popUp.hide();
+                    }
+                    // animate sector to default
+                    this.sector.animate({scale: [1, 1, this.cx, this.cy]}, 900, style.animationType);
+                    // if we have a legend, set do default
+                    if (this.label) {
+                        this.label[0].animate({scale: 1}, 900, style.animationType);
+                        this.label[1].attr({"font-weight": 400});
+                    }
+                });
         }
 
         // eventHandler...
-        pie.click(function() {
+        pie.click(function () {
             var _sectorValue = this.sector.value;
 
             self._onSelectPieSector(_sectorValue.identifier);
@@ -329,7 +329,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * We clean all allocated data
      * @param update
      */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         this._div = null;
         this._raphael = null;
     },
@@ -339,7 +339,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param update
      */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         // Brut-force - just create everything new
         var element = this._div;
         this._raphael = null; // we set the Raphael to null to force a redraw
@@ -354,7 +354,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Get the PIE-Model.
      * In case of a JSON-Object we parse it to create the exxcellent.model.PieModel
      */
-    _getPieModel : function () {
+    _getPieModel: function () {
         var value = this.component.render(exxcellent.PieChart.PIE_MODEL);
         if (value instanceof exxcellent.model.PieModel) {
             return value;
@@ -366,38 +366,38 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Returns the style of the Pie
      */
-    _getStyle : function() {
+    _getStyle: function () {
         var style = {
-            legendFont : this._renderFont(this.component.render(exxcellent.PieChart.LEGEND_FONT)),
-            legendForeground : this.component.render(exxcellent.PieChart.LEGEND_FOREGROUND),
-            legendPosition : this.component.render(exxcellent.PieChart.LEGEND_POSITION) || 'east',
-            legendGapFactor : this.component.render(exxcellent.PieChart.LEGEND_GAP_FACTOR) || 1.2,
-            showLegend : this.component.render(exxcellent.PieChart.SHOW_LEGEND),
-            doAnimation : this.component.render(exxcellent.PieChart.DO_ANIMATION),
-            animationType : this.component.render(exxcellent.PieChart.ANIMATION_TYPE) || 'bounce',
-            doClientSorting : this.component.render(exxcellent.PieChart.DO_CLIENT_SORTING) || false, // default - no client sorting!
-            showPopUp : this.component.render(exxcellent.PieChart.SHOW_POPUP),
-            popupBackground : this.component.render(exxcellent.PieChart.POPUP_BACKGROUND) || '#000',
-            popupBorderColor : this.component.render(exxcellent.PieChart.POPUP_BORDER_COLOR) || '#666',
-            popupForeground : this.component.render(exxcellent.PieChart.POPUP_FOREGROUND) || '#fff',
-            popupFont : this._renderFont(this.component.render(exxcellent.PieChart.POPUP_FONT)) || {font: '10px Helvetica, Arial'},
-            sectorAbbrevShow : this.component.render(exxcellent.PieChart.SECTOR_ABBREV_SHOW) || false, // default is false -> no abbreviation in the sectors
-            sectorAbbrevFont : this._renderFont(this.component.render(exxcellent.PieChart.SECTOR_ABBREV_FONT)) || {font: '10px Helvetica, Arial'},
-            sectorAbbrevForeground : this.component.render(exxcellent.PieChart.SECTOR_ABBREV_FOREGROUND) || '#000',
+            legendFont: this._renderFont(this.component.render(exxcellent.PieChart.LEGEND_FONT)),
+            legendForeground: this.component.render(exxcellent.PieChart.LEGEND_FOREGROUND),
+            legendPosition: this.component.render(exxcellent.PieChart.LEGEND_POSITION) || 'east',
+            legendGapFactor: this.component.render(exxcellent.PieChart.LEGEND_GAP_FACTOR) || 1.2,
+            showLegend: this.component.render(exxcellent.PieChart.SHOW_LEGEND),
+            doAnimation: this.component.render(exxcellent.PieChart.DO_ANIMATION),
+            animationType: this.component.render(exxcellent.PieChart.ANIMATION_TYPE) || 'bounce',
+            doClientSorting: this.component.render(exxcellent.PieChart.DO_CLIENT_SORTING) || false, // default - no client sorting!
+            showPopUp: this.component.render(exxcellent.PieChart.SHOW_POPUP),
+            popupBackground: this.component.render(exxcellent.PieChart.POPUP_BACKGROUND) || '#000',
+            popupBorderColor: this.component.render(exxcellent.PieChart.POPUP_BORDER_COLOR) || '#666',
+            popupForeground: this.component.render(exxcellent.PieChart.POPUP_FOREGROUND) || '#fff',
+            popupFont: this._renderFont(this.component.render(exxcellent.PieChart.POPUP_FONT)) || {font: '10px Helvetica, Arial'},
+            sectorAbbrevShow: this.component.render(exxcellent.PieChart.SECTOR_ABBREV_SHOW) || false, // default is false -> no abbreviation in the sectors
+            sectorAbbrevFont: this._renderFont(this.component.render(exxcellent.PieChart.SECTOR_ABBREV_FONT)) || {font: '10px Helvetica, Arial'},
+            sectorAbbrevForeground: this.component.render(exxcellent.PieChart.SECTOR_ABBREV_FOREGROUND) || '#000',
 
-            fallbackColorArray : new Array(
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_0) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_1) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_2) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_3) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_4) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_5) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_6) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_7) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_8) || null,
-                    this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_9) || null
-                    )
-        }
+            fallbackColorArray: [
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_0) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_1) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_2) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_3) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_4) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_5) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_6) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_7) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_8) || null,
+                this.component.render(exxcellent.PieChart.FALLBACK_SECTOR_COLOR_9) || null
+            ]
+        };
         return style;
     },
 
@@ -411,7 +411,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @return pieRadius
      */
-    _calculatePieRadius : function(width, height, showLegend, legendPos, amountOfSectors) {
+    _calculatePieRadius: function (width, height, showLegend, legendPos, amountOfSectors) {
         var radius = 0;
         // if we have a legend
         if (showLegend) {
@@ -452,7 +452,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {String} sectorName - the name of the selected Sector
      * @param {Number} sectorValue - the value of the sector
      */
-    _onSelectPieSector : function (identifier) {
+    _onSelectPieSector: function (identifier) {
         this.component.doSelectPieSector(identifier);
         return false;
     },
@@ -463,7 +463,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} json the string to be transformed into an object
      * @return {} the object
      */
-    _fromJsonString : function(jsonStr) {
+    _fromJsonString: function (jsonStr) {
         return JSON.parse(jsonStr);
     },
 
@@ -473,7 +473,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} object the object to be transformed into string
      * @return {} the json string
      */
-    _toJsonString : function(object) {
+    _toJsonString: function (object) {
         return JSON.stringify(object);
     },
 
@@ -482,20 +482,22 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param font {Echo.Sync.Font} the font to render as notifier compatible font
      * @return the raphael compatible font
      */
-    _renderFont: function(font) {
-        if (font == null) return null;
-        var fontByEcho = {
-            style: new Object()
+    _renderFont: function (font) {
+        if (font === null) {
+            return null;
         }
+        var fontByEcho = {
+            style: {}
+        };
         Echo.Sync.Font.render(font, fontByEcho);
         var echoStyle = fontByEcho.style;
 
         return {
-            'font' : echoStyle.fontSize + ' ' + echoStyle.fontFamily,
-            'font-family' : echoStyle.fontFamily,
-            'font-size' : echoStyle.fontSize,
-            'font-style' : echoStyle.fontStyle
-        }
+            'font': echoStyle.fontSize + ' ' + echoStyle.fontFamily,
+            'font-family': echoStyle.fontFamily,
+            'font-size': echoStyle.fontSize,
+            'font-style': echoStyle.fontStyle
+        };
 
     }
 });

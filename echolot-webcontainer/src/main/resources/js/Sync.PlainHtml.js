@@ -7,7 +7,7 @@
  * @version 1.0
  */
 exxcellent.PlainHtml = Core.extend(Echo.Component, {
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType('exxcellent.PlainHtml', this);
     },
 
@@ -28,7 +28,7 @@ exxcellent.PlainHtml = Core.extend(Echo.Component, {
  * @version 1.0
  */
 exxcellent.PlainHtmlSync = Core.extend(Echo.Render.ComponentSync, {
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.PlainHtml", this);
     },
 
@@ -39,14 +39,14 @@ exxcellent.PlainHtmlSync = Core.extend(Echo.Render.ComponentSync, {
      * @param update
      * @param parentElement
      */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         if (!this._parentElement) {
             this._parentElement = parentElement;
         }
     },
 
     /** @see Echo.Render.ComponentSync#renderDisplay */
-    renderDisplay: function() {
+    renderDisplay: function () {
         var value = this.component.render(exxcellent.PlainHtml.HTML_TEXT);
         // only if there is something to set - we don't want to display 'undefined' on screen :-)
         if (value) {
@@ -59,7 +59,7 @@ exxcellent.PlainHtmlSync = Core.extend(Echo.Render.ComponentSync, {
      * We clean all allocated data
      * @param update
      */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         if (this._parentElement) {
             this._parentElement.innerHTML = "";
         }
@@ -71,7 +71,7 @@ exxcellent.PlainHtmlSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param update
      */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         // we just force a renderAdd
         this.renderAdd();
         return true;

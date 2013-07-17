@@ -3,54 +3,54 @@
  */
 exxcellent.DatePicker = Core.extend(Echo.Component, {
 
-    $load : function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("exxcellent.DatePicker", this);
     },
 
     /**
      * Properties defined for this component.
      */
-	$static : {
-		/* DatePicker properties. */
-		TRIGGER_EVENT: "triggerEvent",
-		NUMBER_OF_CALENDARS: "numberOfCalendars",
-		DEFAULT_DATE: "defaultDate",
-		LOCALE_MODEL: "localeModel",
-		VIEW_MODE: "viewMode",
-		SELECTION_MODE: "selectionMode",
-		HIDE_ON_SELECT: "hideOnSelect",
-		FLAT_MODE: "flatMode",
-		POSITION: "position",
-		CSS : "css",
-		IMG_DATEPICKER_T : "DATEPICKER_T_IMG",
-		IMG_DATEPICKER_B : "DATEPICKER_B_IMG",
-		IMG_DATEPICKER_L : "DATEPICKER_L_IMG",
-		IMG_DATEPICKER_R : "DATEPICKER_R_IMG",
-		IMG_DATEPICKER_W : "DATEPICKER_W_IMG",//TL
-		IMG_DATEPICKER_X : "DATEPICKER_X_IMG",//TR
-		IMG_DATEPICKER_Y : "DATEPICKER_Y_IMG",//BL
-		IMG_DATEPICKER_Z : "DATEPICKER_Z_IMG",//BR
-		REGEX: "regex",
-		/* Textfield properties. */
-		TEXT: "text",
-		MAX_LENGTH: "maximumLength",
-		WIDTH: "width",
-		EDITABLE: "editable",
-		BORDER: "border",
-		FOREGROUND: "foreground",
-		DISABLED_FOREGROUND: "disabledForeground",
-		BACKGROUND: "background",
-		DISABLED_BACKGROUND: "disabledBackground",
-		DISABLED_BORDER: "disabledBorder",
-		FONT: "font",
-		DISABLED_FONT: "disabledFont",
-		BACKGROUND_IMG: "backgroundImage",
-		DISABLED_BACKGROUND_IMG: "disabledBackgroundImage",
-		ALIGNMENT: "alignment",
-		INSETS: "insets",
-		HEIGHT: "height",
-		TOOLTIP_TEXT: "toolTipText"
-	},
+    $static: {
+        /* DatePicker properties. */
+        TRIGGER_EVENT: "triggerEvent",
+        NUMBER_OF_CALENDARS: "numberOfCalendars",
+        DEFAULT_DATE: "defaultDate",
+        LOCALE_MODEL: "localeModel",
+        VIEW_MODE: "viewMode",
+        SELECTION_MODE: "selectionMode",
+        HIDE_ON_SELECT: "hideOnSelect",
+        FLAT_MODE: "flatMode",
+        POSITION: "position",
+        CSS: "css",
+        IMG_DATEPICKER_T: "DATEPICKER_T_IMG",
+        IMG_DATEPICKER_B: "DATEPICKER_B_IMG",
+        IMG_DATEPICKER_L: "DATEPICKER_L_IMG",
+        IMG_DATEPICKER_R: "DATEPICKER_R_IMG",
+        IMG_DATEPICKER_W: "DATEPICKER_W_IMG",//TL
+        IMG_DATEPICKER_X: "DATEPICKER_X_IMG",//TR
+        IMG_DATEPICKER_Y: "DATEPICKER_Y_IMG",//BL
+        IMG_DATEPICKER_Z: "DATEPICKER_Z_IMG",//BR
+        REGEX: "regex",
+        /* Textfield properties. */
+        TEXT: "text",
+        MAX_LENGTH: "maximumLength",
+        WIDTH: "width",
+        EDITABLE: "editable",
+        BORDER: "border",
+        FOREGROUND: "foreground",
+        DISABLED_FOREGROUND: "disabledForeground",
+        BACKGROUND: "background",
+        DISABLED_BACKGROUND: "disabledBackground",
+        DISABLED_BORDER: "disabledBorder",
+        FONT: "font",
+        DISABLED_FONT: "disabledFont",
+        BACKGROUND_IMG: "backgroundImage",
+        DISABLED_BACKGROUND_IMG: "disabledBackgroundImage",
+        ALIGNMENT: "alignment",
+        INSETS: "insets",
+        HEIGHT: "height",
+        TOOLTIP_TEXT: "toolTipText"
+    },
 
     componentType: "exxcellent.DatePicker",
     focusable: true,
@@ -58,7 +58,7 @@ exxcellent.DatePicker = Core.extend(Echo.Component, {
     /**
      * Programmatically performs a text component action. The user hits Enter on the input textfield.
      */
-    doAction: function() {
+    doAction: function () {
         this.fireEvent({
             type: "action",
             source: this,
@@ -68,34 +68,34 @@ exxcellent.DatePicker = Core.extend(Echo.Component, {
 
 /** The locale model object describes regional settings. */
 exxcellent.model.LocaleModel = Core.extend({
-	prevText : null,
-	nextText : null,
-	weekText : null,
-	monthNames : null,
-	monthNamesShort : null,
-	dayNames : null,
-	dayNamesShort : null,
-	dayNamesMin : null,
-	dateFormat : null,
-	firstDay : null,
+    prevText: null,
+    nextText: null,
+    weekText: null,
+    monthNames: null,
+    monthNamesShort: null,
+    dayNames: null,
+    dayNamesShort: null,
+    dayNamesMin: null,
+    dateFormat: null,
+    firstDay: null,
 
-	$construct : function(prevText, nextText, weekText, monthNames, monthNamesShort, dayNames, dayNamesShort, dayNamesMin, dateFormat, firstDay) {
-		this.prevText = prevText;
-		this.nextText = nextText;
-		this.weekText = weekText;
-		this.monthNames = monthNames;
-		this.monthNamesShort = monthNamesShort;
-		this.dayNames = dayNames;
-		this.dayNamesShort = dayNamesShort;
-		this.dayNamesMin = dayNamesMin;
-		this.dateFormat = dateFormat;
-		this.firstDay =	firstDay;
-	},
+    $construct: function (prevText, nextText, weekText, monthNames, monthNamesShort, dayNames, dayNamesShort, dayNamesMin, dateFormat, firstDay) {
+        this.prevText = prevText;
+        this.nextText = nextText;
+        this.weekText = weekText;
+        this.monthNames = monthNames;
+        this.monthNamesShort = monthNamesShort;
+        this.dayNames = dayNames;
+        this.dayNamesShort = dayNamesShort;
+        this.dayNamesMin = dayNamesMin;
+        this.dateFormat = dateFormat;
+        this.firstDay = firstDay;
+    },
 
-	/** Return the string representation of this model. */
-	toString : function() {
-		return this.monthNames;
-	}
+    /** Return the string representation of this model. */
+    toString: function () {
+        return this.monthNames;
+    }
 });
 /**
  * Component rendering peer: DatePicker.
@@ -122,7 +122,7 @@ exxcellent.model.LocaleModel = Core.extend({
  */
 exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
 
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.DatePicker", this);
         Core.Web.Event.debugListenerCount = true;
     },
@@ -164,7 +164,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Describes how a component is initially built.
      */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         if (window.console && window.console.log) {
             window.console.log('Adding div (renderAdd).');
         }
@@ -202,7 +202,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Describes how the component renders itself.<br/>
      * This method is also triggered if the renderUpdate decided to partially render the component!
      */
-    renderDisplay: function() {
+    renderDisplay: function () {
         if (window.console && window.console.log) {
             window.console.log('Displaying DatePicker (renderDisplay()).');
         }
@@ -213,7 +213,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
             // such that border pixels will not make the component wider than specified percentage.
             var border = this.component.render(exxcellent.DatePicker.BORDER);
             var borderSize = border ?
-                    (Echo.Sync.Border.getPixelSize(border, "left") + Echo.Sync.Border.getPixelSize(border, "right")) : 4;
+                (Echo.Sync.Border.getPixelSize(border, "left") + Echo.Sync.Border.getPixelSize(border, "right")) : 4;
             var insets = this.component.render(exxcellent.DatePicker.INSETS);
             if (insets) {
                 var insetsPx = Echo.Sync.Insets.toPixels(insets);
@@ -227,7 +227,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
                 // Add default windows scroll bar width to border size for Internet Explorer browsers.
                 if (this.container) {
                     this.container.style.width = this._adjustPercentWidth(parseInt(width, 10), 0,
-                            this._input.parentNode.offsetWidth) + "%";
+                        this._input.parentNode.offsetWidth) + "%";
                     /*this.container.style.width = this._adjustPercentWidth(100, Core.Web.Measure.SCROLL_WIDTH,/ 
                      this._input.parentNode.offsetWidth) + "%";
                      */
@@ -243,7 +243,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
             }
 
             this._input.style.width = this._adjustPercentWidth(parseInt(width, 10), borderSize,
-                    this._input.parentNode.offsetWidth) + "%";
+                this._input.parentNode.offsetWidth) + "%";
         }
         if (!this._datepicker) {
             if (window.console && window.console.log) {
@@ -258,9 +258,9 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Describes how a component is updated, e.g. destroyed and build again. The
      * DatePicker supports partially updates for text and editable property.
      */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         var fullRender = !Core.Arrays.containsAll(exxcellent.DatePickerSync._supportedPartialProperties,
-                update.getUpdatedPropertyNames(), true);
+            update.getUpdatedPropertyNames(), true);
 
         if (fullRender) {
             var element = this.container ? this.container : this._input;
@@ -282,7 +282,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
                     }
                 }
                 var editableUpdate = update.getUpdatedProperty("editable");
-                if (editableUpdate != null) {
+                if (editableUpdate !== null) {
                     this._input.readOnly = !editableUpdate.newValue;
                     if (editableUpdate.newValue) {
                         $(this._input).removeClass("datepickerDisabled");
@@ -298,7 +298,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Describes how the component is destroyed.
      */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         // These cleanup things are CRUCICAL to avoid DRASTIC memory leaks.
         //
         // Remove attached keylisteners from the DIV
@@ -321,7 +321,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param parentElement the parent element
      */
-    renderAddToParent: function(parentElement) {
+    renderAddToParent: function (parentElement) {
         if (Core.Web.Env.BROWSER_INTERNET_EXPLORER && this.percentWidth) {
             this.container = document.createElement("div");
             this.container.appendChild(this._input);
@@ -338,7 +338,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {Number} reducePixels the number of pixels by which the percent span should be reduced
      * @param {Number} containerPixels the size of the container element
      */
-    _adjustPercentWidth: function(percentValue, reducePixels, containerPixels) {
+    _adjustPercentWidth: function (percentValue, reducePixels, containerPixels) {
         var value = (100 - (100 * reducePixels / containerPixels)) * percentValue / 100;
         return value > 0 ? value : 0;
     },
@@ -347,7 +347,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Renders style information: colors, borders, font, insets, etc.
      * Sets percentWidth flag.
      */
-    _renderStyle: function() {
+    _renderStyle: function () {
         if (this.component.isRenderEnabled()) {
             Echo.Sync.renderComponentDefaults(this.component, this._input);
             Echo.Sync.Border.render(this.component.render(exxcellent.DatePicker.BORDER), this._input);
@@ -355,15 +355,15 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
         } else {
             Echo.Sync.LayoutDirection.render(this.component.getLayoutDirection(), this._input);
             Echo.Sync.Color.render(Echo.Sync.getEffectProperty(this.component, exxcellent.DatePicker.FOREGROUND, exxcellent.DatePicker.DISABLED_FOREGROUND, true),
-                    this._input, "color");
+                this._input, "color");
             Echo.Sync.Color.render(Echo.Sync.getEffectProperty(this.component, exxcellent.DatePicker.BACKGROUND, exxcellent.DatePicker.DISABLED_BACKGROUND, true),
-                    this._input, "backgroundColor");
+                this._input, "backgroundColor");
             Echo.Sync.Border.render(Echo.Sync.getEffectProperty(this.component, exxcellent.DatePicker.BORDER, exxcellent.DatePicker.DISABLED_BORDER, true),
-                    this._input);
+                this._input);
             Echo.Sync.Font.render(Echo.Sync.getEffectProperty(this.component, exxcellent.DatePicker.FONT, exxcellent.DatePicker.DISABLED_FONT, true),
-                    this._input);
+                this._input);
             Echo.Sync.FillImage.render(Echo.Sync.getEffectProperty(this.component,
-                    exxcellent.DatePicker.BACKGROUND_IMG, exxcellent.DatePicker.DISABLED_BACKGROUND_IMG, true), this._input);
+                exxcellent.DatePicker.BACKGROUND_IMG, exxcellent.DatePicker.DISABLED_BACKGROUND_IMG, true), this._input);
         }
         Echo.Sync.Alignment.render(this.component.render(exxcellent.DatePicker.ALIGNMENT), this._input, false, null);
         Echo.Sync.Insets.render(this.component.render(exxcellent.DatePicker.INSETS), this._input, "padding");
@@ -391,7 +391,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Renders all available options available for the DatePicker.
      * @see http://docs.jquery.com/UI/Datepicker#options
      */
-    _renderOptions: function() {
+    _renderOptions: function () {
         var localeModel = this._getLocaleModel();
         return Object({
             /* The desired event to trigger the date picker. Default: 'click'*/
@@ -444,7 +444,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Method to return the localeModel object.
      */
-    _getLocaleModel : function() {
+    _getLocaleModel: function () {
         var value = this.component.render(exxcellent.DatePicker.LOCALE_MODEL);
         var localeModel;
         if (value) {
@@ -463,7 +463,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} json the string to be transformed into an object
      * @return {} the object
      */
-    _fromJsonString : function(jsonStr) {
+    _fromJsonString: function (jsonStr) {
         return JSON.parse(jsonStr);
     },
 
@@ -473,7 +473,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} object the object to be transformed into string
      * @return {} the json string
      */
-    _toJsonString : function(object) {
+    _toJsonString: function (object) {
         return JSON.stringify(object);
     },
 
@@ -481,7 +481,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Creates a stylesheet with dynamically replaced images.
      * @return css String the stylesheet itself as text
      */
-    _createStylesheet : function() {
+    _createStylesheet: function () {
         var css = this.component.render(exxcellent.DatePicker.CSS);
         if (css) {
             css = css.replace(/DATEPICKER_T/g, this.component.render(exxcellent.DatePicker.IMG_DATEPICKER_T));
@@ -502,7 +502,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} formatted - the date format
      * @param {} dates - the selected dates
      */
-    _onSelect : function(formatted, dates) {
+    _onSelect: function (formatted, dates) {
         if (this._debug && window.console && window.console.log) {
             window.console.log('OnSelect: ' + formated + ", " + dates);
         }
@@ -511,7 +511,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** Processes the blur event (focus lost).*/
-    _processBlur: function(e) {
+    _processBlur: function (e) {
         if (window.console && window.console.log) {
             window.console.log('_processBlur()');
         }
@@ -525,7 +525,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Processes all key up events. (keyPress event) hides the DatePicker.
      * @see http://www.quirksmode.org/dom/events/index.html
      */
-    _processKeyPresses: function(e) {
+    _processKeyPresses: function (e) {
         if (!this.client || !this.client.verifyInput(this.component)) {
             return true;
         }
@@ -548,7 +548,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Processes a focus event. Notifies application of focus.
      */
-    _processFocus: function(e) {
+    _processFocus: function (e) {
         if (window.console && window.console.log) {
             window.console.log('_processFocus()');
         }
@@ -560,7 +560,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /**  @see Echo.Render.ComponentSync#getFocusFlags */
-    getFocusFlags: function() {
+    getFocusFlags: function () {
         return Echo.Render.ComponentSync.FOCUS_PERMIT_ARROW_UP | Echo.Render.ComponentSync.FOCUS_PERMIT_ARROW_DOWN;
     },
 
@@ -568,7 +568,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Processes the focus receive event (focus receive).
      * @see Echo.Render.ComponentSync#renderFocus
      */
-    renderFocus: function() {
+    renderFocus: function () {
         if (window.console && window.console.log) {
             window.console.log('renderFocus()');
         }
@@ -578,7 +578,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Event listener to process input after client input restrictions have been cleared.
      */
-    _processRestrictionsClear: function() {
+    _processRestrictionsClear: function () {
         if (!this.client) {
             // Component has been disposed, do nothing.
             return;
@@ -603,7 +603,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param keyEvent the user keyboard event which triggered the value storage request (optional)
      */
-    _storeValue: function(keyEvent) {
+    _storeValue: function (keyEvent) {
         if (window.console && window.console.log) {
             window.console.log('_storeValue(), keyEvent: ' + keyEvent + ', inputValue: ' + this._input.value + ', lastValue: ' + this._lastProcessedValue);
         }
@@ -639,7 +639,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Inspired from echopoint.RegexTextField (@author Rakesh 2009-03-08)
      * @return <code>true</code> only if the key is allowed, otherwise <code>false</code>
      */
-    _doFilterValue: function(event) {
+    _doFilterValue: function (event) {
         event = (event) ? event : window.event;
         var charCode = (event.which) ? event.which : event.keyCode;
 
@@ -668,7 +668,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
      * Return the caret position in the text field component.
      * Inspired from echopoint.RegexTextField (@author Rakesh 2009-03-08)
      */
-    _getCaretPosition: function() {
+    _getCaretPosition: function () {
         var position = ( this._input.value ) ? this._input.value.length : 0;
 
         if (document.selection) {
@@ -679,7 +679,7 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
             selection.moveStart('character', -this._input.value.length);
             position = selection.text.length - length;
         } else if (this._input.selectionStart ||
-                this._input.selectionStart == '0') {
+            this._input.selectionStart == '0') {
             // FireFox
             position = this._input.selectionStart;
         }

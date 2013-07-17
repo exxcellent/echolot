@@ -1,10 +1,10 @@
 Contrib.ScrollPane = Core.extend(Echo.Component, {
 
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("Contrib.ScrollPane", this);
     },
 
-    componentType: "Contrib.ScrollPane",    
+    componentType: "Contrib.ScrollPane",
 
     cellElementNodeName: "div",
     prevFocusKey: 38,
@@ -16,14 +16,15 @@ Contrib.ScrollPane = Core.extend(Echo.Component, {
 
 Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
 
-   $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("Contrib.ScrollPane", this);
     },
 
     $abstract: {
         cellElementNodeName: true,
 
-        renderChildLayoutData: function(child, cellElement) { }
+        renderChildLayoutData: function (child, cellElement) {
+        }
     },
 
     element: null,
@@ -32,29 +33,29 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
     cellSpacing: null,
     _childIdToElementMap: null,
 
-    processKeyPress: function(e) {
+    processKeyPress: function (e) {
         switch (e.keyCode) {
-        case this.prevFocusKey:
-        case this.nextFocusKey:
-            var focusPrevious = e.keyCode == this.prevFocusKey;
-            var focusedComponent = this.component.application.getFocusedComponent();
-            if (focusedComponent && focusedComponent.peer && focusedComponent.peer.getFocusFlags) {
-                var focusFlags = focusedComponent.peer.getFocusFlags();
-                if ((focusPrevious && focusFlags & this.prevFocusFlag) || (!focusPrevious && focusFlags & this.nextFocusFlag)) {
-                    var focusChild = this.component.application.focusManager.findInParent(this.component, focusPrevious);
-                    if (focusChild) {
-                        this.component.application.setFocusedComponent(focusChild);
-                        Core.Web.DOM.preventEventDefault(e);
-                        return false;
+            case this.prevFocusKey:
+            case this.nextFocusKey:
+                var focusPrevious = e.keyCode == this.prevFocusKey;
+                var focusedComponent = this.component.application.getFocusedComponent();
+                if (focusedComponent && focusedComponent.peer && focusedComponent.peer.getFocusFlags) {
+                    var focusFlags = focusedComponent.peer.getFocusFlags();
+                    if ((focusPrevious && focusFlags & this.prevFocusFlag) || (!focusPrevious && focusFlags & this.nextFocusFlag)) {
+                        var focusChild = this.component.application.focusManager.findInParent(this.component, focusPrevious);
+                        if (focusChild) {
+                            this.component.application.setFocusedComponent(focusChild);
+                            Core.Web.DOM.preventEventDefault(e);
+                            return false;
+                        }
                     }
                 }
-            }
-            break;
+                break;
         }
         return true;
     },
 
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
 
 
         this.element = this.containerElement = document.createElement("div");
@@ -62,10 +63,11 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         this.element.style.overflow = "auto";
         this.element.style.outlineStyle = "none";
         this.element.tabIndex = "-1";
-        var layoutData = this.component.render("layoutData");        
-        if(layoutData) {
-        if(layoutData.height)
-            this.element.style.height = Echo.Sync.Extent.toPixels(layoutData.height, false) + "px";
+        var layoutData = this.component.render("layoutData");
+        if (layoutData) {
+            if (layoutData.height) {
+                this.element.style.height = Echo.Sync.Extent.toPixels(layoutData.height, false) + "px";
+            }
             Echo.Sync.Insets.render(layoutData.insets, parentElement, "padding");
         }
 
@@ -87,7 +89,7 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         parentElement.appendChild(this.element);
     },
 
-    renderChildLayoutData: function(child, cellElement) {
+    renderChildLayoutData: function (child, cellElement) {
         var layoutData = child.render("layoutData");
         if (layoutData) {
             Echo.Sync.Color.render(layoutData.background, cellElement, "backgroundColor");
@@ -100,14 +102,14 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         }
     },
 
-    renderAddChild: function(update, child, index) {
+    renderAddChild: function (update, child, index) {
         var cellElement = document.createElement(this.cellElementNodeName);
         this._childIdToElementMap[child.renderId] = cellElement;
         Echo.Render.renderComponentAdd(update, child, cellElement);
 
         this.renderChildLayoutData(child, cellElement);
 
-        if (index != null) {
+        if (index !== null) {
             var currentChildCount;
             if (this.containerElement.childNodes.length >= 3 && this.cellSpacing) {
                 currentChildCount = (this.containerElement.childNodes.length + 1) / 2;
@@ -118,7 +120,7 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
                 index = null;
             }
         }
-        if (index == null || !this.containerElement.firstChild) {
+        if (index === null || !this.containerElement.firstChild) {
             // Full render, append-at-end scenario, or index 0 specified and no children rendered.
 
             // Render spacing cell first if index != 0 and cell spacing enabled.
@@ -143,7 +145,7 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         }
     },
 
-    renderAddChildren: function(update) {
+    renderAddChildren: function (update) {
         this._childIdToElementMap = {};
 
         var componentCount = this.component.getComponentCount();
@@ -153,11 +155,11 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         }
 
         Core.Web.Event.add(this.element,
-                Core.Web.Env.QUIRK_IE_KEY_DOWN_EVENT_REPEAT ? "keydown" : "keypress",
-                Core.method(this, this.processKeyPress), false);
+            Core.Web.Env.QUIRK_IE_KEY_DOWN_EVENT_REPEAT ? "keydown" : "keypress",
+            Core.method(this, this.processKeyPress), false);
     },
 
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         Core.Web.Event.removeAll(this.element);
         this.element = null;
         this.containerElement = null;
@@ -165,7 +167,7 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         this.spacingPrototype = null;
     },
 
-    renderRemoveChild: function(update, child) {
+    renderRemoveChild: function (update, child) {
         var childElement = this._childIdToElementMap[child.renderId];
         if (!childElement) {
             return;
@@ -186,23 +188,24 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
         delete this._childIdToElementMap[child.renderId];
     },
 
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         var fullRender = false;
         if (update.hasUpdatedProperties() || update.hasUpdatedLayoutDataChildren()) {
             // Full render
             fullRender = true;
         } else {
             var removedChildren = update.getRemovedChildren();
+            var i;
             if (removedChildren) {
                 // Remove children.
-                for (var i = 0; i < removedChildren.length; ++i) {
+                for (i = 0; i < removedChildren.length; ++i) {
                     this.renderRemoveChild(update, removedChildren[i]);
                 }
             }
             var addedChildren = update.getAddedChildren();
             if (addedChildren) {
                 // Add children.
-                for (var i = 0; i < addedChildren.length; ++i) {
+                for (i = 0; i < addedChildren.length; ++i) {
                     this.renderAddChild(update, addedChildren[i], this.component.indexOf(addedChildren[i]));
                 }
             }

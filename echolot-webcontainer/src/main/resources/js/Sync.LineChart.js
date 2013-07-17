@@ -10,7 +10,7 @@
  */
 
 exxcellent.LineChart = Core.extend(Echo.Component, {
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType('exxcellent.LineChart', this);
     },
     $static: {
@@ -19,7 +19,6 @@ exxcellent.LineChart = Core.extend(Echo.Component, {
 
         XAXIS_SECTORS: 'xaxisSectors',
         YAXIS_SECTORS: 'yaxisSectors',
-
 
 
         FILL_CHART: 'fillChart',
@@ -47,12 +46,12 @@ exxcellent.LineChart = Core.extend(Echo.Component, {
         POINT_SELECTION: 'pointSelection'
     },
     componentType: 'exxcellent.LineChart',
-    doSelectPoint : function(pointIdentifier) {
-        // 	Notify table row select listeners.
+    doSelectPoint: function (pointIdentifier) {
+        // Notify table row select listeners.
         this.fireEvent({
-            type : exxcellent.LineChart.POINT_SELECTION,
-            source : this,
-            data : pointIdentifier
+            type: exxcellent.LineChart.POINT_SELECTION,
+            source: this,
+            data: pointIdentifier
         });
     }
 });
@@ -69,12 +68,12 @@ exxcellent.model.LineChartModel = Core.extend({
     /** Should this PIE be animated */
     points: null,
 
-    $construct : function(points) {
+    $construct: function (points) {
         this.points = points;
     },
 
     /** Return the string representation of this PieModel. */
-    toString : function() {
+    toString: function () {
         return 'I am a LineChartModel';
     }
 });
@@ -87,12 +86,12 @@ exxcellent.model.AxisModel = Core.extend({
     yAxisValues: null,
 
 
-    $construct : function(xAxisValues, yAxisValues) {
+    $construct: function (xAxisValues, yAxisValues) {
         this.xAxisValues = xAxisValues;
         this.yAxisValues = yAxisValues;
     },
 
-    toString : function() {
+    toString: function () {
         return 'AxisModel - xAxis: ' + this.xAxisValues + ' yAxis: ' + this.yAxisValues;
     }
 });
@@ -107,7 +106,7 @@ exxcellent.model.Point = Core.extend({
 
     label: '',
 
-    $construct : function(xValue, yValue, label, identifier) {
+    $construct: function (xValue, yValue, label, identifier) {
         this.xValue = xValue;
         this.yValue = yValue;
         this.label = label;
@@ -115,7 +114,7 @@ exxcellent.model.Point = Core.extend({
     },
 
     /** Return the string representation of this Point */
-    toString : function() {
+    toString: function () {
         return 'Label:' + this.label + ' xValue:' + this.xValue + ' yValue:' + this.yValue;
     }
 });
@@ -144,87 +143,87 @@ exxcellent.model.LineChartLayout = Core.extend({
     width: 300,
     height: 200,
 
-    $construct : function() {
+    $construct: function () {
         // nothing to do yet
     },
 
-    isDrawGrid : function() {
+    isDrawGrid: function () {
         return this.drawGrid;
     },
 
-    getGridColor : function() {
+    getGridColor: function () {
         return this.gridColor;
     },
 
-    getXaxisSectors : function() {
+    getXaxisSectors: function () {
         return this.xaxisSectors;
     },
 
-    getYaxisSectors : function() {
+    getYaxisSectors: function () {
         return this.yaxisSectors;
     },
 
-    getAxisFont : function() {
+    getAxisFont: function () {
         return this.axisFont;
     },
 
-    getForeground : function() {
+    getForeground: function () {
         return this.foreground;
     },
 
-    isShowPopup : function() {
+    isShowPopup: function () {
         return this.showPopup;
     },
 
-    getPopupBackground : function() {
+    getPopupBackground: function () {
         return this.popupBackground;
     },
 
-    getPopupBorderColor : function() {
+    getPopupBorderColor: function () {
         return this.popupBorderColor;
     },
 
-    getPopupForeground : function() {
+    getPopupForeground: function () {
         return this.popupForeground;
     },
 
-    getPopupFont : function() {
+    getPopupFont: function () {
         return this.popupFont;
     },
 
-    isFillChart : function() {
+    isFillChart: function () {
         return this.fillChart;
     },
 
-    getLineColor : function() {
+    getLineColor: function () {
         return this.lineColor;
     },
 
-    getDotColor : function() {
+    getDotColor: function () {
         return this.dotColor;
     },
 
-    getInterpolation : function() {
+    getInterpolation: function () {
         return this.interpolation;
     },
 
-    getXscaleMax : function() {
+    getXscaleMax: function () {
         return this.xscaleMax;
     },
 
-    getYscaleMax: function() {
+    getYscaleMax: function () {
         return this.yscaleMax;
     },
 
-    getWidth : function() {
+    getWidth: function () {
         return this.width;
     },
 
-    getHeight : function() {
+    getHeight: function () {
         return this.height;
     },
 
-    toString : function() {
+    toString: function () {
         return 'LineChartModel';
     }
 });
@@ -240,7 +239,7 @@ exxcellent.model.LineChartLayout = Core.extend({
  * @version 1.0
  */
 exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer('exxcellent.LineChart', this);
     },
 
@@ -253,7 +252,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
     _raphael: null,
 
     /** @see Echo.Render.ComponentSync#renderAdd */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         this._div = document.createElement("div");
         var background = this.component.render(exxcellent.LineChart.BACKGROUND);
         if (background) {
@@ -265,7 +264,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
     },
 
     /** @see Echo.Render.ComponentSync#renderDisplay */
-    renderDisplay: function() {
+    renderDisplay: function () {
         var self = this;
         if (this._raphael) {
             // if we have already a raphael, we do nothing att all - it's just a simple refresh
@@ -298,7 +297,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * We clean all allocated data
      * @param update
      */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         this._div = null;
         this._raphael = null;
     },
@@ -308,7 +307,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      *
      * @param update
      */
-    renderUpdate: function(update) {
+    renderUpdate: function (update) {
         // Brut-force - just create everything new
         var element = this._div;
         this._raphael = null; // we set the Raphael to null to force a redraw
@@ -322,7 +321,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
     /**
      * Returns the LineChartLayout - this Objects helps to deal with Layout
      */
-    _getLineChartLayout : function() {
+    _getLineChartLayout: function () {
         var lineChartLayout = new exxcellent.model.LineChartLayout();
         lineChartLayout.showPopup = this.component.render(exxcellent.LineChart.SHOW_POPUP);
         lineChartLayout.popupBackground = this.component.render(exxcellent.LineChart.POPUP_BACKGROUND);
@@ -350,7 +349,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Get the LineChart-Model.
      * In case of a JSON-Object we parse it to create the exxcellent.model.PieModel
      */
-    _getLineChartModel : function () {
+    _getLineChartModel: function () {
         var value = this.component.render(exxcellent.LineChart.LINE_CHART_MODEL);
         if (value instanceof exxcellent.model.LineChartModel) {
             return value;
@@ -363,7 +362,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Get the Axis-Model.
      * In case of a JSON-Object we parse it to create the exxcellent.model.PieModel
      */
-    _getAxisModel : function () {
+    _getAxisModel: function () {
         var value = this.component.render(exxcellent.LineChart.AXIS_MODEL);
         if (value instanceof exxcellent.model.AxisModel) {
             return value;
@@ -378,7 +377,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} json the string to be transformed into an object
      * @return {} the object
      */
-    _fromJsonString : function(jsonStr) {
+    _fromJsonString: function (jsonStr) {
         return JSON.parse(jsonStr);
     },
 
@@ -388,7 +387,7 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param {} object the object to be transformed into string
      * @return {} the json string
      */
-    _toJsonString : function(object) {
+    _toJsonString: function (object) {
         return JSON.stringify(object);
     },
 
@@ -396,10 +395,10 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * Callback - a click occured
      * @param self
      */
-    _clickCallback : function(self) {
-        return function() {
+    _clickCallback: function (self) {
+        return function () {
             self.component.doSelectPoint(this.identifier);
-        }
+        };
     },
 
     /**
@@ -407,20 +406,22 @@ exxcellent.LineChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @param font {Echo.Sync.Font} the font to render as notifier compatible font
      * @return the raphael compatible font
      */
-    _renderFont: function(font) {
-        if (font == null) return null;
-        var fontByEcho = {
-            style: new Object()
+    _renderFont: function (font) {
+        if (font === null) {
+            return null;
         }
+        var fontByEcho = {
+            style: {}
+        };
         Echo.Sync.Font.render(font, fontByEcho);
         var echoStyle = fontByEcho.style;
 
         return {
-            'font' : echoStyle.fontSize + ' ' + echoStyle.fontFamily,
-            'font-family' : echoStyle.fontFamily,
-            'font-size' : echoStyle.fontSize,
-            'font-style' : echoStyle.fontStyle
-        }
+            'font': echoStyle.fontSize + ' ' + echoStyle.fontFamily,
+            'font-family': echoStyle.fontFamily,
+            'font-size': echoStyle.fontSize,
+            'font-style': echoStyle.fontStyle
+        };
 
     }
 });
