@@ -742,7 +742,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public void setActivePage(final Page page) {
         set(PROPERTY_ACTIVE_PAGE, page);
-        firePropertyChange(PROPERTY_ACTIVE_PAGE, null, page);
     }
 
     /**
@@ -780,7 +779,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public void setColumnModel(final ColumnModel newColumnModel) {
         set(PROPERTY_COLUMNMODEL, newColumnModel);
-        firePropertyChange(PROPERTY_COLUMNMODEL, null, newColumnModel);
     }
 
     /**
@@ -791,7 +789,6 @@ public class FlexiGrid extends Component implements Pane {
     public void setSortingModel(final SortingModel newSortingModel) {
         final SortingModel oldSortingModel = sortingModel;
         set(PROPERTY_SORTINGMODEL, newSortingModel);
-        firePropertyChange(PROPERTY_SORTINGMODEL, oldSortingModel, newSortingModel);
     }
 
     /**
