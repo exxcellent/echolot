@@ -7,7 +7,7 @@
  */
 exxcellent.SuggestField = Core.extend(Echo.TextComponent, {
 
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("exxcellent.SuggestField", this);
     },
 
@@ -41,7 +41,7 @@ exxcellent.SuggestField = Core.extend(Echo.TextComponent, {
     /** @see Echo.Component#componentType */
     componentType: "exxcellent.SuggestField",
 
-    doTriggerServerFilter: function(inputData) {
+    doTriggerServerFilter: function (inputData) {
         this.fireEvent({
             type: exxcellent.SuggestField.TRIGGER_SERVER_FILTER,
             source: this,
@@ -49,7 +49,7 @@ exxcellent.SuggestField = Core.extend(Echo.TextComponent, {
         });
     },
 
-    doFireSuggestItemSelected: function(inputData) {
+    doFireSuggestItemSelected: function (inputData) {
         this.fireEvent({
             type: exxcellent.SuggestField.SUGGEST_ITEM_SELECTED,
             source: this,
@@ -65,21 +65,21 @@ exxcellent.SuggestField = Core.extend(Echo.TextComponent, {
  */
 exxcellent.config.SuggestConfig = Core.extend({
     minLength: 1,
-    delay : 300,
-    disabled:false,
-    doServerFilter:false,
-    showDescription:false,
-    showCategory:false,
-    growLeft:false,
+    delay: 300,
+    disabled: false,
+    doServerFilter: false,
+    showDescription: false,
+    showCategory: false,
+    growLeft: false,
 
-    $construct : function() {
+    $construct: function () {
     },
 
     /** Return the string representation of this PieModel. */
-    toString : function() {
+    toString: function () {
         return '[SuggestConfig] - minLength: ' + this.minLength + ' delay: ' + this.delay +
-                ' disabled: ' + this.disabled + ' serverFilter: ' + this.doServerFilter +
-                ' showDescription: ' + this.showDescription + ' showCategory: ' + this.showCategory + ' growLeft' + this.growLeft;
+            ' disabled: ' + this.disabled + ' serverFilter: ' + this.doServerFilter +
+            ' showDescription: ' + this.showDescription + ' showCategory: ' + this.showCategory + ' growLeft' + this.growLeft;
     }
 });
 
@@ -89,12 +89,12 @@ exxcellent.config.SuggestConfig = Core.extend({
 exxcellent.model.SuggestModel = Core.extend({
     suggestItems: null,
 
-    $construct : function(suggestItems) {
+    $construct: function (suggestItems) {
         this.suggestItems = suggestItems;
     },
 
     /** Return the string representation of this PieModel. */
-    toString : function() {
+    toString: function () {
         return '[SuggestModel] - Items: ' + this.suggestItems;
     }
 });
@@ -109,7 +109,7 @@ exxcellent.model.SuggestItem = Core.extend({
     idnetifier: null,
 
 
-    $construct : function(label, description, category, identifier) {
+    $construct: function (label, description, category, identifier) {
         this.label = label;
         this.description = description;
         this.category = category;
@@ -117,7 +117,7 @@ exxcellent.model.SuggestItem = Core.extend({
     },
 
     /** Return the string representation of this PieModel. */
-    toString : function() {
+    toString: function () {
         return '[SuggestItem] - Label: ' + this.label + ' Description: ' + this.description + ' Category: ' + this.category + ' Identifier: ' + this.identifier;
     }
 });
@@ -132,7 +132,7 @@ exxcellent.model.SuggestItem = Core.extend({
  */
 exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
 
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.SuggestField", this);
     },
 
@@ -145,18 +145,18 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
         _type: "text"
     },
 
-    _number : 1,
+    _number: 1,
     _lastInput: null,
     _obsoleteInput: null,
     _isValidSuggestUpdate: null, // marker, if we have a valid update - if false, updateEvents will not be processed
 
     /** @see Echo.Render.ComponentSync#getFocusFlags */
-    getFocusFlags: function() {
+    getFocusFlags: function () {
         //return Echo.Render.ComponentSync.FOCUS_PERMIT_ARROW_UP | Echo.Render.ComponentSync.FOCUS_PERMIT_ARROW_DOWN;
     },
 
     /** @see Echo.Render.ComponentSync#renderAdd */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         // first of all, we create the input-field
         this.input = document.createElement("input");
 
@@ -186,55 +186,55 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
         var _id = this.input;
         var self = this;
         var suggestConfig = this._getSuggestConfig();
-        var orientation = new Object();
+        var orientation = {};
         if (suggestConfig.growLeft) {
-            orientation.my = "right top",//  <- force to grow from right to left :-)
-                    orientation.at = "right bottom",
-                    orientation.collision = "none",
-                    orientation.offset = "0 0",
-                    orientation.of = $(this.input)
+            orientation.my = "right top"; //  <- force to grow from right to left :-)
+            orientation.at = "right bottom";
+            orientation.collision = "none";
+            orientation.offset = "0 0";
+            orientation.of = $(this.input);
         } else {
-            orientation.my = "left top",// <- force to grow from left to right this is default
-                    orientation.at = "left bottom",
-                    orientation.collision = "none",
-                    orientation.offset = "0 0"
+            orientation.my = "left top"; // <- force to grow from left to right this is default
+            orientation.at = "left bottom";
+            orientation.collision = "none";
+            orientation.offset = "0 0";
 
         }
         $(_id).autocomplete(
-        {
-            disabled : suggestConfig.disabled,          // are we disabled...?
-            delay : suggestConfig.delay,                // the delay - how long do we wait before triggering a search (is only for none-Serverfilter)
-            position: orientation,                      // specify, how the suggestBox should grow and where to start
-            minLength:suggestConfig.minLength,          // the minimum length of input, before we trigger a search
-            source: function(request, response) {       // this function is a hook to collect the suggestData
-                response(self._getData());
-            },
-            styling : this._getUserDefinedStyle(),       // the style of the autocomplete
-            doServerFilter: suggestConfig.doServerFilter, // property to indicate, if we have a server filter
-            select: function(event, ui) {
-                self._suggestSelectCallback(ui.item);
-                self.input.value = ui.item.value;
-                return false;
-            }
-        }).data("autocomplete")._renderItem = function(ul, item) {
+            {
+                disabled: suggestConfig.disabled,          // are we disabled...?
+                delay: suggestConfig.delay,                // the delay - how long do we wait before triggering a search (is only for none-Serverfilter)
+                position: orientation,                      // specify, how the suggestBox should grow and where to start
+                minLength: suggestConfig.minLength,          // the minimum length of input, before we trigger a search
+                source: function (request, response) {       // this function is a hook to collect the suggestData
+                    response(self._getData());
+                },
+                styling: this._getUserDefinedStyle(),       // the style of the autocomplete
+                doServerFilter: suggestConfig.doServerFilter, // property to indicate, if we have a server filter
+                select: function (event, ui) {
+                    self._suggestSelectCallback(ui.item);
+                    self.input.value = ui.item.value;
+                    return false;
+                }
+            }).data("autocomplete")._renderItem = function (ul, item) {
             return self._getRenderItem(ul, item, this.term, this);  // <- call our own implementation
         };
 
         // finally we add a keyUp handler to the input-field
         Core.Web.Event.add(this.input, "keyup",
-                Core.method(this, this._processKeyUpInternal), false);
+            Core.method(this, this._processKeyUpInternal), false);
         // and a keydown for consuming ESC
 
         this.renderAddToParent(parentElement);
         Core.Web.Event.add(this.input, "keydown",
-                Core.method(this, this._processKeyDownInternal), false);
+            Core.method(this, this._processKeyDownInternal), false);
     },
 
     /**
      * Called when an update occurs
      * @param update
      */
-    renderUpdate : function(update) {
+    renderUpdate: function (update) {
         var id = this.input;
         if (update.getUpdatedProperty(exxcellent.SuggestField.SUGGEST_MODEL)) {
             if (this._isValidSuggestUpdate) {
@@ -263,7 +263,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * Destroy the component
      * @param update
      */
-    renderDispose: function(update) {
+    renderDispose: function (update) {
         $(this.input).autocomplete('destroy');
         // call super
         Echo.Sync.TextField.prototype.renderDispose.call(this, update);
@@ -272,7 +272,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
     /**
      * Callback to retrieve data
      */
-    _getData: function() {
+    _getData: function () {
         var availableTags = this._getSuggestModel().suggestItems;
         return availableTags;
     },
@@ -280,7 +280,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
     /**
      * Returns the defined style - this will be merged will the default style of the jQuery UI autocomplete component
      */
-    _getUserDefinedStyle: function() {
+    _getUserDefinedStyle: function () {
         var style = {
             magnifier_img: Echo.Sync.ImageReference.getUrl(this.component.render(exxcellent.SuggestField.MAGNIFIER_IMG)),
             loading_img: Echo.Sync.ImageReference.getUrl(this.component.render(exxcellent.SuggestField.LOADING_IMG)),
@@ -290,7 +290,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
             descriptionForeground: this.component.render(exxcellent.SuggestField.DESCRIPTION_FOREGROUND),
             suggestAreaColor: this.component.render(exxcellent.SuggestField.SUGGEST_AREA_COLOR),
             suggestAreaHover: this.component.render(exxcellent.SuggestField.SUGGEST_AREA_HOVER)
-        }
+        };
 
         return style;
     },
@@ -302,39 +302,39 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * @param term - the term the user has written to the textField
      * @param that - the jQuery Object
      */
-    _getRenderItem : function(ul, item, term, that) {
+    _getRenderItem: function (ul, item, term, that) {
         // RegExp-Voodoo: replace the userInput in with a bold character
         var t = item.label.replace(
-                new RegExp(
-                        "(?![^&;]+;)(?!<[^<>]*)(" +
-                                $.ui.autocomplete.escapeRegex(term) +
-                                ")(?![^<>]*>)(?![^&;]+;)", "gi"
-                        ), "<strong>$1</strong>");
+            new RegExp(
+                "(?![^&;]+;)(?!<[^<>]*)(" +
+                    $.ui.autocomplete.escapeRegex(term) +
+                    ")(?![^<>]*>)(?![^&;]+;)", "gi"
+            ), "<strong>$1</strong>");
 
         // now we first get the styling for the main-Text
         var mainStyle = this._getFontAsStyle(that.styling.suggestFont, that.styling.suggestForeground);
         var labelText = '' +
-                '<a>' + // <- we open a section the we call 'a' ******************************
-                '<span ' + mainStyle + '>' +
-                t + // <- this is our text
-                '</span>';
+            '<a>' + // <- we open a section the we call 'a' ******************************
+            '<span ' + mainStyle + '>' +
+            t + // <- this is our text
+            '</span>';
 
         var suggestConfig = this._getSuggestConfig();
         if (suggestConfig.showDescription) {
             // if we have to show a description, we get the stylung for description
             var descrStyle = this._getFontAsStyle(that.styling.descriptionFont, that.styling.descriptionForeground);
             labelText = labelText +
-                    '<br>' + // <- a new line
-                    '<span ' + descrStyle + '>' + // <- the styling
-                    ((item.description) ? item.description : '-') + // <- the description itself
-                    '</span>';
+                '<br>' + // <- a new line
+                '<span ' + descrStyle + '>' + // <- the styling
+                ((item.description) ? item.description : '-') + // <- the description itself
+                '</span>';
         }
         labelText = labelText + '</a>'; // <- finally we close the whole section ****************
 
         return $("<li></li>")
-                .data("item.autocomplete", item)
-                .append(labelText)
-                .appendTo(ul);
+            .data("item.autocomplete", item)
+            .append(labelText)
+            .appendTo(ul);
     },
 
     /**
@@ -342,16 +342,18 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * @param font
      * @param color
      */
-    _getFontAsStyle : function(font, color) {
-        if (font == null) return '';
+    _getFontAsStyle: function (font, color) {
+        if (font === null) {
+            return '';
+        }
         var style = 'style = "' +
-                ' font-family:' + (font.typeface instanceof Array ? '\'' + font.typeface.join('\', \'') + '\'' : ('\'' + font.typeface + '\'')) + ';' + // <- if it is an array, we have to split
-                ' font-size:' + font.size + ';' +
-                ' font-style:' + ((font.italic) ? 'italic' : 'normal') + ';' +
-                ' font-weight:' + ((font.bold) ? 'bold' : 'normal') + ';' +
-                ' text-decoration:' + ((font.underline) ? 'underline' : ((font.overline) ? 'overline' : ((font.lineThrough) ? 'line-through' : 'normal'))) + ';' +
-                ' color:' + ((color) ? color : '#000000') +
-                '" ';
+            ' font-family:' + (font.typeface instanceof Array ? '\'' + font.typeface.join('\', \'') + '\'' : ('\'' + font.typeface + '\'')) + ';' + // <- if it is an array, we have to split
+            ' font-size:' + font.size + ';' +
+            ' font-style:' + ((font.italic) ? 'italic' : 'normal') + ';' +
+            ' font-weight:' + ((font.bold) ? 'bold' : 'normal') + ';' +
+            ' text-decoration:' + ((font.underline) ? 'underline' : ((font.overline) ? 'overline' : ((font.lineThrough) ? 'line-through' : 'normal'))) + ';' +
+            ' color:' + ((color) ? color : '#000000') +
+            '" ';
         return style;
     },
 
@@ -362,7 +364,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      *
      * @deprecated
      */
-    _getRenderItem_OLD : function(ul, item) {
+    _getRenderItem_OLD: function (ul, item) {
         var suggestConfig = this._getSuggestConfig();
         var labelText = '<a>' + item.label;
         if (suggestConfig.showDescription) {
@@ -370,16 +372,16 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
         }
         labelText = labelText + '</a>';
         return $("<li></li>")
-                .data("item.autocomplete", item)
-                .append(labelText)
-                .appendTo(ul);
+            .data("item.autocomplete", item)
+            .append(labelText)
+            .appendTo(ul);
     },
 
     /**
      * Allows all input.
      * @see Echo.Sync.TextComponent#sanitizeInput
      */
-    sanitizeInput: function() {
+    sanitizeInput: function () {
         // allow all input
     },
 
@@ -387,7 +389,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * Callback for a selection of a suggestItem
      * @param suggestItem
      */
-    _suggestSelectCallback: function(suggestItem) {
+    _suggestSelectCallback: function (suggestItem) {
         // force a setText and then call the super.clientKeyUp - we want to make sure, that the input is in sync with the component
         this.component.set("text", suggestItem.label, true);
         if (this.component.get("text")) {
@@ -404,7 +406,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * Processes a KeyUp-Event
      * @param e
      */
-    _processKeyUpInternal: function(e) {
+    _processKeyUpInternal: function (e) {
         // we call the super.clientKeyUp - we want to make sure, that the input is in sync with the component
         Echo.Sync.TextComponent.prototype.clientKeyUp.call(this, e);
         var inField = this.input;
@@ -421,13 +423,12 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
         var keyCode = $.ui.keyCode;
         switch (e.keyCode) {
             case keyCode.ENTER:
-            case keyCode.NUMPAD_ENTER: {
+            case keyCode.NUMPAD_ENTER:
                 clearTimeout(inField.searching);
                 this._isValidSuggestUpdate = false;
                 $(inField).autocomplete('setLoadingAnimation', false);
                 $(inField).autocomplete('close');
                 return true;
-            }
             case keyCode.PAGE_UP:
             case keyCode.PAGE_DOWN:
             case keyCode.UP:
@@ -447,8 +448,8 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
                 if (currentLength >= defMinLength) {
                     clearTimeout(self.searching);
                     this._isValidSuggestUpdate = true;
-                    self.searching = setTimeout(function() {
-                        self._triggerServerFilter()
+                    self.searching = setTimeout(function () {
+                        self._triggerServerFilter();
                     }, 500);
                 }
         }
@@ -460,7 +461,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * Processes KeyDown-Events from suggestField
      * @param e
      */
-    _processKeyDownInternal: function(e) {
+    _processKeyDownInternal: function (e) {
         var inField = this.input;
         var keyCode = $.ui.keyCode;
         switch (e.keyCode) {
@@ -479,14 +480,12 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
             // Handle ENTER and NUMPAD_ENTER -> do not consume it here, maybe there is another ActionListener, that will be informed
             case keyCode.ENTER:
             case keyCode.NUMPAD_ENTER:
-            {
                 clearTimeout(inField.searching);
                 this._isValidSuggestUpdate = false;
                 $(inField).autocomplete('setLoadingAnimation', false);
                 $(inField).autocomplete('close');
                 // so we throw it back with true -> echo will look for other listeners for us
                 return true;
-            }
         }
 
 
@@ -495,7 +494,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
     /**
      * will be triggered after a certain of time
      */
-    _triggerServerFilter : function() {
+    _triggerServerFilter: function () {
         if (this._isValidSuggestUpdate) {
             var inField = this.input;
             $(inField).autocomplete('setLoadingAnimation', true);
@@ -506,7 +505,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
     /**
      * Returns the config for the suggestField
      */
-    _getSuggestConfig : function() {
+    _getSuggestConfig: function () {
         // we have some defaultValues
         var suggestConfig = new exxcellent.config.SuggestConfig();
         suggestConfig.minLength = this.component.render(exxcellent.SuggestField.MIN_LENGTH) || 1;
@@ -522,7 +521,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * Get the Suggest-Model.
      * In case of a JSON-Object we parse it to create the exxcellent.model.SuggestModel
      */
-    _getSuggestModel : function () {
+    _getSuggestModel: function () {
         var value = this.component.render(exxcellent.SuggestField.SUGGEST_MODEL);
         if (value instanceof exxcellent.model.SuggestModel) {
             return value;
@@ -537,7 +536,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * @param {} json the string to be transformed into an object
      * @return {} the object
      */
-    _fromJsonString : function(jsonStr) {
+    _fromJsonString: function (jsonStr) {
         return JSON.parse(jsonStr);
     },
 
@@ -547,7 +546,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * @param {} object the object to be transformed into string
      * @return {} the json string
      */
-    _toJsonString : function(object) {
+    _toJsonString: function (object) {
         return JSON.stringify(object);
     }
 });

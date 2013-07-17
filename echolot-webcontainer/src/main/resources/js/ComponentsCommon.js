@@ -11,12 +11,12 @@
  */
 exxcellent =
 {
-  /**
-   * Maintains a unique id for the exxcellent namespace.
-   *
-   * @type Number
-   */
-  uniqueId: 20090526
+    /**
+     * Maintains a unique id for the exxcellent namespace.
+     *
+     * @type Number
+     */
+    uniqueId: 20090526
 };
 
 /**
@@ -24,12 +24,12 @@ exxcellent =
  */
 exxcellent.model =
 {
-  /**
-   * Maintains a unique id for the exxcellent model namespace.
-   *
-   * @type Number
-   */
-  uniqueId: 20090609
+    /**
+     * Maintains a unique id for the exxcellent model namespace.
+     *
+     * @type Number
+     */
+    uniqueId: 20090609
 };
 
 /**
@@ -37,19 +37,19 @@ exxcellent.model =
  */
 exxcellent.config =
 {
-  /**
-   * Maintains a unique id for the exxcellent config namespace.
-   *
-   * @type Number
-   */
-  uniqueId: 20090610
+    /**
+     * Maintains a unique id for the exxcellent config namespace.
+     *
+     * @type Number
+     */
+    uniqueId: 20090610
 };
 
 /**
  * The Contrib namespace contains all components from the echo3 contribution forum.
  */
 Contrib = {
-	uniqueId: 20090525
+    uniqueId: 20090525
 };
 
 

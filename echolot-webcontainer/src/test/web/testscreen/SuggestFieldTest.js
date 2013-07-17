@@ -11,11 +11,11 @@
  * @author Ralf Enderle <r.enderle@exxcellent.de>
  */
 exxcellent.test.SuggestFieldTest = Core.extend({
-    _mainContent:null,
-    _suggestField : null,
-    _suggestModel : null,
+    _mainContent: null,
+    _suggestField: null,
+    _suggestModel: null,
 
-    $construct: function(testArea, mainContent) {
+    $construct: function (testArea, mainContent) {
         this._mainContent = mainContent;
         var testColumn = new Echo.Column({styleName: "Default"});
         var controlColumn = new Echo.Column({
@@ -28,74 +28,74 @@ exxcellent.test.SuggestFieldTest = Core.extend({
                     text: "Models", styleName: "Default"
                 }),
                 this._createButton("Default Model",
-                        function() {
-                            hintLabel.set('text', "Try e.g. typing 'T'");
-                            this._suggestModel = this._getSuggestModel_1();
-                            this._suggestField.set(exxcellent.SuggestField.SUGGEST_MODEL, this._suggestModel);
-                        }),
+                    function () {
+                        hintLabel.set('text', "Try e.g. typing 'T'");
+                        this._suggestModel = this._getSuggestModel_1();
+                        this._suggestField.set(exxcellent.SuggestField.SUGGEST_MODEL, this._suggestModel);
+                    }),
 
                 this._createButton("Language Model",
-                        function() {
-                            hintLabel.set('text', "Try e.g. typing 'J'");
-                            this._suggestModel = this._getSuggestModel_2();
-                            this._suggestField.set(exxcellent.SuggestField.SUGGEST_MODEL, this._suggestModel);
-                        }),
+                    function () {
+                        hintLabel.set('text', "Try e.g. typing 'J'");
+                        this._suggestModel = this._getSuggestModel_2();
+                        this._suggestField.set(exxcellent.SuggestField.SUGGEST_MODEL, this._suggestModel);
+                    }),
                 new Echo.Label({
                     text: "Config", styleName: "Default"
                 }),
                 this._createButton("Show current Config",
-                        function() {
-                            var text = '';
-                            for (var j in  this._suggestField.getLocalStyleData()) {
-                                if (j != 'suggestModel') {
-                                    text = text + j + ': ' + this._suggestField.get(j).toString() + ' ';
-                                }
+                    function () {
+                        var text = '';
+                        for (var j in  this._suggestField.getLocalStyleData()) {
+                            if (j != 'suggestModel') {
+                                text = text + j + ': ' + this._suggestField.get(j).toString() + ' ';
                             }
+                        }
 
-                            text = text + '\n\n';
+                        text = text + '\n\n';
 
-                            for (var i in this._suggestModel.suggestItems) {
-                                text = text + this._suggestModel.suggestItems[i].toString() + '\n';
-                            }
+                        for (var i in this._suggestModel.suggestItems) {
+                            text = text + this._suggestModel.suggestItems[i].toString() + '\n';
+                        }
 
-                            this._mainContent.showMsg('Current config', text);
-                        }),
+                        this._mainContent.showMsg('Current config', text);
+                    }),
 
 
                 this._createButton("Delay - 100ms",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.DELAY, this._suggestField.get(exxcellent.SuggestField.DELAY) - 100);
-                        }),
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.DELAY, this._suggestField.get(exxcellent.SuggestField.DELAY) - 100);
+                    }),
 
                 this._createButton("Delay + 100ms",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.DELAY, this._suggestField.get(exxcellent.SuggestField.DELAY) + 100);
-                        }),
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.DELAY, this._suggestField.get(exxcellent.SuggestField.DELAY) + 100);
+                    }),
 
                 this._createButton("MinLength + 1",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.MIN_LENGTH, this._suggestField.get(exxcellent.SuggestField.MIN_LENGTH) + 1);
-                        }),
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.MIN_LENGTH, this._suggestField.get(exxcellent.SuggestField.MIN_LENGTH) + 1);
+                    }),
 
                 this._createButton("MinLength - 1",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.MIN_LENGTH, this._suggestField.get(exxcellent.SuggestField.MIN_LENGTH) - 1);
-                        }),
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.MIN_LENGTH, this._suggestField.get(exxcellent.SuggestField.MIN_LENGTH) - 1);
+                    }),
 
                 this._createButton("Toggle showDescr",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.SHOW_DESCRIPTION, !this._suggestField.get(exxcellent.SuggestField.SHOW_DESCRIPTION));
-                        }),
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.SHOW_DESCRIPTION, !this._suggestField.get(exxcellent.SuggestField.SHOW_DESCRIPTION));
+                    }),
 
                 this._createButton("Toggle disabled",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.DISABLED, !this._suggestField.get(exxcellent.SuggestField.DISABLED));
-                        }),
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.DISABLED, !this._suggestField.get(exxcellent.SuggestField.DISABLED));
+                    }),
 
                 this._createButton("Toggle serverFilter",
-                        function() {
-                            this._suggestField.set(exxcellent.SuggestField.DO_SERVER_FILTER, !this._suggestField.get(exxcellent.SuggestField.DO_SERVER_FILTER));
-                        })
+                    function () {
+                        this._suggestField.set(exxcellent.SuggestField.DO_SERVER_FILTER, !this._suggestField.get(exxcellent.SuggestField.DO_SERVER_FILTER));
+                    })
             ]
         });
 
@@ -105,21 +105,21 @@ exxcellent.test.SuggestFieldTest = Core.extend({
 
         this.suggestModel = this._getSuggestModel_1();
         this._suggestField = new exxcellent.SuggestField({
-            width:'100%',
-            minLength:1,
-            delay:200,
+            width: '100%',
+            minLength: 1,
+            delay: 200,
             suggestModel: this.suggestModel,
             magnifierImg: 'image/magnifier.png',
             loadingImg: 'image/load.gif',
-            suggestFont : {
+            suggestFont: {
                 size: "14",
-                typeface:["Arial", "Times New Roman"],
+                typeface: ["Arial", "Times New Roman"],
                 italic: true
             },
             suggestForeground: '#800000',
-            descriptionFont : {
+            descriptionFont: {
                 size: "10",
-                typeface:["Courier", "Times New Roman", "serif"],
+                typeface: ["Courier", "Times New Roman", "serif"],
                 bold: true
             },
             descriptionForeground: '#808000',
@@ -127,7 +127,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
             suggestAreaHover: '#CC9933',
             events: {
                 async_triggerServerFilter: Core.method(this, this._dummyAction),
-                suggestItemSelected:  Core.method(this, this._dummyListener__SuggestItemSelected)}
+                suggestItemSelected: Core.method(this, this._dummyListener__SuggestItemSelected)}
         });
 
         testColumn.add(hintLabel);
@@ -140,9 +140,9 @@ exxcellent.test.SuggestFieldTest = Core.extend({
                 controlColumn,
                 testColumn]
         }));
-    } ,
+    },
 
-    _getSuggestModel_1 : function() {
+    _getSuggestModel_1: function () {
         var suggestModel = new exxcellent.model.SuggestModel([
             new exxcellent.model.SuggestItem('Alpha', 'desrciption 1', 'Cat 1', 1),
             new exxcellent.model.SuggestItem('Beta', 'desrciption 1', 'Cat 1', 2),
@@ -157,7 +157,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
         return suggestModel;
     },
 
-    _getSuggestModel_2 : function() {
+    _getSuggestModel_2: function () {
         var suggestModel = new exxcellent.model.SuggestModel([
             new exxcellent.model.SuggestItem('ActionScript', 'description 1', 'Cat 1', 1),
             new exxcellent.model.SuggestItem('AppleScript', 'description 1', 'Cat 1', 2),
@@ -186,7 +186,7 @@ exxcellent.test.SuggestFieldTest = Core.extend({
      * @param text
      * @param action
      */
-    _createButton: function(text, action, width) {
+    _createButton: function (text, action, width) {
         return new Echo.Button({
             text: text,
             styleName: "Default",
@@ -196,21 +196,21 @@ exxcellent.test.SuggestFieldTest = Core.extend({
         });
     },
 
-    _dummyAction: function(event) {
+    _dummyAction: function (event) {
         var self = this;
         this._suggestModel.suggestItems = this._suggestModel.suggestItems.concat(new exxcellent.model.SuggestItem('TestLabel ' + Math.round(Math.random() * 100), '', 'Cat 1', Math.round(Math.random() * 100)));
 
-        setTimeout(function() {
+        setTimeout(function () {
             self._triggerClient();
         }, 500);
         this._mainContent.showMsg("Action triggered!", event.type + " data: " + event.data);
     },
 
-    _dummyListener__SuggestItemSelected: function(event) {
+    _dummyListener__SuggestItemSelected: function (event) {
         this._mainContent.showMsg("SuggestItem selected", "Identifier: " + event.data);
     },
 
-    _triggerClient: function() {
+    _triggerClient: function () {
         this._suggestField.set(exxcellent.SuggestField.SUGGEST_MODEL, null);
         this._suggestField.set(exxcellent.SuggestField.SUGGEST_MODEL, this._suggestModel);
     }

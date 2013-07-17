@@ -18,7 +18,7 @@
  */
 exxcellent.Block = Core.extend(Echo.Component, {
 
-    $load: function() {
+    $load: function () {
         Echo.ComponentFactory.registerType("exxcellent.Block", this);
     },
 
@@ -31,7 +31,7 @@ exxcellent.Block = Core.extend(Echo.Component, {
  */
 exxcellent.BlockSync = Core.extend(Echo.Sync.ArrayContainer, {
 
-    $load: function() {
+    $load: function () {
         Echo.Render.registerPeer("exxcellent.Block", this);
     },
 
@@ -51,7 +51,7 @@ exxcellent.BlockSync = Core.extend(Echo.Sync.ArrayContainer, {
     nextFocusFlag: Echo.Render.ComponentSync.FOCUS_PERMIT_ARROW_DOWN,
 
     /** @see Echo.Render.ComponentSync#renderAdd */
-    renderAdd: function(update, parentElement) {
+    renderAdd: function (update, parentElement) {
         this.element = this.containerElement = document.createElement("div");
         this.element.id = this.component.renderId;
         this.element.style.outlineStyle = "none";
@@ -75,7 +75,7 @@ exxcellent.BlockSync = Core.extend(Echo.Sync.ArrayContainer, {
     },
 
     /** @see Echo.Sync.ArrayContainer#renderChildLayoutData */
-    renderChildLayoutData: function(child, cellElement) {
+    renderChildLayoutData: function (child, cellElement) {
         var layoutData = child.render("layoutData");
         if (layoutData) {
             Echo.Sync.Color.render(layoutData.background, cellElement, "backgroundColor");
