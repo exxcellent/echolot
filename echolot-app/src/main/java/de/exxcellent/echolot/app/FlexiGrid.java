@@ -727,7 +727,7 @@ public class FlexiGrid extends Component implements Pane {
         }
         finally
         {
-        	flexTableModel.setCacheablePass(false);
+        	firePaging(false);
         }
     }
 
