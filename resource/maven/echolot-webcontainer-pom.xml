@@ -78,7 +78,7 @@
 
         <dependency>
             <groupId>com.googlecode.jslint4java</groupId>
-            <artifactId>jslint4java</artifactId>
+            <artifactId>jslint4java-ant</artifactId>
             <version>[1.4.2,)</version>
             <scope>test</scope>
         </dependency>

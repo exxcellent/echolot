@@ -65,7 +65,7 @@
             <dependency groupId="org.codehaus.jettison" artifactId="jettison" version="1.1" classifier="sources"/>
             <dependency groupId="com.thoughtworks.xstream" artifactId="xstream" version="1.4.4"/>
             <dependency groupId="com.thoughtworks.xstream" artifactId="xstream" version="1.4.4" classifier="sources"/>
-            <dependency groupId="com.googlecode.jslint4java" artifactId="jslint4java" version="1.4.2"/>
+            <dependency groupId="com.googlecode.jslint4java" artifactId="jslint4java-ant" version="1.4.2"/>
             <dependency groupId="junit" artifactId="junit" version="4.5"/>
         </artifact:dependencies>
 

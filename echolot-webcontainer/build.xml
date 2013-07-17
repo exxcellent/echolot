@@ -72,8 +72,11 @@
 
     <target name="jslint" description="Verifies jslint doesn't complain.">
 	    <taskdef name="jslint"
-           classname="com.googlecode.jslint4java.ant.JSLintTask"
-           classpath="${dir.lib}/test/jslint4java-1.4.2.jar" />
+           classname="com.googlecode.jslint4java.ant.JSLintTask">
+                <classpath>
+                    <fileset dir="${dir.lib}" includes="jslint4java*.jar js-*.jar"/>
+                </classpath>
+           </taskdef>
 
         <!-- TODO: fix excluded JavaScript sources instead of ignoring them -->
 
