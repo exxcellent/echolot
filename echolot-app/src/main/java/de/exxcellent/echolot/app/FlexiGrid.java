@@ -30,9 +30,11 @@
 package de.exxcellent.echolot.app;
 
 import de.exxcellent.echolot.event.TableColumnToggleEvent;
+import de.exxcellent.echolot.event.TablePagingEvent;
 import de.exxcellent.echolot.event.TableRowSelectEvent;
 import de.exxcellent.echolot.event.TableSortingChangeEvent;
 import de.exxcellent.echolot.listener.TableColumnToggleListener;
+import de.exxcellent.echolot.listener.TablePagingListener;
 import de.exxcellent.echolot.listener.TableRowSelectListener;
 import de.exxcellent.echolot.listener.TableSortingChangeListener;
 import de.exxcellent.echolot.model.*;
@@ -233,6 +235,10 @@ public class FlexiGrid extends Component implements Pane {
      * The constant used to track changes to the action listener list.
      */
     public static final String TABLE_COLUMNTOGGLE_LISTENERS_CHANGED_PROPERTY = "tableColumnToggleListeners";
+    /**
+     * The constant used to track changes to the action listener list.
+     */
+    public static final String TABLE_PAGING_LISTENERS_CHANGED_PROPERTY = "tablePagingListeners";
     /**
      * The constant used to track changes to the action listener list.
      */
@@ -677,44 +683,52 @@ public class FlexiGrid extends Component implements Pane {
         int firstRowStart;
         int rowEnd;
 
-        // if all Rows should be displayed on one page...
-        if (flexTableModel.getRowsPerPageCount() == FlexTableModel.SHOW_ALL_ROWS_ON_ONE_PAGE) {
-            // ... we set rowStart to zero and rowEnd to maximum
-            firstRowStart = 0;
-            rowEnd = flexTableModel.getRowCount();
-        } else {
-            // otherwise if there is some paging active we have to calculate the range of rows to display
-            firstRowStart = (page - 1) * flexTableModel.getRowsPerPageCount();
-            rowEnd = firstRowStart + flexTableModel.getRowsPerPageCount();
-            if (rowEnd > flexTableModel.getRowCount()) {
+        firePaging(true);
+        try
+        {
+            // if all Rows should be displayed on one page...
+            if (flexTableModel.getRowsPerPageCount() == FlexTableModel.SHOW_ALL_ROWS_ON_ONE_PAGE) {
+                // ... we set rowStart to zero and rowEnd to maximum
+                firstRowStart = 0;
                 rowEnd = flexTableModel.getRowCount();
-            }
-        }
-
-        // die Anzahl an Zeilen für diese Page
-        int amountOfRows = rowEnd - firstRowStart;
-
-        // Aufbau der Page
-        // ----------------
-        Row[] rows = new Row[amountOfRows];
-        int rowCounter = 0;
-        for (int currentRow = firstRowStart; currentRow < rowEnd; currentRow++) {
-            String[] cells = new String[flexTableModel.getColumnCount()];
-            for (int currentColumn = 0; currentColumn < flexTableModel.getColumnCount(); currentColumn++) {
-                String value = flexTableModel.getValueAt(currentRow, currentColumn);
-                if (value == null) {
-                    value = "";
+            } else {
+                // otherwise if there is some paging active we have to calculate the range of rows to display
+                firstRowStart = (page - 1) * flexTableModel.getRowsPerPageCount();
+                rowEnd = firstRowStart + flexTableModel.getRowsPerPageCount();
+                if (rowEnd > flexTableModel.getRowCount()) {
+                    rowEnd = flexTableModel.getRowCount();
                 }
-                cells[currentColumn] = value;
             }
-            Row row = new Row(currentRow, cells);
-            rows[rowCounter] = row;
-            rowCounter++;
+    
+            // die Anzahl an Zeilen für diese Page
+            int amountOfRows = rowEnd - firstRowStart;
+    
+            // Aufbau der Page
+            // ----------------
+            Row[] rows = new Row[amountOfRows];
+            int rowCounter = 0;
+            for (int currentRow = firstRowStart; currentRow < rowEnd; currentRow++) {
+                String[] cells = new String[flexTableModel.getColumnCount()];
+                for (int currentColumn = 0; currentColumn < flexTableModel.getColumnCount(); currentColumn++) {
+                    String value = flexTableModel.getValueAt(currentRow, currentColumn);
+                    if (value == null) {
+                        value = "";
+                    }
+                    cells[currentColumn] = value;
+                }
+                Row row = new Row(currentRow, cells);
+                rows[rowCounter] = row;
+                rowCounter++;
+            }
+            Page newPage = new Page(page, flexTableModel.getRowCount(), rows);
+    
+            // setze diese Page als Active
+            setActivePage(newPage);
         }
-        Page newPage = new Page(page, flexTableModel.getRowCount(), rows);
-
-        // setze diese Page als Active
-        setActivePage(newPage);
+        finally
+        {
+        	firePaging(false);
+        }
     }
 
     /**
@@ -728,7 +742,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public void setActivePage(final Page page) {
         set(PROPERTY_ACTIVE_PAGE, page);
-        firePropertyChange(PROPERTY_ACTIVE_PAGE, null, page);
     }
 
     /**
@@ -766,7 +779,6 @@ public class FlexiGrid extends Component implements Pane {
      */
     public void setColumnModel(final ColumnModel newColumnModel) {
         set(PROPERTY_COLUMNMODEL, newColumnModel);
-        firePropertyChange(PROPERTY_COLUMNMODEL, null, newColumnModel);
     }
 
     /**
@@ -777,7 +789,6 @@ public class FlexiGrid extends Component implements Pane {
     public void setSortingModel(final SortingModel newSortingModel) {
         final SortingModel oldSortingModel = sortingModel;
         set(PROPERTY_SORTINGMODEL, newSortingModel);
-        firePropertyChange(PROPERTY_SORTINGMODEL, oldSortingModel, newSortingModel);
     }
 
     /**
@@ -1037,6 +1048,26 @@ public class FlexiGrid extends Component implements Pane {
     }
 
     /**
+     * Adds a {@link TablePagingListener}.
+     *
+     * @param l will be informed if the table pages the data
+     */
+    public void addTablePagingListener(TablePagingListener l) {
+        getEventListenerList().addListener(TablePagingListener.class, l);
+        firePropertyChange(TABLE_PAGING_LISTENERS_CHANGED_PROPERTY, null, l);
+    }
+
+    /**
+     * Removes a {@link TablePagingListener}
+     *
+     * @param l will be removed from listener list.
+     */
+    public void removeTablePagingListener(TablePagingListener l) {
+        getEventListenerList().removeListener(TablePagingListener.class, l);
+        firePropertyChange(TABLE_PAGING_LISTENERS_CHANGED_PROPERTY, l, null);
+    }
+
+    /**
      * Adds a {@link TableSortingChangeListener}.
      *
      * @param l will be informed if the sorting changes for columns
@@ -1097,6 +1128,23 @@ public class FlexiGrid extends Component implements Pane {
         TableRowSelectEvent e = new TableRowSelectEvent(this, rowSelection);
         for (int i = 0; i < listeners.length; ++i) {
             ((TableRowSelectListener) listeners[i]).rowSelection(e);
+        }
+    }
+
+    /**
+     * Notifies <code>TableRowSelectListener</code>s that the user has selected a row.
+     */
+    protected void firePaging(boolean isPaging) {
+        if (!hasEventListenerList()) {
+            return;
+        }
+        EventListener[] listeners = getEventListenerList().getListeners(TablePagingListener.class);
+        if (listeners.length == 0) {
+            return;
+        }
+        TablePagingEvent e = new TablePagingEvent(this, isPaging);
+        for (int i = 0; i < listeners.length; ++i) {
+            ((TablePagingListener) listeners[i]).paging(e);
         }
     }
 
