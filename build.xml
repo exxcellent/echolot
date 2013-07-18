@@ -337,7 +337,7 @@
                     <arg value="-Durl=${maven.repository.staging.url}" />
                     <arg value="-DrepositoryId=${maven.repository.staging.id}" />
                     <arg value="-DpomFile=${dir.build}/maven-pom/echolot-@{module}-pom.xml" />
-                    <arg value="-Dfile=${dir.build.dist}/bin//@{file}" />
+                    <arg value="-Dfile=${dir.build.dist}/bin/@{file}" />
                     <arg value="-Dclassifier=@{classifier}" />
                     <arg value="-e" />
                     <arg value="-Pgpg" />
@@ -345,13 +345,13 @@
             </sequential>
         </macrodef>
 
-        <deploysigned module="app" classifier=""        file="${dir.build.dist}/bin/echolot-app-${release.version}.jar"/>
-        <deploysigned module="app" classifier="sources" file="${dir.build.dist}/bin/echolot-app-${release.version}-sources.jar"/>
-        <deploysigned module="app" classifier="javadoc" file="${dir.build.dist}/bin/echolot-app-${release.version}-javadoc.jar"/>
+        <deploysigned module="app" classifier=""        file="echolot-app-${release.version}.jar"/>
+        <deploysigned module="app" classifier="sources" file="echolot-app-${release.version}-sources.jar"/>
+        <deploysigned module="app" classifier="javadoc" file="echolot-app-${release.version}-javadoc.jar"/>
 
-        <deploysigned module="webcontainer" classifier=""        file="${dir.build.dist}/bin/echolot-webcontainer-${release.version}.jar"/>
-        <deploysigned module="webcontainer" classifier="sources" file="${dir.build.dist}/bin/echolot-webcontainer-${release.version}-sources.jar"/>
-        <deploysigned module="webcontainer" classifier="javadoc" file="${dir.build.dist}/bin/echolot-webcontainer-${release.version}-javadoc.jar"/>
+        <deploysigned module="webcontainer" classifier=""        file="echolot-webcontainer-${release.version}.jar"/>
+        <deploysigned module="webcontainer" classifier="sources" file="echolot-webcontainer-${release.version}-sources.jar"/>
+        <deploysigned module="webcontainer" classifier="javadoc" file="echolot-webcontainer-${release.version}-javadoc.jar"/>
     </target>
 
 </project>
