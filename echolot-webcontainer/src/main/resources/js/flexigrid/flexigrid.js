@@ -551,6 +551,7 @@
 					});
 					*/
                     var bHeight = globalDiv.offsetParent().attr('offsetHeight') - p.heightOffset;
+                    bHeight = bHeight > 50 ? bHeight : 50;
 			        // adjust the flexigrid body (table) height
 	                $(g.bDiv).css({ height: bHeight+"px"});
 	                // adjust the column visibility menu height and width
