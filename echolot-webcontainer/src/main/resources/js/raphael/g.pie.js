@@ -93,20 +93,22 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
 
         if(style.doClientSorting) {
             // when doing clientSorting we sort from big to small to show the biggest sector at top
+            // *WARNING*: only if client sorting is enabled, small sectors < 1.5° are accumulated and categorized as "Other"
+            // This should probably be changed and implemented properly in the future
             values.sort(function (a, b) {
                 return b.value - a.value;
             });
-        }
-        for (i = 0; i < len; i++) {
-            if (defcut && values[i].value != 0 && values[i].value * 360 / total <= 1.5) {
-                cut = i;
-                defcut = false;
-            }
-            if (i > cut) {
-                defcut = false;
-                values[cut].value += values[i];
-                values[cut].others = true;
-                others = values[cut].value;
+            for (i = 0; i < len; i++) {
+                if (defcut && values[i].value != 0 && values[i].value * 360 / total <= 1.5) {
+                    cut = i;
+                    defcut = false;
+                }
+                if (i > cut) {
+                    defcut = false;
+                    values[cut].value += values[i];
+                    values[cut].others = true;
+                    others = values[cut].value;
+                }
             }
         }
         len = Math.min(cut + 1, values.length);
