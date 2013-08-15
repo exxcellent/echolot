@@ -59,6 +59,11 @@ public class PieChart extends Component {
     public static final String PROPERTY_LEGEND_POSITION = "legendPosition";
 
     /**
+     * Exclude slices with value zero from the legend
+     */
+    public static final String PROPERTY_LEGEND_HIDE_ZERO_VALUES = "legendHideZeroValues";
+
+    /**
      * The gap-factor that's used while calculating the space of the legendValues
      * Default is 1.2 - it's also possible to set negative values here
      */
@@ -169,6 +174,24 @@ public class PieChart extends Component {
      */
     public double getLegendGapFactor() {
         return (Double) get(PROPERTY_LEGEND_GAP_FACTOR);
+    }
+
+    /**
+     * --- Property: LEGEND_HIDE_ZERO_VALUES
+     *
+     * @return true, if slices with value 0 should be excluded from the legend
+     */
+    public Boolean isLegendHideZeroValues() {
+        return (Boolean) get(PROPERTY_LEGEND_HIDE_ZERO_VALUES);
+    }
+
+    /**
+     * Should slices with value 0 be excluded from the legend?
+     *
+     * @param hideZeroValues true, if slices with value 0 should be excluded from the legend
+     */
+    public void setLegendHideZeroValues(final Boolean hideZeroValues) {
+        set(PROPERTY_LEGEND_HIDE_ZERO_VALUES, hideZeroValues);
     }
 
 

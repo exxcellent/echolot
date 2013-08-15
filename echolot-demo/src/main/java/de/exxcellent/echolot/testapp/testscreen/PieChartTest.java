@@ -73,6 +73,7 @@ public class PieChartTest extends SplitPane {
         pieChart.setForeground(Color.ORANGE);
         pieChart.setShowLegend(true);
         pieChart.setShowPopUp(true);
+        pieChart.setLegendHideZeroValues(false);
         pieChart.setDoAnimation(true);
         pieChart.setSectorAbbrevShow(false);
         pieChart.setDoClientSorting(false);
@@ -226,6 +227,11 @@ public class PieChartTest extends SplitPane {
         controlsColumn.addButton("LegendGap:default '2'", new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 pieChart.setLegendGapFactor(2);
+            }
+        });
+        controlsColumn.addButton("Legend: Toggle hide slices with value zero", new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                pieChart.setLegendHideZeroValues(!pieChart.isLegendHideZeroValues());
             }
         });
         // -- Abbreviation ---

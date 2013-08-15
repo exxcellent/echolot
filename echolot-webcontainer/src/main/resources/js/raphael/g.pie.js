@@ -84,6 +84,13 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
                 return this.value;
             }};
         }
+        for (var i = 0; i < valuesToIgnore.length; i++) {
+            valuesToIgnore[i] = {label: opts.legend[len+i], value: valuesToIgnore[i].value,  order: i, name: valuesToIgnore[i].name, abbreviation: valuesToIgnore[i].abbreviation, abbreviationForeground: valuesToIgnore[i].abbreviationForeground, popUpLabel: valuesToIgnore[i].popUpLabel, color: valuesToIgnore[i].color, identifier: valuesToIgnore[i].identifier, valueOf: function () {
+                                               return this.value;
+            }};
+
+        }
+
         if(style.doClientSorting) {
             // when doing clientSorting we sort from big to small to show the biggest sector at top
             values.sort(function (a, b) {
@@ -257,7 +264,7 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
         dir = (dir && dir.toLowerCase && dir.toLowerCase()) || "east";
         mark = paper.g.markers[mark && mark.toLowerCase()] || "disc";
         chart.labels = paper.set();
-        for (var i = 0; i < labels.length; i++) {
+        for (var i = 0; i < len; i++) {
             // if it's a label that fits to a values-Object:
             if (i < len) {
                 var clr = series[i].attr("fill"),
@@ -271,15 +278,15 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
                 covers[i].label = chart.labels[i];
                 h += txt.getBBox().height * style.legendGapFactor;
             }
-            // if it's a label for a 'ZERO' value:
-            else {
-                var clr = valuesToIgnore[i-len].color || fallbackColorFactory(),
-                        j = i,
+        }
+        if (!style.legendHideZeroValues) {
+            for (var i = 0; i < valuesToIgnore.length; i++) {
+                var clr = valuesToIgnore[i].color || fallbackColorFactory(),
                         txt;
-                labels[i] = paper.g.labelise(labels[i], 0, total); // we labelise with ZERO
+                labels[len + i] = paper.g.labelise(valuesToIgnore[i].label, valuesToIgnore[i], total); // we labelise with ZERO
                 chart.labels.push(paper.set());
-                chart.labels[i].push(paper.g[mark](x + 5, h, 5).attr({fill: clr, stroke: "none"}));
-                chart.labels[i].push(txt = paper.text(x + 20, h, labels[i] || 0).attr(style.legendFont || paper.g.txtattr).attr({fill: opts.legendcolor || "#000", "text-anchor": "start"}));
+                chart.labels[len + i].push(paper.g[mark](x + 5, h, 5).attr({fill: clr, stroke: "none"}));
+                chart.labels[len + i].push(txt = paper.text(x + 20, h, labels[len+i] || 0).attr(style.legendFont || paper.g.txtattr).attr({fill: opts.legendcolor || "#000", "text-anchor": "start"}));
                 h += txt.getBBox().height * style.legendGapFactor;
             }
         }

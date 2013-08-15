@@ -22,6 +22,7 @@ exxcellent.PieChart = Core.extend(Echo.Component, {
         LEGEND_FOREGROUND: 'foreground', // <- it is the property of 'Echo.Component'
         LEGEND_POSITION: 'legendPosition',
         LEGEND_GAP_FACTOR: 'legendGapFactor',
+        LEGEND_HIDE_ZERO_VALUES: 'legendHideZeroValues', // Hide zero values in legend?
         SHOW_LEGEND: 'showLegend',
 
         SHOW_POPUP: 'showPopUp',
@@ -370,6 +371,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
         var style = {
             legendFont: this._renderFont(this.component.render(exxcellent.PieChart.LEGEND_FONT)),
             legendForeground: this.component.render(exxcellent.PieChart.LEGEND_FOREGROUND),
+            legendHideZeroValues: this.component.render(exxcellent.PieChart.LEGEND_HIDE_ZERO_VALUES) || false,
             legendPosition: this.component.render(exxcellent.PieChart.LEGEND_POSITION) || 'east',
             legendGapFactor: this.component.render(exxcellent.PieChart.LEGEND_GAP_FACTOR) || 1.2,
             showLegend: this.component.render(exxcellent.PieChart.SHOW_LEGEND),
