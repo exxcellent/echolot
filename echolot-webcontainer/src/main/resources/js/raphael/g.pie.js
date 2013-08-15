@@ -43,6 +43,13 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
 
     var fallbackColorFactory = style.nextFallbackColor();
 
+    for (var i = 0; i < valuesToIgnore.length; i++) {
+        valuesToIgnore[i] = {label: opts.legend[len+i], value: valuesToIgnore[i].value,  order: i, name: valuesToIgnore[i].name, abbreviation: valuesToIgnore[i].abbreviation, abbreviationForeground: valuesToIgnore[i].abbreviationForeground, popUpLabel: valuesToIgnore[i].popUpLabel, color: valuesToIgnore[i].color, identifier: valuesToIgnore[i].identifier, valueOf: function () {
+                                           return this.value;
+        }};
+
+    }
+
     if (len == 1) {
         values[0] = {value: values[0].value,  order: 0, name: values[0].name, abbreviation: values[0].abbreviation, abbreviationForeground: values[0].abbreviationForeground, popUpLabel: values[0].popUpLabel, color: values[0].color, identifier: values[0].identifier, valueOf: function () {
             return this.value;
@@ -83,12 +90,6 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
             values[i] = {value: values[i].value,  order: i, name: values[i].name, abbreviation: values[i].abbreviation, abbreviationForeground: values[i].abbreviationForeground, popUpLabel: values[i].popUpLabel, color: values[i].color, identifier: values[i].identifier, valueOf: function () {
                 return this.value;
             }};
-        }
-        for (var i = 0; i < valuesToIgnore.length; i++) {
-            valuesToIgnore[i] = {label: opts.legend[len+i], value: valuesToIgnore[i].value,  order: i, name: valuesToIgnore[i].name, abbreviation: valuesToIgnore[i].abbreviation, abbreviationForeground: valuesToIgnore[i].abbreviationForeground, popUpLabel: valuesToIgnore[i].popUpLabel, color: valuesToIgnore[i].color, identifier: valuesToIgnore[i].identifier, valueOf: function () {
-                                               return this.value;
-            }};
-
         }
 
         if(style.doClientSorting) {
@@ -285,7 +286,7 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
             for (var i = 0; i < valuesToIgnore.length; i++) {
                 var clr = valuesToIgnore[i].color || fallbackColorFactory(),
                         txt;
-                labels[len + i] = paper.g.labelise(valuesToIgnore[i].label, valuesToIgnore[i], total); // we labelise with ZERO
+                labels[len + i] = paper.g.labelise(valuesToIgnore[i].label, valuesToIgnore[i], (total === 0 ? 1 : total)); // we labelise with ZERO
                 chart.labels.push(paper.set());
                 chart.labels[len + i].push(paper.g[mark](x + 5, h, 5).attr({fill: clr, stroke: "none"}));
                 chart.labels[len + i].push(txt = paper.text(x + 20, h, labels[len+i] || 0).attr(style.legendFont || paper.g.txtattr).attr({fill: opts.legendcolor || "#000", "text-anchor": "start"}));
