@@ -485,7 +485,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
      * @return the raphael compatible font
      */
     _renderFont: function (font) {
-        if (font === null) {
+        if (!font) {
             return null;
         }
         var fontByEcho = {

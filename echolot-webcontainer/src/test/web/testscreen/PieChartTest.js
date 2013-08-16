@@ -139,17 +139,17 @@ exxcellent.test.PieChartTest = Core.extend({
     _createPieModel_1: function () {
         // the sectors
         var sectors = [
-            new exxcellent.model.PieSector("Blubber", 260, "Blubber PopUp", true, '#33FF99', 'Abbrev 1', 10)
+            new exxcellent.model.PieSector("Blubber", 260, "Blubber PopUp", true, '#33FF99', 'Abbrev 1', "#000", 10)
             ,
-            new exxcellent.model.PieSector("Bar", 1000, "Bar PopUp", true, '#666633', 'Abbrev 3', null, 12)
+            new exxcellent.model.PieSector("Bar", 1000, "Bar PopUp", true, '#666633', 'Abbrev 3', null, "#000", 12)
             ,
-            new exxcellent.model.PieSector("One", 1, "one", true, '#666633', 'Abbrev 3', null, 12)
+            new exxcellent.model.PieSector("One", 1, "one", true, '#666633', 'Abbrev 3', null, "#000", 12)
             ,
-            new exxcellent.model.PieSector("Bar", 500, "Bar PopUp", true, '#666633', 'Abbrev 3', null, 12)
+            new exxcellent.model.PieSector("Bar", 500, "Bar PopUp", true, '#666633', 'Abbrev 3', null, "#000", 12)
             ,
-            new exxcellent.model.PieSector("Also one", 1, "also one", true, '#666633', 'Abbrev 3', null, 12)
+            new exxcellent.model.PieSector("Also one", 1, "also one", true, '#666633', 'Abbrev 3', null, "#000", 12)
             ,
-            new exxcellent.model.PieSector("zero2", 0, "zero", true, '#666633', 'Abbrev 3', null, 12)
+            new exxcellent.model.PieSector("zero2", 0, "zero", true, '#666633', 'Abbrev 3', null, "#000", 12)
         ];
 
         // return the whole thing

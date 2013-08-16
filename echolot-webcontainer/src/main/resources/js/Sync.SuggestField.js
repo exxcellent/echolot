@@ -343,7 +343,7 @@ exxcellent.SuggestFieldSync = Core.extend(Echo.Sync.TextComponent, {
      * @param color
      */
     _getFontAsStyle: function (font, color) {
-        if (font === null) {
+        if (!font) {
             return '';
         }
         var style = 'style = "' +
