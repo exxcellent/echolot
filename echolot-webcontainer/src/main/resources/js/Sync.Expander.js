@@ -118,6 +118,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
         this._div.id = this.component.renderId;
         this._div.tabIndex = "0";// because of "0" it will take part in the focus cycle, otherwise "-1"
         this._div.style.outlineStyle = "none";
+        this._div.style.overflow = "hidden";
 
         Echo.Sync.renderComponentDefaults(this.component, this._div);
         Echo.Sync.Border.render(this.component.render(exxcellent.Expander.BORDER), this._div);
@@ -249,6 +250,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
      */
     _renderChildren: function (update) {
         this._showDiv = document.createElement("div"); // mandatory - shown child
+        this._showDiv.style.overflow = "auto";
         this._hideDiv = document.createElement("div"); // optional - hide child - may be empty
 
         var showInit = this.component.render(exxcellent.Expander.SHOW, exxcellent.ExpanderSync.DEFAULTS.showInitially);
