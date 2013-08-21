@@ -336,7 +336,9 @@
         var returnArray = new Array();
         for (var i = 0; i < barChartModel.barValues.length; i++) {
             for (var j = 0; j < barChartModel.barValues[i].length; j++) {
-                returnArray.push(barChartModel.barValues[i][j].value);
+                if (barChartModel.barValues[i][j]) {
+                    returnArray.push(barChartModel.barValues[i][j].value);
+                }
             }
         }
         return returnArray;
@@ -350,7 +352,11 @@
     Raphael.fn.exx.getSpecifiedBarValues = function(barChartModel, position) {
         var returnArray = new Array();
         for (var i = 0; i < barChartModel.barValues[position].length; i++) {
-            returnArray.push(barChartModel.barValues[position][i].value);
+            if (barChartModel.barValues[position][i]) {
+                returnArray.push(barChartModel.barValues[position][i].value);
+            } else {
+                returnArray.push(0);
+            }
         }
         return returnArray;
     }; // End of getSpecifiedBarValues

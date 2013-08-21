@@ -202,9 +202,11 @@ exxcellent.test.BarChartTest = Core.extend({
                 new exxcellent.model.Bar(30, 'Text 6', 6)
             ],
             [
+                null,
                 new exxcellent.model.Bar(70, 'Foo', 1),
-                new exxcellent.model.Bar(10, 'Bar', 2),
-                new exxcellent.model.Bar(90, 'Fooo', 3)
+                new exxcellent.model.Bar(1, 'Foo', 2),
+                new exxcellent.model.Bar(10, 'Bar', 3),
+                new exxcellent.model.Bar(90, 'Fooo', 4)
             ],
             [
                 new exxcellent.model.Bar(50, 'Text Bla', 1),

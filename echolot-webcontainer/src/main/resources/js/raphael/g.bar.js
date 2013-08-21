@@ -53,6 +53,15 @@ Raphael.fn.g.barchart = function (x, y, width, height, values, opts, barChartMod
             len = barChartModel.barValues.length,
         // Array of Array of bars
             barValues = barChartModel.barValues;
+
+    for (var i = 0; i < barValues.length; i++) {
+        for (var j = 0; j < barValues[i].length; j++) {
+            if (barValues[i][j] === null) {
+                barValues[i][j] = new exxcellent.model.Bar(0, null, null, null);
+            }
+        }
+    }
+
     if (this.raphael.is(barValues[0], "array")) {
         total = [];
         multi = len;
@@ -292,6 +301,15 @@ Raphael.fn.g.hbarchart = function (x, y, width, height, values, opts, barChartMo
             len = barChartModel.barValues.length,
         // Array of Array of bars
             barValues = barChartModel.barValues;
+
+    for (var i = 0; i < barValues.length; i++) {
+        for (var j = 0; j < barValues[i].length; j++) {
+            if (barValues[i][j] === null) {
+                barValues[i][j] = new exxcellent.model.Bar(0, null, null, null);
+            }
+        }
+    }
+
     if (this.raphael.is(barValues[0], "array")) {
         total = [];
         multi = len;
