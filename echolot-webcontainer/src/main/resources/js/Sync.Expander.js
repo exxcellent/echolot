@@ -251,6 +251,7 @@ exxcellent.ExpanderSync = Core.extend(Echo.Render.ComponentSync, {
     _renderChildren: function (update) {
         this._showDiv = document.createElement("div"); // mandatory - shown child
         this._showDiv.style.overflow = "auto";
+        this._showDiv.style.clear = "both";
         this._hideDiv = document.createElement("div"); // optional - hide child - may be empty
 
         var showInit = this.component.render(exxcellent.Expander.SHOW, exxcellent.ExpanderSync.DEFAULTS.showInitially);
