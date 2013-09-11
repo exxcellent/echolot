@@ -131,7 +131,7 @@ Raphael.fn.g.piechart = function (cx, cy, r, values, valuesToIgnore, opts, style
             p.mangle = mangle;
             sectors.push(p);
             series.push(p);
-            opts.init && p.animate({path: path.join(",")}, (+opts.init - 1) || 1000, ">");
+            opts.init && p.animate({path: path.join(",")}, (+opts.init - 1) || style.animationDuration, ">");
 
 
             // maybe we wanna have some text in the sectors

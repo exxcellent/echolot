@@ -33,6 +33,7 @@ exxcellent.PieChart = Core.extend(Echo.Component, {
 
         DO_ANIMATION: 'doAnimation',
         ANIMATION_TYPE: 'animationType',
+        ANIMATION_DURATION: 'animationDuration',
 
         DO_CLIENT_SORTING: 'doClientSorting',
 
@@ -304,10 +305,10 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
                         this.popUp.hide();
                     }
                     // animate sector to default
-                    this.sector.animate({scale: [1, 1, this.cx, this.cy]}, 900, style.animationType);
+                    this.sector.animate({scale: [1, 1, this.cx, this.cy]}, style.animationDuration, style.animationType);
                     // if we have a legend, set do default
                     if (this.label) {
-                        this.label[0].animate({scale: 1}, 900, style.animationType);
+                        this.label[0].animate({scale: 1}, style.animationDuration, style.animationType);
                         this.label[1].attr({"font-weight": 400});
                     }
                 });
@@ -378,6 +379,7 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
             showLegend: this.component.render(exxcellent.PieChart.SHOW_LEGEND),
             doAnimation: this.component.render(exxcellent.PieChart.DO_ANIMATION),
             animationType: this.component.render(exxcellent.PieChart.ANIMATION_TYPE) || 'bounce',
+            animationDuration: this.component.render(exxcellent.PieChart.ANIMATION_DURATION) || 900,
             doClientSorting: this.component.render(exxcellent.PieChart.DO_CLIENT_SORTING) || false, // default - no client sorting!
             showPopUp: this.component.render(exxcellent.PieChart.SHOW_POPUP),
             popupBackground: this.component.render(exxcellent.PieChart.POPUP_BACKGROUND) || '#000',

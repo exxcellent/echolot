@@ -91,6 +91,7 @@ public class PieChart extends Component {
 
     public static final String PROPERTY_DO_ANIMATION = "doAnimation";
     public static final String PROPERTY_ANIMATION_TYPE = "animationType";
+    public static final String PROPERTY_ANIMATION_DURATION = "animationDuration";
 
     /**
      * If you want the client to sort all sectors set this true
@@ -352,6 +353,22 @@ public class PieChart extends Component {
      */
     public AnimationType getAnimationType() {
         return AnimationType.toAnimationType((String) get(PROPERTY_ANIMATION_TYPE));
+    }
+
+    /**
+     * Returns the duration of the animation in milliseconds.
+     * @return
+     */
+    public Integer getAnimationDuration() {
+        return (Integer) get(PROPERTY_ANIMATION_DURATION);
+    }
+
+    /**
+     * Sets the duration of the animation in milliseconds.
+     * @param duration
+     */
+    public void setAnimationDuration(Integer duration) {
+        set(PROPERTY_ANIMATION_DURATION, duration);
     }
 
     /**
