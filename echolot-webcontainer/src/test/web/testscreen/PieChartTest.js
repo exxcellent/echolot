@@ -73,6 +73,16 @@ exxcellent.test.PieChartTest = Core.extend({
                         this._pieChart.set(exxcellent.PieChart.ANIMATION_TYPE, "bounce");
                     }
                 ),
+                this._createButton("100 ms Animation",
+                    function () {
+                        this._pieChart.set(exxcellent.PieChart.ANIMATION_DURATION, 100);
+                    }
+                ),
+                this._createButton("2000 ms Animation",
+                    function () {
+                        this._pieChart.set(exxcellent.PieChart.ANIMATION_DURATION, 2000);
+                    }
+                ),
                 new Echo.Label({
                     text: "Styling", styleName: "Default"
                 }),
