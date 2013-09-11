@@ -62,7 +62,7 @@ exxcellent.KeystrokeListenerSync = Core.extend(Echo.Render.ComponentSync, {
         if (this._debug && window.console && window.console.log) {
             console.log("KeystrokeListener : Parent changed from " + e.oldValue + " to " + e.newValue);
         }
-        if (e.newValue === null) {
+        if (e.newValue === null || typeof e.newValue == 'undefined') {
             this.remove_all_shortcuts();
         }
     },
@@ -136,7 +136,7 @@ exxcellent.KeystrokeListenerSync = Core.extend(Echo.Render.ComponentSync, {
         }
 
         var ele;
-        if (opt.target == "null" || opt.target === null) {
+        if (opt.target == "null" || opt.target === null || typeof opt.target == 'undefined') {
             ele = document;
         } else if (typeof opt.target == 'string') {
             ele = document.getElementById(opt.target);

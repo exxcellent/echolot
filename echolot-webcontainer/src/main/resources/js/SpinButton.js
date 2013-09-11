@@ -44,7 +44,7 @@ exxcellent.SpinButton.Sync = Core.extend(Echo.Render.ComponentSync, {
         var value = this.component.get("value");
         this._input = document.createElement("input");
         this._input.type = "text";
-        this._input.value = value === null ? "0" : parseInt(value, 10);
+        this._input.value = !value ? "0" : parseInt(value, 10);
         this._input.style.textAlign = "right";
         this._div.appendChild(this._input);
 

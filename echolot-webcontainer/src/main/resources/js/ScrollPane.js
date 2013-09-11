@@ -109,7 +109,7 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
 
         this.renderChildLayoutData(child, cellElement);
 
-        if (index !== null) {
+        if (index !== null && typeof index != 'undefined') {
             var currentChildCount;
             if (this.containerElement.childNodes.length >= 3 && this.cellSpacing) {
                 currentChildCount = (this.containerElement.childNodes.length + 1) / 2;
@@ -120,7 +120,7 @@ Contrib.ScrollPane.Peer = Core.extend(Echo.Render.ComponentSync, {
                 index = null;
             }
         }
-        if (index === null || !this.containerElement.firstChild) {
+        if (index === null || typeof index == 'undefined' || !this.containerElement.firstChild) {
             // Full render, append-at-end scenario, or index 0 specified and no children rendered.
 
             // Render spacing cell first if index != 0 and cell spacing enabled.

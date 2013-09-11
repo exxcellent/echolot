@@ -275,14 +275,14 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
                 }
                 var textUpdate = update.getUpdatedProperty("text");
                 if (textUpdate) {
-                    var newValue = textUpdate.newValue === null ? "" : textUpdate.newValue;
-                    if (newValue !== this._lastProcessedValue) {
+                    var newValue = !textUpdate.newValue ? "" : textUpdate.newValue;
+                    if (newValue != this._lastProcessedValue) {
                         this._input.value = newValue;
                         this._lastProcessedValue = newValue;
                     }
                 }
                 var editableUpdate = update.getUpdatedProperty("editable");
-                if (editableUpdate !== null) {
+                if (editableUpdate) {
                     this._input.readOnly = !editableUpdate.newValue;
                     if (editableUpdate.newValue) {
                         $(this._input).removeClass("datepickerDisabled");

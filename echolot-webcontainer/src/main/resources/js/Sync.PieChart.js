@@ -201,7 +201,8 @@ exxcellent.PieChartSync = Core.extend(Echo.Render.ComponentSync, {
             return function () {
                 currentCount++;
                 // if the next defined color in the is null, we start looping
-                while (fallbackColorArrayInner[currentCount % 10] === null) {
+                while (fallbackColorArrayInner[currentCount % 10] === null ||
+                    typeof fallbackColorArrayInner[currentCount % 10] == 'undefined') {
                     currentCount++;
                     // we stop at 0 - makes no sensee to search any more
                     if (currentCount % 10 === 0) {
