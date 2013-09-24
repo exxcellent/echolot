@@ -496,7 +496,8 @@
 						display: 'block',
                         top: top + 'px',
                         left: left + 'px',
-                        position: 'absolute'
+                        position: 'absolute',
+                        zIndex: 16777271,
 					});
 					if (options.onShow) {
                         options.onShow.apply(options.owner, [this.gDiv]);

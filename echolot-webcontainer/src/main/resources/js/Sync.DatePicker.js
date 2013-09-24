@@ -312,23 +312,24 @@ exxcellent.DatePickerSync = Core.extend(Echo.Render.ComponentSync, {
         this._focused = false;
         this._input = null;
         this._datepicker = null;
+        this.container = null;
     },
 
     /**
      * Adds the input element to its parent in the DOM.
-     * Wraps the element in a special container DIV if necessary to appease Internet Explorer's various text field/area bugs,
+     * The input element is wrapped in a container div with position "relative" to place the datepicker popup
+     * correctly when an outer container is scrolled.
+     *
+     * This container DIV also appeases Internet Explorer's various text field/area bugs,
      * including percent-based text areas inducing scroll bars and the IE6 percentage width "growing" text area bug.
      *
      * @param parentElement the parent element
      */
     renderAddToParent: function (parentElement) {
-        if (Core.Web.Env.BROWSER_INTERNET_EXPLORER && this.percentWidth) {
-            this.container = document.createElement("div");
-            this.container.appendChild(this._input);
-            parentElement.appendChild(this.container);
-        } else {
-            parentElement.appendChild(this._input);
-        }
+        this.container = document.createElement("div");
+        this.container.style.cssText = "position: relative";
+        this.container.appendChild(this._input);
+        parentElement.appendChild(this.container);
     },
 
     /**
