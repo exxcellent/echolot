@@ -115,6 +115,7 @@ public class TestPane extends ContentPane {
         addTest("LineChart", LineChartTest.class.getSimpleName());
         addTest("PlainHtml", PlainHtmlTest.class.getSimpleName());
         addTest("SuggestField", SuggestFieldTest.class.getSimpleName());
+        addTest("RegexComponent", RegexComponentTest.class.getSimpleName());
 
         Column applicationControlsColumn = new Column();
         controlsColumn.add(applicationControlsColumn);
