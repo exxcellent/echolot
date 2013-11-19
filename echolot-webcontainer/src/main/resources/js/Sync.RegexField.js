@@ -98,7 +98,7 @@ exxcellent.RegexTextFieldSync = Core.extend(exxcellent.RegexComponentSync,
         if (!this.component.render("editable", true)) {
             this.input.readOnly = true;
         }
-        this.input.type = this._type;
+        this.input.type = "text";
         var maximumLength = this.component.render("maximumLength", -1);
         if (maximumLength >= 0) {
             this.input.maxLength = maximumLength;
