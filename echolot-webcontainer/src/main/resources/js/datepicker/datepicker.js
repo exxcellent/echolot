@@ -474,7 +474,7 @@
 					this.layout(this.gDiv);
                     switch (options.position){
                         case 'top':
-                            top -= inputfield.offsetHeight;
+                            top -= cal.outerHeight();
                             break;
                         case 'left':
                             left -= inputfield.offsetWidth;
@@ -488,6 +488,10 @@
                         case 'bottom-left':
                             top += inputfield.offsetHeight;
                             left -= cal.outerWidth() - inputfield.offsetWidth;
+                            break;
+                        case 'top-right':
+                            top -= cal.outerHeight() - inputfield.offsetHeight;
+                            left += inputfield.offsetWidth;
                             break;
                     }
 
